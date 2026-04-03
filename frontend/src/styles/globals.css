@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #020209;
+    color: #e2e8f0;
+    font-family: 'JetBrains Mono', Consolas, monospace;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0d0d1a;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2a2a4a;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00e5ff44;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply bg-venue-panel border border-venue-border rounded-lg;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-mono font-medium;
+  }
+
+  .badge-error   { @apply badge bg-red-900/40 text-red-300 border border-red-700/40; }
+  .badge-warning { @apply badge bg-amber-900/40 text-amber-300 border border-amber-700/40; }
+  .badge-info    { @apply badge bg-blue-900/40 text-blue-300 border border-blue-700/40; }
+  .badge-ok      { @apply badge bg-green-900/40 text-green-300 border border-green-700/40; }
+
+  .glow-cyan   { box-shadow: 0 0 12px #00e5ff44, 0 0 24px #00e5ff22; }
+  .glow-green  { box-shadow: 0 0 12px #00ff8844, 0 0 24px #00ff8822; }
+  .glow-red    { box-shadow: 0 0 12px #ff3d0044, 0 0 24px #ff3d0022; }
+  .glow-amber  { box-shadow: 0 0 12px #ffb30044, 0 0 24px #ffb30022; }
+}
+
+/* Drag-overlay card shimmer */
+.drag-ghost {
+  opacity: 0.6;
+  transform: rotate(2deg) scale(1.03);
+  cursor: grabbing;
+  box-shadow: 0 16px 40px #00000088, 0 0 20px #00e5ff44;
+}
+
+/* Venue position pulse ring */
+@keyframes ring-pulse {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  50%  { transform: scale(1.3); opacity: 0.2; }
+  100% { transform: scale(1);   opacity: 0.6; }
+}
+.pos-ring { animation: ring-pulse 2s ease-in-out infinite; }
+
+/* Connection line draw */
+@keyframes draw-line {
+  from { stroke-dashoffset: 200; }
+  to   { stroke-dashoffset: 0; }
+}
+.connection-line {
+  stroke-dasharray: 200;
+  animation: draw-line 0.6s ease-out forwards;
+}
