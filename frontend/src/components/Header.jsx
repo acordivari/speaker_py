@@ -10,12 +10,15 @@ const MANUFACTURER_COLORS = {
   'Lab.gruppen':       '#c0392b',
 }
 
-export default function Header() {
+export default function Header({ soundcheckInfo, onSoundcheck }) {
   const validationResult = useStore(s => s.validationResult)
   const isValidating     = useStore(s => s.isValidating)
   const resetAll         = useStore(s => s.resetAll)
   const loadPreset       = useStore(s => s.loadPreset)
   const manufacturers    = useStore(s => s.manufacturers)
+  const channels         = useStore(s => s.channels)
+
+  const hasConfig = channels.some(ch => ch.amp || ch.speakers.length > 0)
 
   const statusColor = !validationResult
     ? '#7878a8'
@@ -72,6 +75,32 @@ export default function Header() {
             {statusText}
           </span>
         </div>
+
+        {hasConfig && (
+          <button
+            onClick={onSoundcheck}
+            className="text-xs font-mono px-3 py-1 rounded border transition-all duration-200"
+            style={{
+              borderColor: soundcheckInfo?.available ? '#00e5ff66' : '#3c3c68',
+              color:       soundcheckInfo?.available ? '#00e5ff'   : '#7070a8',
+              background:  soundcheckInfo?.available ? '#00e5ff0d' : 'transparent',
+            }}
+            onMouseEnter={e => {
+              if (!soundcheckInfo?.available) return
+              e.currentTarget.style.borderColor = '#00e5ff'
+              e.currentTarget.style.background  = '#00e5ff1a'
+              e.currentTarget.style.boxShadow   = '0 0 12px #00e5ff33'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = soundcheckInfo?.available ? '#00e5ff66' : '#3c3c68'
+              e.currentTarget.style.background  = soundcheckInfo?.available ? '#00e5ff0d' : 'transparent'
+              e.currentTarget.style.boxShadow   = 'none'
+            }}
+            title={soundcheckInfo?.available ? 'Run soundcheck' : 'Place soundcheck.flac in backend/audio/ to enable'}
+          >
+            {soundcheckInfo?.available ? '◉ RUN SOUNDCHECK' : '◌ RUN SOUNDCHECK'}
+          </button>
+        )}
 
         <button
           onClick={() => loadPreset(FUNKTION_ONE_PRESET)}

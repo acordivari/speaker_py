@@ -19,3 +19,6 @@ export const fetchComponents = (params = {}) =>
  */
 export const validateConfiguration = (channels) =>
   client.post('/validate/', { channels }).then(r => r.data)
+
+export const fetchSoundcheckInfo = () =>
+  client.get('/soundcheck/info').then(r => r.data)

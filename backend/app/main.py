@@ -1,13 +1,16 @@
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.database import create_tables, SessionLocal
 from app.data.seed import seed_database
 from app.api.manufacturers import router as manufacturers_router
 from app.api.components import router as components_router
 from app.api.validation import router as validation_router
+from app.api.soundcheck import router as soundcheck_router
 
 
 @asynccontextmanager
@@ -47,6 +50,13 @@ API_PREFIX = "/api/v1"
 app.include_router(manufacturers_router, prefix=API_PREFIX)
 app.include_router(components_router, prefix=API_PREFIX)
 app.include_router(validation_router, prefix=API_PREFIX)
+app.include_router(soundcheck_router, prefix=API_PREFIX)
+
+# Serve the audio directory so the browser can stream the FLAC file directly.
+# StaticFiles handles Range requests, so large files stream correctly.
+_audio_dir = Path(__file__).resolve().parents[1] / "audio"
+_audio_dir.mkdir(exist_ok=True)
+app.mount("/audio", StaticFiles(directory=str(_audio_dir)), name="audio")
 
 
 @app.get("/", tags=["Health"])

@@ -15,6 +15,8 @@ import VenueLayout from './components/venue/VenueLayout'
 import ChannelEditor from './components/channel/ChannelEditor'
 import ValidationPanel from './components/validation/ValidationPanel'
 import DragGhostCard from './components/palette/DragGhostCard'
+import SoundcheckModal from './components/soundcheck/SoundcheckModal'
+import { fetchSoundcheckInfo } from './services/api'
 
 export default function App() {
   const loadData      = useStore(s => s.loadData)
@@ -25,7 +27,9 @@ export default function App() {
   const isLoadingData = useStore(s => s.isLoadingData)
   const dataError     = useStore(s => s.dataError)
 
-  const [activeItem, setActiveItem] = useState(null)
+  const [activeItem,      setActiveItem]      = useState(null)
+  const [soundcheckOpen,  setSoundcheckOpen]  = useState(false)
+  const [soundcheckInfo,  setSoundcheckInfo]  = useState({ available: false })
 
   // Debounced auto-validate on any channel change
   const validateTimer = useRef(null)
@@ -36,6 +40,9 @@ export default function App() {
 
   useEffect(() => { loadData() }, [loadData])
   useEffect(() => { scheduleValidate() }, [channels, scheduleValidate])
+  useEffect(() => {
+    fetchSoundcheckInfo().then(setSoundcheckInfo).catch(() => {})
+  }, [])
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } })
@@ -88,7 +95,10 @@ export default function App() {
       onDragEnd={handleDragEnd}
     >
       <div className="flex flex-col h-screen overflow-hidden bg-venue-bg">
-        <Header />
+        <Header
+          soundcheckInfo={soundcheckInfo}
+          onSoundcheck={() => setSoundcheckOpen(true)}
+        />
 
         <div className="flex flex-1 overflow-hidden gap-3 p-3 pt-0">
           {/* Left: Component Palette */}
@@ -116,6 +126,14 @@ export default function App() {
       <DragOverlay dropAnimation={null}>
         {activeItem ? <DragGhostCard component={activeItem} /> : null}
       </DragOverlay>
+
+      {soundcheckOpen && (
+        <SoundcheckModal
+          onClose={() => setSoundcheckOpen(false)}
+          channels={channels}
+          soundcheckInfo={soundcheckInfo}
+        />
+      )}
     </DndContext>
   )
 }
