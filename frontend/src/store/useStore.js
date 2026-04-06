@@ -79,6 +79,59 @@ const makeDefaultChannel = (def) => ({
   bridged: false,
 })
 
+// ── Funktion-One full-venue preset ───────────────────────────────────────────
+// Realistic club/festival rig for a ~2 000-cap room (Mission Ballroom scale).
+// Model numbers must match seed data exactly.
+
+// Impedance targets per channel (all parallel wiring, F1000 min load = 2 Ω):
+//   4× EVO 7 @ 8 Ω → 2 Ω  | amp 1 500 W / speaker total 3 000 W RMS → ratio 0.50 ✓
+//   2× F221  @ 4 Ω → 2 Ω  | amp 1 500 W / speaker total 3 000 W RMS → ratio 0.50 ✓
+//   4× EVO 6 @ 8 Ω → 2 Ω  | amp 1 500 W / speaker total 3 000 W RMS → ratio 0.50 ✓
+//   3× EVO 6 @ 8 Ω → 2.67 Ω | amp ≈1 333 W / 2 250 W RMS → ratio 0.59 ✓
+//   2× EVO 6 @ 8 Ω → 4 Ω  | amp 1 000 W / 1 500 W RMS → ratio 0.67 ✓
+export const FUNKTION_ONE_PRESET = [
+  {
+    channelId: 'main-l',
+    ampModel:  'F1000 SERIES II',
+    speakers:  [{ model: 'EVO 7', count: 4 }],
+  },
+  {
+    channelId: 'main-r',
+    ampModel:  'F1000 SERIES II',
+    speakers:  [{ model: 'EVO 7', count: 4 }],
+  },
+  {
+    channelId: 'sub-c',
+    ampModel:  'F1000 SERIES II',
+    speakers:  [{ model: 'F221', count: 2 }],
+  },
+  {
+    channelId: 'ff',
+    ampModel:  'F1000 SERIES II',
+    speakers:  [{ model: 'EVO 6', count: 4 }],
+  },
+  {
+    channelId: 'delay-l',
+    ampModel:  'F1000 SERIES II',
+    speakers:  [{ model: 'EVO 6', count: 3 }],
+  },
+  {
+    channelId: 'delay-r',
+    ampModel:  'F1000 SERIES II',
+    speakers:  [{ model: 'EVO 6', count: 3 }],
+  },
+  {
+    channelId: 'mon-l',
+    ampModel:  'F1000 SERIES II',
+    speakers:  [{ model: 'EVO 6', count: 2 }],
+  },
+  {
+    channelId: 'mon-r',
+    ampModel:  'F1000 SERIES II',
+    speakers:  [{ model: 'EVO 6', count: 2 }],
+  },
+]
+
 // ── Store ────────────────────────────────────────────────────────────────────
 
 const useStore = create((set, get) => ({
@@ -202,6 +255,32 @@ const useStore = create((set, get) => ({
     set({
       channels: VENUE_CHANNELS.map(makeDefaultChannel),
       validationResult: null,
+    }),
+
+  loadPreset: (preset) =>
+    set(state => {
+      const byModel = {}
+      state.components.forEach(c => { byModel[c.model_number] = c })
+
+      return {
+        channels: state.channels.map(ch => {
+          const config = preset.find(p => p.channelId === ch.id)
+          if (!config) return makeDefaultChannel(VENUE_CHANNELS.find(d => d.id === ch.id))
+
+          const amp = config.ampModel ? (byModel[config.ampModel] ?? null) : null
+          const speakers = (config.speakers ?? [])
+            .map(s => ({ component: byModel[s.model], count: s.count }))
+            .filter(s => s.component)
+
+          return {
+            ...makeDefaultChannel(VENUE_CHANNELS.find(d => d.id === ch.id)),
+            amp,
+            speakers,
+            bridged: config.bridged ?? false,
+          }
+        }),
+        validationResult: null,
+      }
     }),
 
   setManufacturerFilter: (id) => set({ activeManufacturerId: id }),

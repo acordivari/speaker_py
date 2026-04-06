@@ -1,4 +1,4 @@
-import useStore from '../store/useStore'
+import useStore, { FUNKTION_ONE_PRESET } from '../store/useStore'
 
 const MANUFACTURER_COLORS = {
   'Funktion-One':      '#ff8c00',
@@ -14,6 +14,7 @@ export default function Header() {
   const validationResult = useStore(s => s.validationResult)
   const isValidating     = useStore(s => s.isValidating)
   const resetAll         = useStore(s => s.resetAll)
+  const loadPreset       = useStore(s => s.loadPreset)
   const manufacturers    = useStore(s => s.manufacturers)
 
   const statusColor = !validationResult
@@ -71,6 +72,19 @@ export default function Header() {
             {statusText}
           </span>
         </div>
+
+        <button
+          onClick={() => loadPreset(FUNKTION_ONE_PRESET)}
+          className="text-xs font-mono px-3 py-1 rounded border transition-colors duration-200"
+          style={{
+            borderColor: '#ff8c0066',
+            color:       '#ff8c00',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = '#ff8c00'; e.currentTarget.style.background = '#ff8c0011' }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = '#ff8c0066'; e.currentTarget.style.background = 'transparent' }}
+        >
+          F1 PRESET
+        </button>
 
         <button
           onClick={resetAll}
