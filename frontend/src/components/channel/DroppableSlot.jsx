@@ -35,12 +35,12 @@ export default function DroppableSlot({
     data: { channelId, slotType },
   })
 
-  const accentColor = component ? getMfrColor(component.manufacturer_name) : '#38385e'
+  const accentColor = component ? getMfrColor(component.manufacturer_name) : '#7070a8'
   const borderColor = isOver
     ? '#00e5ff'
     : occupied
       ? accentColor
-      : '#28284e'
+      : '#3c3c68'
 
   return (
     <div
@@ -59,7 +59,7 @@ export default function DroppableSlot({
       {/* Slot type label */}
       <div
         className="text-[9px] font-mono flex-shrink-0 w-8 text-center rounded px-1"
-        style={{ color: isOver ? '#00e5ff' : '#3a3a5a', border: `1px solid ${borderColor}33` }}
+        style={{ color: isOver ? '#00e5ff' : '#7070a0', border: `1px solid ${borderColor}33` }}
       >
         {label}
       </div>
@@ -67,7 +67,7 @@ export default function DroppableSlot({
       {!occupied && (
         <div
           className="text-[9px] font-mono flex-1 text-center"
-          style={{ color: isOver ? '#00e5ff88' : '#38385e' }}
+          style={{ color: isOver ? '#00e5ff88' : '#7070a8' }}
         >
           {isOver
             ? `DROP ${slotType.toUpperCase()}`

@@ -37,7 +37,7 @@ export default function ValidationPanel() {
   const infos    = allIssues.filter(i => i.severity === 'info')
 
   const statusColor = !validationResult
-    ? '#4a4a6a'
+    ? '#7878a8'
     : validationResult.is_valid
       ? errors.length === 0 && warnings.length === 0
         ? '#00ff88'
@@ -58,7 +58,7 @@ export default function ValidationPanel() {
             className="text-[9px] font-mono px-2 py-0.5 rounded border transition-colors"
             style={{
               borderColor: '#00e5ff44',
-              color:       isValidating ? '#3a3a5a' : '#00e5ff',
+              color:       isValidating ? '#7070a0' : '#00e5ff',
               background:  isValidating ? 'transparent' : '#00e5ff0a',
             }}
           >
@@ -211,7 +211,7 @@ export default function ValidationPanel() {
             <div className="text-3xl opacity-20">⚡</div>
             <div>
               <div className="font-bold mb-1">No configuration yet</div>
-              <div className="text-[10px] opacity-60 leading-relaxed">
+              <div className="text-[10px] text-slate-400 leading-relaxed">
                 Drag components from the library into the channel slots below the venue map.
                 Validation runs automatically.
               </div>

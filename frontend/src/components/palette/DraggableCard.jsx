@@ -31,7 +31,7 @@ export default function DraggableCard({ component }) {
       style={{
         opacity:     isDragging ? 0.3 : 1,
         cursor:      isDragging ? 'grabbing' : 'grab',
-        borderColor: isDragging ? accentColor : '#28284e',
+        borderColor: isDragging ? accentColor : '#3c3c68',
         background:  isDragging
           ? `${accentColor}10`
           : 'linear-gradient(135deg, #161626 0%, #1e1e36 100%)',

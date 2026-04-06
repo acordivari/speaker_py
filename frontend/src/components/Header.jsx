@@ -17,7 +17,7 @@ export default function Header() {
   const manufacturers    = useStore(s => s.manufacturers)
 
   const statusColor = !validationResult
-    ? '#4a4a6a'
+    ? '#7878a8'
     : validationResult.is_valid
       ? '#00ff88'
       : '#ff3d00'

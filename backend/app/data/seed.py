@@ -201,6 +201,27 @@ COMPONENTS = [
     ),
     dict(
         manufacturer_name="Funktion-One",
+        name="F1000 Series II Amplifier",
+        model_number="F1000 SERIES II",
+        component_type=ComponentType.AMPLIFIER,
+        description=(
+            "Funktion-One's 4-channel Class D touring amplifier, designed specifically "
+            "to drive F-One passive speaker systems. Onboard DSP ships with factory "
+            "presets for all current Funktion-One cabinets. Lightweight chassis "
+            "(10 kg) makes it a practical touring rack solution."
+        ),
+        channels=4,
+        output_power_at_8ohm_watts=650.0,
+        output_power_at_4ohm_watts=1000.0,
+        output_power_at_2ohm_watts=1500.0,
+        min_load_impedance_ohms=2.0,
+        has_onboard_dsp=True,
+        input_connector=ConnectorType.XLR_3PIN,
+        output_connector=ConnectorType.SPEAKON_NL4,
+        weight_kg=10.0,
+    ),
+    dict(
+        manufacturer_name="Funktion-One",
         name="F221 Subwoofer",
         model_number="F221",
         component_type=ComponentType.SUBWOOFER,
@@ -655,25 +676,28 @@ COMPONENTS = [
 
 def seed_database(db: Session) -> None:
     """
-    Insert all manufacturers and components if the database is empty.
-    Safe to call multiple times — skips if data already exists.
+    Insert manufacturers and components that do not yet exist.
+    Safe to call on every startup — skips rows already present.
     """
-    if db.query(Manufacturer).count() > 0:
-        return  # already seeded
-
-    # Insert manufacturers and build a name → id map
-    name_to_mfr: dict[str, Manufacturer] = {}
+    # Upsert manufacturers by name
+    name_to_mfr: dict[str, Manufacturer] = {
+        m.name: m for m in db.query(Manufacturer).all()
+    }
     for mfr_data in MANUFACTURERS:
-        mfr = Manufacturer(**mfr_data)
-        db.add(mfr)
-        name_to_mfr[mfr.name] = mfr
+        if mfr_data["name"] not in name_to_mfr:
+            mfr = Manufacturer(**mfr_data)
+            db.add(mfr)
+            name_to_mfr[mfr_data["name"]] = mfr
 
     db.flush()  # populate ids without committing
 
-    # Insert components — copy each dict so the global list is not mutated
+    # Upsert components by model_number
+    existing_models = {c.model_number for c in db.query(Component.model_number).all()}
     for raw in COMPONENTS:
-        comp_data = dict(raw)                   # shallow copy prevents mutation
+        comp_data = dict(raw)
         mfr_name = comp_data.pop("manufacturer_name")
+        if comp_data["model_number"] in existing_models:
+            continue
         mfr = name_to_mfr[mfr_name]
         comp = Component(manufacturer_id=mfr.id, **comp_data)
         db.add(comp)

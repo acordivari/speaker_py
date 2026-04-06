@@ -36,7 +36,7 @@ export default function ChannelEditor() {
                   ? '#00e5ff'
                   : populated
                     ? '#6060a0'
-                    : '#38385e',
+                    : '#7070a8',
                 background: isActive ? '#00e5ff0a' : 'transparent',
               }}
             >
@@ -55,7 +55,7 @@ export default function ChannelEditor() {
             <div className="text-[9px] font-mono text-venue-muted uppercase tracking-widest">
               {channel.label}
             </div>
-            <div className="text-[8px] font-mono text-venue-muted/50 mt-0.5 leading-relaxed">
+            <div className="text-[8px] font-mono text-slate-400 mt-0.5 leading-relaxed">
               {chanDef?.description}
             </div>
           </div>
@@ -70,8 +70,8 @@ export default function ChannelEditor() {
                   onClick={() => setWiring(channel.id, w)}
                   className="flex-1 text-[9px] font-mono py-1 rounded border transition-colors"
                   style={{
-                    borderColor: channel.wiring === w ? '#00e5ff' : '#28284e',
-                    color:       channel.wiring === w ? '#00e5ff' : '#3a3a5a',
+                    borderColor: channel.wiring === w ? '#00e5ff' : '#3c3c68',
+                    color:       channel.wiring === w ? '#00e5ff' : '#7070a0',
                     background:  channel.wiring === w ? '#00e5ff0d' : 'transparent',
                   }}
                 >
@@ -87,7 +87,7 @@ export default function ChannelEditor() {
               onClick={() => setBridged(channel.id, !channel.bridged)}
               className="w-7 h-4 rounded-full border transition-all relative flex-shrink-0"
               style={{
-                borderColor: channel.bridged ? '#ffb300' : '#38385e',
+                borderColor: channel.bridged ? '#ffb300' : '#7070a8',
                 background:  channel.bridged ? '#ffb30033' : '#161626',
               }}
             >
@@ -95,11 +95,11 @@ export default function ChannelEditor() {
                 className="absolute top-0.5 w-3 h-3 rounded-full transition-all"
                 style={{
                   left:       channel.bridged ? 'calc(100% - 14px)' : '2px',
-                  background: channel.bridged ? '#ffb300' : '#38385e',
+                  background: channel.bridged ? '#ffb300' : '#7070a8',
                 }}
               />
             </button>
-            <span className="text-[9px] font-mono" style={{ color: channel.bridged ? '#ffb300' : '#3a3a5a' }}>
+            <span className="text-[9px] font-mono" style={{ color: channel.bridged ? '#ffb300' : '#7070a0' }}>
               BRIDGED
             </span>
           </div>

@@ -64,8 +64,8 @@ export default function ComponentPalette({ isLoading }) {
               onClick={() => setType(opt.value)}
               className="text-[8px] font-mono px-1.5 py-0.5 rounded border transition-colors"
               style={{
-                borderColor: selectedType === opt.value ? '#00e5ff' : '#28284e',
-                color:       selectedType === opt.value ? '#00e5ff' : '#4a4a6a',
+                borderColor: selectedType === opt.value ? '#00e5ff' : '#3c3c68',
+                color:       selectedType === opt.value ? '#00e5ff' : '#7878a8',
                 background:  selectedType === opt.value ? '#00e5ff11' : 'transparent',
               }}
             >
@@ -80,8 +80,8 @@ export default function ComponentPalette({ isLoading }) {
             onClick={() => setMfr(null)}
             className="text-[8px] font-mono px-1.5 py-0.5 rounded border transition-colors"
             style={{
-              borderColor: selectedMfr === null ? '#00e5ff' : '#28284e',
-              color:       selectedMfr === null ? '#00e5ff' : '#4a4a6a',
+              borderColor: selectedMfr === null ? '#00e5ff' : '#3c3c68',
+              color:       selectedMfr === null ? '#00e5ff' : '#7878a8',
             }}
           >
             ALL
@@ -95,8 +95,8 @@ export default function ComponentPalette({ isLoading }) {
                 onClick={() => setMfr(active ? null : m.name)}
                 className="text-[8px] font-mono px-1.5 py-0.5 rounded border transition-colors"
                 style={{
-                  borderColor: active ? color : '#28284e',
-                  color:       active ? color : '#4a4a6a',
+                  borderColor: active ? color : '#3c3c68',
+                  color:       active ? color : '#7878a8',
                   background:  active ? `${color}11` : 'transparent',
                 }}
                 title={m.name}

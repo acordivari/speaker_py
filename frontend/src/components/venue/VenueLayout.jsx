@@ -17,20 +17,20 @@ export default function VenueLayout() {
   }
 
   return (
-    <div className="panel h-full flex flex-col overflow-hidden relative">
+    <div className="panel h-full flex flex-col overflow-hidden">
       {/* Venue label */}
-      <div className="absolute top-2 left-3 z-10 flex flex-col">
-        <span className="text-[10px] font-mono text-venue-muted uppercase tracking-widest">
+      <div className="flex items-baseline gap-3 px-3 pt-2 pb-1 flex-shrink-0 border-b border-venue-border">
+        <span className="text-[10px] font-mono text-venue-muted uppercase tracking-widest whitespace-nowrap">
           Mission Ballroom · Denver
         </span>
-        <span className="text-[9px] text-venue-muted/50">
+        <span className="text-[9px] text-slate-400 whitespace-nowrap">
           Bird's-eye view — drag components from palette → channel slots below
         </span>
       </div>
 
       <svg
         viewBox="0 0 800 560"
-        className="w-full h-full"
+        className="w-full flex-1 min-h-0"
         style={{ filter: 'drop-shadow(0 0 40px #00e5ff08)' }}
       >
         {/* ── Ambient glow background ──────────────────────────────── */}
@@ -53,27 +53,27 @@ export default function VenueLayout() {
         <rect x="0" y="0" width="800" height="560" fill="#0b0b18" />
         <rect
           x="30" y="30" width="740" height="500" rx="14"
-          fill="#141426" stroke="#28284e" strokeWidth="1.5"
+          fill="#141426" stroke="#3c3c68" strokeWidth="1.5"
         />
 
         {/* ── Balcony back ─────────────────────────────────────────── */}
         <rect x="90"  y="50"  width="620" height="85" rx="8"
-              fill="#1b1b34" stroke="#28284e" strokeWidth="1" />
-        <text x="400" y="98" textAnchor="middle" fill="#38385e"
+              fill="#1b1b34" stroke="#3c3c68" strokeWidth="1" />
+        <text x="400" y="98" textAnchor="middle" fill="#7070a8"
               fontSize="9" fontFamily="monospace" letterSpacing="3">
           BALCONY
         </text>
 
         {/* ── Balcony sides ─────────────────────────────────────────── */}
         <rect x="30" y="135" width="90" height="230" rx="6"
-              fill="#18182e" stroke="#28284e" strokeWidth="1" />
+              fill="#18182e" stroke="#3c3c68" strokeWidth="1" />
         <rect x="680" y="135" width="90" height="230" rx="6"
-              fill="#18182e" stroke="#28284e" strokeWidth="1" />
-        <text x="75"  y="255" textAnchor="middle" fill="#38385e"
+              fill="#18182e" stroke="#3c3c68" strokeWidth="1" />
+        <text x="75"  y="255" textAnchor="middle" fill="#7070a8"
               fontSize="8" fontFamily="monospace" transform="rotate(-90,75,255)" letterSpacing="2">
           BALCONY
         </text>
-        <text x="725" y="255" textAnchor="middle" fill="#38385e"
+        <text x="725" y="255" textAnchor="middle" fill="#7070a8"
               fontSize="8" fontFamily="monospace" transform="rotate(90,725,255)" letterSpacing="2">
           BALCONY
         </text>

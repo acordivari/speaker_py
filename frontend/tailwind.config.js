@@ -8,8 +8,8 @@ export default {
           bg:       '#0b0b18',
           panel:    '#161626',
           surface:  '#1e1e36',
-          border:   '#28284e',
-          muted:    '#38385e',
+          border:   '#3c3c68',
+          muted:    '#7070a8',
         },
         brand: {
           cyan:   '#00e5ff',
