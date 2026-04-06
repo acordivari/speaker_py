@@ -37,10 +37,15 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Allow the React dev server (and any localhost origin) during development
+# Origins are set via ALLOWED_ORIGINS env var in production (comma-separated).
+# Falls back to localhost for local development.
+import os as _os
+_raw_origins = _os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:5173")
+_allowed_origins = [o.strip() for o in _raw_origins.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173"],
+    allow_origins=_allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

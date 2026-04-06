@@ -28,7 +28,13 @@ htmlcov/
 .vscode/
 .idea/
 
-# Node (for future React frontend)
+# Node
 node_modules/
 .env
 .env.local
+
+# Audio files — committed directly to repo (static, <100 MB)
+# backend/audio/*.flac
+
+# Vite build output
+frontend/dist/

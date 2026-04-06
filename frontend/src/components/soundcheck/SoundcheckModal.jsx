@@ -133,7 +133,7 @@ export default function SoundcheckModal({ onClose, channels, soundcheckInfo }) {
     if (audioRef.current) return
     const audio = new Audio()
     audio.preload = 'auto'
-    audio.src     = soundcheckInfo.url
+    audio.src     = `${import.meta.env.VITE_API_URL ?? ''}${soundcheckInfo.url}`
 
     audio.addEventListener('loadedmetadata', () => {
       setDuration(audio.duration)
