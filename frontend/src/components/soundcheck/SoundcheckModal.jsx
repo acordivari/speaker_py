@@ -132,8 +132,9 @@ export default function SoundcheckModal({ onClose, channels, soundcheckInfo }) {
   function initAudioElement() {
     if (audioRef.current) return
     const audio = new Audio()
-    audio.preload = 'auto'
-    audio.src     = `${import.meta.env.VITE_API_URL ?? ''}${soundcheckInfo.url}`
+    audio.crossOrigin = 'anonymous'   // required for Web Audio API across origins
+    audio.preload     = 'auto'
+    audio.src         = `${import.meta.env.VITE_API_URL ?? ''}${soundcheckInfo.url}`
 
     audio.addEventListener('loadedmetadata', () => {
       setDuration(audio.duration)
