@@ -37,11 +37,11 @@ export default function VenueLayout() {
         <defs>
           <radialGradient id="floorGlow" cx="50%" cy="60%" r="55%">
             <stop offset="0%"   stopColor="#0a1628" />
-            <stop offset="100%" stopColor="#020209" />
+            <stop offset="100%" stopColor="#0b0b18" />
           </radialGradient>
           <radialGradient id="stageGlow" cx="50%" cy="50%" r="50%">
             <stop offset="0%"   stopColor="#1a1a3e" />
-            <stop offset="100%" stopColor="#0d0d1a" />
+            <stop offset="100%" stopColor="#161626" />
           </radialGradient>
           <filter id="bloom">
             <feGaussianBlur stdDeviation="3" result="blur" />
@@ -50,30 +50,30 @@ export default function VenueLayout() {
         </defs>
 
         {/* ── Outer venue shell ─────────────────────────────────────── */}
-        <rect x="0" y="0" width="800" height="560" fill="#020209" />
+        <rect x="0" y="0" width="800" height="560" fill="#0b0b18" />
         <rect
           x="30" y="30" width="740" height="500" rx="14"
-          fill="#0a0a18" stroke="#1e1e3c" strokeWidth="1.5"
+          fill="#141426" stroke="#28284e" strokeWidth="1.5"
         />
 
         {/* ── Balcony back ─────────────────────────────────────────── */}
         <rect x="90"  y="50"  width="620" height="85" rx="8"
-              fill="#111128" stroke="#1e1e3c" strokeWidth="1" />
-        <text x="400" y="98" textAnchor="middle" fill="#2a2a4a"
+              fill="#1b1b34" stroke="#28284e" strokeWidth="1" />
+        <text x="400" y="98" textAnchor="middle" fill="#38385e"
               fontSize="9" fontFamily="monospace" letterSpacing="3">
           BALCONY
         </text>
 
         {/* ── Balcony sides ─────────────────────────────────────────── */}
         <rect x="30" y="135" width="90" height="230" rx="6"
-              fill="#0e0e22" stroke="#1e1e3c" strokeWidth="1" />
+              fill="#18182e" stroke="#28284e" strokeWidth="1" />
         <rect x="680" y="135" width="90" height="230" rx="6"
-              fill="#0e0e22" stroke="#1e1e3c" strokeWidth="1" />
-        <text x="75"  y="255" textAnchor="middle" fill="#2a2a4a"
+              fill="#18182e" stroke="#28284e" strokeWidth="1" />
+        <text x="75"  y="255" textAnchor="middle" fill="#38385e"
               fontSize="8" fontFamily="monospace" transform="rotate(-90,75,255)" letterSpacing="2">
           BALCONY
         </text>
-        <text x="725" y="255" textAnchor="middle" fill="#2a2a4a"
+        <text x="725" y="255" textAnchor="middle" fill="#38385e"
               fontSize="8" fontFamily="monospace" transform="rotate(90,725,255)" letterSpacing="2">
           BALCONY
         </text>

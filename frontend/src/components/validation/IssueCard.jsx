@@ -15,7 +15,7 @@ export default function IssueCard({ issue }) {
       className="rounded border text-xs font-mono overflow-hidden transition-all duration-200"
       style={{
         borderColor: style.borderColor,
-        background:  `linear-gradient(135deg, #0d0d1a 0%, #141428 100%)`,
+        background:  `linear-gradient(135deg, #161626 0%, #1e1e36 100%)`,
       }}
     >
       {/* Summary row */}

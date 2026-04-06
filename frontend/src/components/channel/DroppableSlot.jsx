@@ -1,6 +1,15 @@
 import { useDroppable } from '@dnd-kit/core'
 import { getMfrColor } from '../venue/venueConfig'
 
+const TYPE_LABELS = {
+  line_array: 'LINE ARRAY',
+  full_range:  'FULL RANGE',
+  subwoofer:   'SUBWOOFER',
+  monitor:     'MONITOR',
+  fill:        'FILL',
+  amplifier:   'AMPLIFIER',
+}
+
 /**
  * A drop target for a single component slot inside the ChannelEditor.
  * slotType: 'amp' | 'speaker'
@@ -14,19 +23,24 @@ export default function DroppableSlot({
   onRemove,
   count,
   onCountChange,
+  componentId,
+  allowedTypes,
 }) {
-  const droppableId = `${channelId}::${slotType}`
+  // Occupied slots get a unique ID so dnd-kit never sees duplicate droppable registrations
+  const droppableId = componentId
+    ? `${channelId}::${slotType}::${componentId}`
+    : `${channelId}::${slotType}`
   const { isOver, setNodeRef } = useDroppable({
     id: droppableId,
     data: { channelId, slotType },
   })
 
-  const accentColor = component ? getMfrColor(component.manufacturer_name) : '#2a2a4a'
+  const accentColor = component ? getMfrColor(component.manufacturer_name) : '#38385e'
   const borderColor = isOver
     ? '#00e5ff'
     : occupied
       ? accentColor
-      : '#1e1e3c'
+      : '#28284e'
 
   return (
     <div
@@ -38,7 +52,7 @@ export default function DroppableSlot({
           ? '#00e5ff08'
           : occupied
             ? `${accentColor}08`
-            : '#0d0d1a',
+            : '#161626',
         boxShadow: isOver ? `0 0 12px #00e5ff22` : 'none',
       }}
     >
@@ -53,9 +67,13 @@ export default function DroppableSlot({
       {!occupied && (
         <div
           className="text-[9px] font-mono flex-1 text-center"
-          style={{ color: isOver ? '#00e5ff88' : '#2a2a4a' }}
+          style={{ color: isOver ? '#00e5ff88' : '#38385e' }}
         >
-          {isOver ? `DROP ${slotType.toUpperCase()}` : `drag ${slotType} here`}
+          {isOver
+            ? `DROP ${slotType.toUpperCase()}`
+            : allowedTypes
+              ? `drag ${allowedTypes.map(t => TYPE_LABELS[t] ?? t.toUpperCase()).join(' / ')} here`
+              : `drag ${slotType} here`}
         </div>
       )}
 

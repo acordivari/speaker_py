@@ -36,7 +36,7 @@ export default function ChannelEditor() {
                   ? '#00e5ff'
                   : populated
                     ? '#6060a0'
-                    : '#2a2a4a',
+                    : '#38385e',
                 background: isActive ? '#00e5ff0a' : 'transparent',
               }}
             >
@@ -70,7 +70,7 @@ export default function ChannelEditor() {
                   onClick={() => setWiring(channel.id, w)}
                   className="flex-1 text-[9px] font-mono py-1 rounded border transition-colors"
                   style={{
-                    borderColor: channel.wiring === w ? '#00e5ff' : '#1e1e3c',
+                    borderColor: channel.wiring === w ? '#00e5ff' : '#28284e',
                     color:       channel.wiring === w ? '#00e5ff' : '#3a3a5a',
                     background:  channel.wiring === w ? '#00e5ff0d' : 'transparent',
                   }}
@@ -87,15 +87,15 @@ export default function ChannelEditor() {
               onClick={() => setBridged(channel.id, !channel.bridged)}
               className="w-7 h-4 rounded-full border transition-all relative flex-shrink-0"
               style={{
-                borderColor: channel.bridged ? '#ffb300' : '#2a2a4a',
-                background:  channel.bridged ? '#ffb30033' : '#0d0d1a',
+                borderColor: channel.bridged ? '#ffb300' : '#38385e',
+                background:  channel.bridged ? '#ffb30033' : '#161626',
               }}
             >
               <div
                 className="absolute top-0.5 w-3 h-3 rounded-full transition-all"
                 style={{
                   left:       channel.bridged ? 'calc(100% - 14px)' : '2px',
-                  background: channel.bridged ? '#ffb300' : '#2a2a4a',
+                  background: channel.bridged ? '#ffb300' : '#38385e',
                 }}
               />
             </button>
@@ -126,6 +126,8 @@ export default function ChannelEditor() {
             label="AMP"
             occupied={!!channel.amp}
             component={channel.amp}
+            componentId={channel.amp?.id}
+            allowedTypes={['amplifier']}
             onRemove={() => removeAmp(channel.id)}
           />
 
@@ -138,6 +140,7 @@ export default function ChannelEditor() {
               label="SPK"
               occupied={true}
               component={entry.component}
+              componentId={entry.component.id}
               count={entry.count}
               onCountChange={(c) => setSpeakerCount(channel.id, entry.component.id, c)}
               onRemove={() => removeSpeaker(channel.id, entry.component.id)}
@@ -151,6 +154,7 @@ export default function ChannelEditor() {
             label="SPK"
             occupied={false}
             component={null}
+            allowedTypes={chanDef?.allowedSpeakerTypes}
           />
         </div>
       </div>

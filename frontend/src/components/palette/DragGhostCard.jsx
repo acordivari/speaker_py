@@ -7,7 +7,7 @@ export default function DragGhostCard({ component }) {
     <div
       className="drag-ghost rounded px-3 py-2 text-sm font-mono pointer-events-none"
       style={{
-        background:   `linear-gradient(135deg, #0d0d1a 0%, #141428 100%)`,
+        background:   `linear-gradient(135deg, #161626 0%, #1e1e36 100%)`,
         border:       `1px solid ${color}`,
         color:        color,
         minWidth:     '140px',

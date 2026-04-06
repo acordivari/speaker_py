@@ -11,7 +11,7 @@
     height: 100%;
     margin: 0;
     padding: 0;
-    background-color: #020209;
+    background-color: #0b0b18;
     color: #e2e8f0;
     font-family: 'JetBrains Mono', Consolas, monospace;
   }
@@ -21,10 +21,10 @@
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #0d0d1a;
+    background: #161626;
   }
   ::-webkit-scrollbar-thumb {
-    background: #2a2a4a;
+    background: #38385e;
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {

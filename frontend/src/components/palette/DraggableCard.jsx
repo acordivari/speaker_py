@@ -31,10 +31,10 @@ export default function DraggableCard({ component }) {
       style={{
         opacity:     isDragging ? 0.3 : 1,
         cursor:      isDragging ? 'grabbing' : 'grab',
-        borderColor: isDragging ? accentColor : '#1e1e3c',
+        borderColor: isDragging ? accentColor : '#28284e',
         background:  isDragging
           ? `${accentColor}10`
-          : 'linear-gradient(135deg, #0d0d1a 0%, #141428 100%)',
+          : 'linear-gradient(135deg, #161626 0%, #1e1e36 100%)',
         transform:   isDragging ? 'scale(0.97)' : 'scale(1)',
       }}
     >

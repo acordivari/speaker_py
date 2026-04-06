@@ -23,10 +23,10 @@ export default function VenuePosition({
   const { cx, cy } = coords
 
   // Color based on state
-  let ringColor   = '#2a2a4a'
+  let ringColor   = '#38385e'
   let glowColor   = 'transparent'
   let labelColor  = '#3a3a5a'
-  let innerColor  = '#141428'
+  let innerColor  = '#1e1e36'
 
   if (hasComponents) {
     if (!isValid) {
@@ -77,7 +77,7 @@ export default function VenuePosition({
       {!hasComponents && !isSelected && (
         <circle cx={cx} cy={cy} r={22}
                 fill="none"
-                stroke="#1e1e3c"
+                stroke="#28284e"
                 strokeWidth={1}
                 opacity={0.5}
                 className="pos-ring"
@@ -106,7 +106,7 @@ export default function VenuePosition({
 
       {/* Empty indicator */}
       {!hasComponents && (
-        <circle cx={cx} cy={cy} r={3} fill={isSelected ? '#00e5ff' : '#2a2a4a'} />
+        <circle cx={cx} cy={cy} r={3} fill={isSelected ? '#00e5ff' : '#38385e'} />
       )}
 
       {/* Short label above */}

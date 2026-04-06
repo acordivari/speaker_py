@@ -5,11 +5,11 @@ export default {
     extend: {
       colors: {
         venue: {
-          bg:       '#020209',
-          panel:    '#0d0d1a',
-          surface:  '#141428',
-          border:   '#1e1e3c',
-          muted:    '#2a2a4a',
+          bg:       '#0b0b18',
+          panel:    '#161626',
+          surface:  '#1e1e36',
+          border:   '#28284e',
+          muted:    '#38385e',
         },
         brand: {
           cyan:   '#00e5ff',

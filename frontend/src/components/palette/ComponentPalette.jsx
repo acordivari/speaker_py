@@ -64,7 +64,7 @@ export default function ComponentPalette({ isLoading }) {
               onClick={() => setType(opt.value)}
               className="text-[8px] font-mono px-1.5 py-0.5 rounded border transition-colors"
               style={{
-                borderColor: selectedType === opt.value ? '#00e5ff' : '#1e1e3c',
+                borderColor: selectedType === opt.value ? '#00e5ff' : '#28284e',
                 color:       selectedType === opt.value ? '#00e5ff' : '#4a4a6a',
                 background:  selectedType === opt.value ? '#00e5ff11' : 'transparent',
               }}
@@ -80,7 +80,7 @@ export default function ComponentPalette({ isLoading }) {
             onClick={() => setMfr(null)}
             className="text-[8px] font-mono px-1.5 py-0.5 rounded border transition-colors"
             style={{
-              borderColor: selectedMfr === null ? '#00e5ff' : '#1e1e3c',
+              borderColor: selectedMfr === null ? '#00e5ff' : '#28284e',
               color:       selectedMfr === null ? '#00e5ff' : '#4a4a6a',
             }}
           >
@@ -95,7 +95,7 @@ export default function ComponentPalette({ isLoading }) {
                 onClick={() => setMfr(active ? null : m.name)}
                 className="text-[8px] font-mono px-1.5 py-0.5 rounded border transition-colors"
                 style={{
-                  borderColor: active ? color : '#1e1e3c',
+                  borderColor: active ? color : '#28284e',
                   color:       active ? color : '#4a4a6a',
                   background:  active ? `${color}11` : 'transparent',
                 }}
