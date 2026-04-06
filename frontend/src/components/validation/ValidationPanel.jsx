@@ -4,10 +4,10 @@ import IssueCard from './IssueCard'
 function MetricRow({ label, value, unit, color }) {
   return (
     <div className="flex items-baseline justify-between py-0.5">
-      <span className="text-[9px] font-mono text-venue-muted">{label}</span>
+      <span className="text-[9px] font-mono text-slate-400">{label}</span>
       <span className="text-xs font-mono font-bold" style={{ color: color ?? '#e2e8f0' }}>
         {value}
-        {unit && <span className="text-[9px] font-normal text-venue-muted ml-1">{unit}</span>}
+        {unit && <span className="text-[9px] font-normal text-slate-200 ml-1">{unit}</span>}
       </span>
     </div>
   )
@@ -159,9 +159,9 @@ export default function ValidationPanel() {
                        className="flex items-center gap-2 text-[9px] font-mono py-0.5">
                     <div className="w-1.5 h-1.5 rounded-full flex-shrink-0"
                          style={{ backgroundColor: dot }} />
-                    <span className="text-slate-300 flex-1 truncate">{ch.label}</span>
+                    <span className="text-slate-200 flex-1 truncate">{ch.label}</span>
                     {ch.total_speaker_impedance_ohms != null && (
-                      <span className="text-venue-muted flex-shrink-0">
+                      <span className="text-slate-400 flex-shrink-0">
                         {ch.total_speaker_impedance_ohms.toFixed(1)}Ω
                       </span>
                     )}
@@ -195,7 +195,7 @@ export default function ValidationPanel() {
             {[...errors, ...warnings, ...infos].map((issue, i) => (
               <div key={i}>
                 {issue.channelLabel && (
-                  <div className="text-[8px] font-mono text-venue-muted mb-0.5 ml-1">
+                  <div className="text-[8px] font-mono text-slate-400 mb-0.5 ml-1">
                     {issue.channelLabel}
                   </div>
                 )}
@@ -207,10 +207,10 @@ export default function ValidationPanel() {
 
         {/* Empty state */}
         {!validationResult && !isValidating && (
-          <div className="flex flex-col items-center justify-center h-48 text-venue-muted font-mono text-xs text-center px-6 gap-3">
+          <div className="flex flex-col items-center justify-center h-48 text-slate-400 font-mono text-xs text-center px-6 gap-3">
             <div className="text-3xl opacity-20">⚡</div>
             <div>
-              <div className="font-bold mb-1">No configuration yet</div>
+              <div className="font-bold mb-1 text-slate-200">No configuration yet</div>
               <div className="text-[10px] text-slate-400 leading-relaxed">
                 Drag components from the library into the channel slots below the venue map.
                 Validation runs automatically.

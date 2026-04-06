@@ -54,13 +54,13 @@ export default function DraggableCard({ component }) {
             >
               {component.model_number}
             </span>
-            <span className="text-[9px] font-mono text-venue-muted flex-shrink-0">
+            <span className="text-[9px] font-mono text-slate-400 flex-shrink-0">
               {icon}
             </span>
           </div>
 
           {/* Manufacturer */}
-          <div className="text-[9px] text-venue-muted font-mono truncate">
+          <div className="text-[9px] text-slate-400 font-mono truncate">
             {component.manufacturer_name}
           </div>
 
@@ -78,13 +78,13 @@ export default function DraggableCard({ component }) {
             )}
 
             {!isActive && component.nominal_impedance_ohms && (
-              <span className="text-[8px] font-mono text-venue-muted">
+              <span className="text-[8px] font-mono text-slate-400">
                 {component.nominal_impedance_ohms}Ω
               </span>
             )}
 
             {component.power_handling_rms_watts && (
-              <span className="text-[8px] font-mono text-venue-muted">
+              <span className="text-[8px] font-mono text-slate-400">
                 {component.power_handling_rms_watts}W
               </span>
             )}

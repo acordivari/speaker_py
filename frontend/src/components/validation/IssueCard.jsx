@@ -24,8 +24,8 @@ export default function IssueCard({ issue }) {
         onClick={() => setExpanded(e => !e)}
       >
         <span className={style.badge}>{style.icon} {issue.severity.toUpperCase()}</span>
-        <span className="flex-1 text-slate-300 leading-snug">{issue.message}</span>
-        <span className="flex-shrink-0 text-venue-muted mt-0.5">
+        <span className="flex-1 text-slate-200 leading-snug">{issue.message}</span>
+        <span className="flex-shrink-0 text-slate-400 mt-0.5">
           {expanded ? '▲' : '▼'}
         </span>
       </button>
@@ -38,7 +38,7 @@ export default function IssueCard({ issue }) {
             <div className="text-[9px] uppercase tracking-widest text-venue-muted mb-1">
               Why this matters
             </div>
-            <p className="text-slate-400 text-[10px] leading-relaxed whitespace-pre-line">
+            <p className="text-slate-300 text-[10px] leading-relaxed whitespace-pre-line">
               {issue.educational_explanation}
             </p>
           </div>
@@ -50,7 +50,7 @@ export default function IssueCard({ issue }) {
               {issue.recommendation}
             </p>
           </div>
-          <div className="text-[9px] text-venue-muted opacity-50">
+          <div className="text-[9px] text-slate-500">
             Code: {issue.code}
           </div>
         </div>

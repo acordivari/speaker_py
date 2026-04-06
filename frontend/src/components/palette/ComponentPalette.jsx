@@ -111,13 +111,13 @@ export default function ComponentPalette({ isLoading }) {
       {/* Component list */}
       <div className="flex-1 overflow-y-auto px-2 py-2 space-y-1.5">
         {isLoading && (
-          <div className="text-center text-venue-muted text-xs font-mono py-8 animate-pulse">
+          <div className="text-center text-slate-400 text-xs font-mono py-8 animate-pulse">
             Loading components…
           </div>
         )}
 
         {!isLoading && filtered.length === 0 && (
-          <div className="text-center text-venue-muted text-xs font-mono py-8">
+          <div className="text-center text-slate-400 text-xs font-mono py-8">
             No components match.
           </div>
         )}
@@ -129,7 +129,7 @@ export default function ComponentPalette({ isLoading }) {
 
       {/* Footer count */}
       <div className="px-3 py-1.5 border-t border-venue-border flex-shrink-0">
-        <span className="text-[9px] font-mono text-venue-muted">
+        <span className="text-[9px] font-mono text-slate-400">
           {filtered.length} / {components.length} components · drag to channel slots ↓
         </span>
       </div>

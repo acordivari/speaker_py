@@ -35,12 +35,12 @@ export default function Header() {
       {/* Logo / title */}
       <div className="flex items-center gap-3">
         <div className="flex flex-col">
-          <span className="text-xs text-venue-muted font-mono uppercase tracking-widest">
+          <span className="text-xs font-mono uppercase tracking-widest" style={{ color: '#ff8c00' }}>
             Sound Design Lab
           </span>
           <span className="text-sm font-bold tracking-wide text-white">
             Mission Ballroom
-            <span className="text-venue-muted font-normal text-xs ml-2">Denver, CO</span>
+            <span className="font-normal text-xs ml-2" style={{ color: '#ff8c00' }}>Denver, CO</span>
           </span>
         </div>
       </div>

@@ -86,7 +86,7 @@ export default function DroppableSlot({
           >
             {component.model_number}
           </span>
-          <span className="text-[9px] font-mono text-venue-muted truncate hidden sm:block">
+          <span className="text-[9px] font-mono text-slate-400 truncate hidden sm:block">
             {component.manufacturer_name}
           </span>
 
