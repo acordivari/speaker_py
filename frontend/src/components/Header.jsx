@@ -10,7 +10,7 @@ const MANUFACTURER_COLORS = {
   'Lab.gruppen':       '#c0392b',
 }
 
-export default function Header({ soundcheckInfo, onSoundcheck }) {
+export default function Header({ soundcheckInfo, onSoundcheck, onGlossary }) {
   const validationResult = useStore(s => s.validationResult)
   const isValidating     = useStore(s => s.isValidating)
   const resetAll         = useStore(s => s.resetAll)
@@ -116,10 +116,22 @@ export default function Header({ soundcheckInfo, onSoundcheck }) {
         </button>
 
         <button
+          onClick={onGlossary}
+          className="text-xs font-mono px-3 py-1 rounded border transition-colors duration-200"
+          style={{ borderColor: '#ff8c0066', color: '#ff8c00' }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = '#ff8c00'; e.currentTarget.style.background = '#ff8c0011' }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = '#ff8c0066'; e.currentTarget.style.background = 'transparent' }}
+          title="Open electrical engineering glossary"
+        >
+          ⌁ REFERENCE
+        </button>
+
+        <button
           onClick={resetAll}
-          className="text-xs font-mono px-3 py-1 rounded border border-venue-border
-                     text-venue-muted hover:border-brand-red hover:text-brand-red
-                     transition-colors duration-200"
+          className="text-xs font-mono px-3 py-1 rounded border transition-colors duration-200"
+          style={{ borderColor: '#ff8c0066', color: '#ff8c00' }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = '#ff8c00'; e.currentTarget.style.background = '#ff8c0011' }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = '#ff8c0066'; e.currentTarget.style.background = 'transparent' }}
         >
           RESET
         </button>

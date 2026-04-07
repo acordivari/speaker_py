@@ -16,6 +16,7 @@ import ChannelEditor from './components/channel/ChannelEditor'
 import ValidationPanel from './components/validation/ValidationPanel'
 import DragGhostCard from './components/palette/DragGhostCard'
 import SoundcheckModal from './components/soundcheck/SoundcheckModal'
+import GlossaryModal from './components/glossary/GlossaryModal'
 import { fetchSoundcheckInfo } from './services/api'
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
   const [activeItem,      setActiveItem]      = useState(null)
   const [soundcheckOpen,  setSoundcheckOpen]  = useState(false)
   const [soundcheckInfo,  setSoundcheckInfo]  = useState({ available: false })
+  const [glossaryOpen,    setGlossaryOpen]    = useState(false)
 
   // Debounced auto-validate on any channel change
   const validateTimer = useRef(null)
@@ -98,6 +100,7 @@ export default function App() {
         <Header
           soundcheckInfo={soundcheckInfo}
           onSoundcheck={() => setSoundcheckOpen(true)}
+          onGlossary={() => setGlossaryOpen(true)}
         />
 
         <div className="flex flex-1 overflow-hidden gap-3 p-3 pt-0">
@@ -133,6 +136,10 @@ export default function App() {
           channels={channels}
           soundcheckInfo={soundcheckInfo}
         />
+      )}
+
+      {glossaryOpen && (
+        <GlossaryModal onClose={() => setGlossaryOpen(false)} />
       )}
     </DndContext>
   )
