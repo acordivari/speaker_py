@@ -549,23 +549,43 @@ export default function GlossaryModal({ onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
       style={{ background: '#000000cc', backdropFilter: 'blur(4px)' }}
       onClick={e => e.target === e.currentTarget && onClose()}
     >
       <div
-        className="relative flex flex-col rounded-xl border overflow-hidden"
+        className="relative flex flex-col overflow-hidden
+                   w-full sm:rounded-xl sm:border"
         style={{
-          width:     'min(96vw, 1100px)',
-          height:    'min(94vh, 820px)',
-          background: '#0f0f20',
+          /* Full-screen on mobile, constrained on desktop */
+          height:      '100dvh',
+          maxHeight:   '100dvh',
+          background:  '#0f0f20',
           borderColor: '#3c3c68',
           boxShadow:   '0 0 60px #00e5ff14, 0 24px 80px #00000088',
         }}
+        // Override to constrained modal on sm+
+        {...{}}
       >
-        {/* ── Header ────────────────────────────────────────────────────── */}
+        <style>{`
+          @media (min-width: 640px) {
+            .glossary-inner {
+              width: min(96vw, 1100px) !important;
+              height: min(94vh, 820px) !important;
+              border-radius: 0.75rem !important;
+            }
+          }
+        `}</style>
         <div
-          className="flex items-center justify-between px-5 py-3 border-b flex-shrink-0"
+          className="glossary-inner relative flex flex-col overflow-hidden w-full h-full"
+          style={{
+            background:  '#0f0f20',
+            borderColor: '#3c3c68',
+          }}
+        >
+        {/* ── Header ────────────────────────────────────────────────── */}
+        <div
+          className="flex items-center justify-between px-4 py-3 border-b flex-shrink-0"
           style={{ borderColor: '#28284e' }}
         >
           <div>
@@ -573,46 +593,76 @@ export default function GlossaryModal({ onClose }) {
               Sound Design Lab · Reference
             </div>
             <div className="text-sm font-bold text-white font-mono tracking-wide">
-              Electrical Engineering Glossary
+              Glossary
               <span className="text-xs font-normal ml-2 font-mono" style={{ color: '#7070a8' }}>
                 {GLOSSARY.length} terms
               </span>
             </div>
           </div>
 
-          {/* Search */}
-          <div className="hidden sm:flex items-center">
-            <input
-              type="text"
-              placeholder="Search terms…"
-              value={search}
-              onChange={e => { setSearch(e.target.value); setActiveCategory('All Terms') }}
-              className="text-xs font-mono px-3 py-1.5 rounded border outline-none w-48"
-              style={{
-                background:  '#161626',
-                borderColor: '#3c3c68',
-                color:       '#e0e0f0',
-              }}
-              onFocus={e  => { e.target.style.borderColor = C.cyan }}
-              onBlur={e   => { e.target.style.borderColor = '#3c3c68' }}
-            />
-          </div>
+          {/* Search — always visible */}
+          <input
+            type="search"
+            placeholder="Search…"
+            value={search}
+            onChange={e => { setSearch(e.target.value); setActiveCategory('All Terms') }}
+            className="text-xs font-mono px-3 py-1.5 rounded border outline-none mx-3 flex-1 max-w-[200px]"
+            style={{
+              background:  '#161626',
+              borderColor: '#3c3c68',
+              color:       '#e0e0f0',
+            }}
+            onFocus={e => { e.target.style.borderColor = C.cyan }}
+            onBlur={e  => { e.target.style.borderColor = '#3c3c68' }}
+          />
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded flex items-center justify-center text-slate-400
-                       hover:text-white hover:bg-white/10 transition-colors font-mono text-lg"
+            aria-label="Close glossary"
+            className="w-9 h-9 rounded flex items-center justify-center text-slate-400
+                       hover:text-white hover:bg-white/10 transition-colors font-mono text-lg
+                       flex-shrink-0 touch-target-lg"
           >
             ×
           </button>
         </div>
 
-        {/* ── Body ──────────────────────────────────────────────────────── */}
+        {/* ── Mobile category pills ──────────────────────────────────── */}
+        <div
+          className="flex sm:hidden overflow-x-auto gap-2 px-3 py-2 flex-shrink-0 scrollbar-none border-b"
+          style={{ borderColor: '#1e1e36' }}
+          role="tablist"
+          aria-label="Filter by category"
+        >
+          {CATEGORIES.map(cat => {
+            const active = activeCategory === cat.name && !search
+            return (
+              <button
+                key={cat.name}
+                role="tab"
+                aria-selected={active}
+                onClick={() => { setActiveCategory(cat.name); setSearch('') }}
+                className="flex-shrink-0 text-[10px] font-mono px-2.5 py-1.5 rounded-full
+                           border transition-colors whitespace-nowrap"
+                style={{
+                  borderColor: active ? cat.color : '#3c3c68',
+                  color:       active ? cat.color : '#7070a8',
+                  background:  active ? cat.color + '18' : 'transparent',
+                }}
+              >
+                {cat.icon} {cat.name === 'All Terms' ? 'All' : cat.name.split(' ')[0]}
+              </button>
+            )
+          })}
+        </div>
+
+        {/* ── Body ──────────────────────────────────────────────────── */}
         <div className="flex flex-1 overflow-hidden">
-          {/* Sidebar */}
+          {/* Sidebar — desktop only */}
           <nav
-            className="w-52 flex-shrink-0 border-r flex flex-col overflow-y-auto py-2"
+            className="hidden sm:flex w-52 flex-shrink-0 border-r flex-col overflow-y-auto py-2"
             style={{ borderColor: '#28284e', background: '#0b0b18' }}
+            aria-label="Category navigation"
           >
             {CATEGORIES.map(cat => {
               const count  = cat.name === 'All Terms'
@@ -631,7 +681,7 @@ export default function GlossaryModal({ onClose }) {
                     color:       active ? cat.color : '#7070a8',
                   }}
                 >
-                  <span className="text-base leading-none w-4 flex-shrink-0">{cat.icon}</span>
+                  <span className="text-base leading-none w-4 flex-shrink-0" aria-hidden="true">{cat.icon}</span>
                   <span className="text-[11px] font-mono flex-1">{cat.name}</span>
                   <span
                     className="text-[9px] font-mono rounded px-1"
@@ -646,7 +696,7 @@ export default function GlossaryModal({ onClose }) {
               )
             })}
 
-            {/* Rule callouts */}
+            {/* Quick Rules callout */}
             <div className="mt-4 mx-3 border-t pt-3" style={{ borderColor: '#1e1e36' }}>
               <div className="text-[8px] font-mono uppercase tracking-widest mb-2" style={{ color: '#4a4a6a' }}>
                 Quick Rules
@@ -666,7 +716,7 @@ export default function GlossaryModal({ onClose }) {
           </nav>
 
           {/* Term list */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+          <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3">
             {filtered.length === 0 && (
               <div className="flex items-center justify-center h-full">
                 <div className="text-center">
@@ -677,8 +727,8 @@ export default function GlossaryModal({ onClose }) {
             )}
 
             {filtered.map(entry => {
-              const color      = categoryColor(entry.category)
-              const eli5Open   = expandedEli5[entry.id] !== false  // default open
+              const color         = categoryColor(entry.category)
+              const eli5Open      = expandedEli5[entry.id] !== false
               const isDefaultOpen = expandedEli5[entry.id] === undefined
 
               return (
@@ -725,11 +775,16 @@ export default function GlossaryModal({ onClose }) {
                   <div className="px-4 pb-3">
                     <button
                       onClick={() => toggleEli5(entry.id)}
-                      className="flex items-center gap-2 text-[9px] font-mono uppercase tracking-widest mb-1.5 transition-colors"
-                      style={{ color: (isDefaultOpen || eli5Open) ? C.amber : '#4a4a6a' }}
+                      aria-expanded={isDefaultOpen || eli5Open}
+                      className="flex items-center gap-2 text-[9px] font-mono uppercase
+                                 tracking-widest mb-1.5 transition-colors touch-target"
+                      style={{
+                        color: (isDefaultOpen || eli5Open) ? C.amber : '#4a4a6a',
+                        minHeight: '32px',
+                      }}
                     >
-                      <span>{(isDefaultOpen || eli5Open) ? '▾' : '▸'}</span>
-                      Explain Like I'm 5
+                      <span aria-hidden="true">{(isDefaultOpen || eli5Open) ? '▾' : '▸'}</span>
+                      Explain Like I&apos;m 5
                     </button>
 
                     {(isDefaultOpen || eli5Open) && (
@@ -765,7 +820,8 @@ export default function GlossaryModal({ onClose }) {
                               setSearch('')
                               setTimeout(() => scrollToTerm(ref), 50)
                             }}
-                            className="text-[9px] font-mono px-1.5 py-0.5 rounded border transition-colors"
+                            className="text-[9px] font-mono px-1.5 py-1 rounded border
+                                       transition-colors touch-target"
                             style={{ color: refColor, borderColor: refColor + '44', background: refColor + '0d' }}
                           >
                             {target.term}
@@ -780,17 +836,22 @@ export default function GlossaryModal({ onClose }) {
           </div>
         </div>
 
-        {/* ── Footer ────────────────────────────────────────────────────── */}
+        {/* ── Footer ────────────────────────────────────────────────── */}
         <div
-          className="px-5 py-2 border-t flex items-center justify-between flex-shrink-0"
-          style={{ borderColor: '#1e1e36', background: '#0b0b18' }}
+          className="px-4 py-2 border-t flex items-center justify-between flex-shrink-0"
+          style={{
+            borderColor: '#1e1e36',
+            background:  '#0b0b18',
+            paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
+          }}
         >
           <span className="text-[9px] font-mono" style={{ color: '#3c3c68' }}>
-            {filtered.length} of {GLOSSARY.length} terms shown
+            {filtered.length} of {GLOSSARY.length} terms
           </span>
-          <span className="text-[9px] font-mono" style={{ color: '#3c3c68' }}>
+          <span className="hidden sm:block text-[9px] font-mono" style={{ color: '#3c3c68' }}>
             Press <kbd className="px-1 rounded" style={{ background: '#1e1e36', color: '#7070a8' }}>Esc</kbd> to close
           </span>
+        </div>
         </div>
       </div>
     </div>

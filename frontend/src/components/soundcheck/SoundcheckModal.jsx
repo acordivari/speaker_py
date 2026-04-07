@@ -264,14 +264,28 @@ export default function SoundcheckModal({ onClose, channels, soundcheckInfo }) {
       onClick={e => e.target === e.currentTarget && onClose()}
     >
       <div
-        className="relative flex flex-col rounded-xl border overflow-hidden"
+        className="relative flex flex-col overflow-hidden
+                   w-full sm:rounded-xl sm:border sm:max-h-[90vh]"
         style={{
-          width: 'min(92vw, 900px)',
-          maxHeight: '90vh',
+          height:     '100dvh',
+          maxHeight:  '100dvh',
           background: '#0f0f20',
           borderColor: '#3c3c68',
           boxShadow: `0 0 60px #00e5ff18, 0 24px 80px #00000088`,
         }}
+      >
+        <style>{`
+          @media (min-width: 640px) {
+            .soundcheck-inner {
+              width: min(92vw, 900px) !important;
+              height: auto !important;
+              max-height: 90vh !important;
+              border-radius: 0.75rem !important;
+            }
+          }
+        `}</style>
+        <div className="soundcheck-inner w-full h-full flex flex-col overflow-hidden"
+             style={{ background: '#0f0f20' }}
       >
         {/* ── Header bar ─────────────────────────────────────────────── */}
         <div className="flex items-center justify-between px-5 py-3 border-b"
@@ -302,36 +316,39 @@ export default function SoundcheckModal({ onClose, channels, soundcheckInfo }) {
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded flex items-center justify-center text-slate-400
-                       hover:text-white hover:bg-white/10 transition-colors font-mono text-lg"
+            aria-label="Close soundcheck"
+            className="w-10 h-10 rounded flex items-center justify-center text-slate-400
+                       hover:text-white hover:bg-white/10 transition-colors font-mono text-lg
+                       flex-shrink-0 touch-target-lg"
           >
             ×
           </button>
         </div>
 
-        {/* ── Visualizers ────────────────────────────────────────────── */}
-        <div className="flex gap-2 p-3 flex-1 min-h-0" style={{ minHeight: '260px' }}>
+        {/* ── Visualizers — side-by-side on sm+, stacked on mobile ──── */}
+        <div className="flex flex-col sm:flex-row gap-2 p-3 flex-1 min-h-0"
+             style={{ minHeight: '220px' }}>
           {/* Oscilloscope */}
-          <div className="flex-1 flex flex-col gap-1 min-w-0">
+          <div className="flex-1 flex flex-col gap-1 min-w-0 min-h-0">
             <div className="text-[8px] font-mono uppercase tracking-widest text-venue-muted">
               Oscilloscope · time domain
             </div>
             <canvas
               ref={oscRef}
               className="flex-1 w-full rounded"
-              style={{ background: '#0b0b18', border: '1px solid #1e1e36', minHeight: '140px' }}
+              style={{ background: '#0b0b18', border: '1px solid #1e1e36', minHeight: '100px' }}
             />
           </div>
 
           {/* Spectrum */}
-          <div className="flex-1 flex flex-col gap-1 min-w-0">
+          <div className="flex-1 flex flex-col gap-1 min-w-0 min-h-0">
             <div className="text-[8px] font-mono uppercase tracking-widest text-venue-muted">
               Spectrum analyzer · frequency domain
             </div>
             <canvas
               ref={specRef}
               className="flex-1 w-full rounded"
-              style={{ background: '#0b0b18', border: '1px solid #1e1e36', minHeight: '140px' }}
+              style={{ background: '#0b0b18', border: '1px solid #1e1e36', minHeight: '100px' }}
             />
           </div>
         </div>
@@ -413,7 +430,11 @@ export default function SoundcheckModal({ onClose, channels, soundcheckInfo }) {
               and restart the backend.
             </div>
           )}
+
+          {/* Safe-area spacer for notched phones */}
+          <div style={{ height: 'env(safe-area-inset-bottom, 0px)' }} />
         </div>
+      </div>  {/* .soundcheck-inner */}
       </div>
     </div>
   )

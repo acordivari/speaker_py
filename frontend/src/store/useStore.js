@@ -154,6 +154,9 @@ const useStore = create((set, get) => ({
   activeManufacturerId: null,
   activeTypeFilter: null,
 
+  // ── Mobile tap-to-assign ───────────────────────────────────────────────────
+  tapSelectedComponent: null,
+
   // ── Actions ───────────────────────────────────────────────────────────────
 
   loadData: async () => {
@@ -285,6 +288,9 @@ const useStore = create((set, get) => ({
 
   setManufacturerFilter: (id) => set({ activeManufacturerId: id }),
   setTypeFilter: (type) => set({ activeTypeFilter: type }),
+
+  setTapSelected:  (component) => set({ tapSelectedComponent: component }),
+  clearTapSelected: ()          => set({ tapSelectedComponent: null }),
 
   // ── Validation ────────────────────────────────────────────────────────────
   validate: async () => {

@@ -1,5 +1,7 @@
 import { useDraggable } from '@dnd-kit/core'
 import { getMfrColor, TYPE_ICON } from '../venue/venueConfig'
+import useStore from '../../store/useStore'
+import { useIsMobile } from '../../hooks/useIsMobile'
 
 const TYPE_LABELS = {
   line_array: 'LINE ARRAY',
@@ -17,25 +19,62 @@ export default function DraggableCard({ component }) {
     data: { component },
   })
 
+  const tapSelected     = useStore(s => s.tapSelectedComponent)
+  const setTapSelected  = useStore(s => s.setTapSelected)
+  const clearTapSelected = useStore(s => s.clearTapSelected)
+  const isMobile        = useIsMobile()
+
+  const isSelected  = tapSelected?.id === component.id
   const accentColor = getMfrColor(component.manufacturer_name)
   const typeLabel   = TYPE_LABELS[component.component_type] ?? component.component_type.toUpperCase()
   const icon        = TYPE_ICON[component.component_type] ?? '◉'
   const isActive    = component.power_type === 'active'
 
+  function handleTap() {
+    if (!isMobile) return
+    if (isSelected) {
+      clearTapSelected()
+    } else {
+      setTapSelected(component)
+    }
+  }
+
+  // On mobile: plain button-like tap. On desktop: drag via dnd-kit listeners.
+  const interactionProps = isMobile
+    ? { onClick: handleTap }
+    : { ...listeners, ...attributes }
+
   return (
     <div
       ref={setNodeRef}
-      {...listeners}
-      {...attributes}
+      {...interactionProps}
+      role={isMobile ? 'button' : undefined}
+      aria-label={isMobile ? `Select ${component.model_number} to assign` : undefined}
+      aria-pressed={isMobile ? isSelected : undefined}
+      tabIndex={0}
       className="select-none rounded border transition-all duration-150"
       style={{
         opacity:     isDragging ? 0.3 : 1,
-        cursor:      isDragging ? 'grabbing' : 'grab',
-        borderColor: isDragging ? accentColor : '#3c3c68',
-        background:  isDragging
-          ? `${accentColor}10`
-          : 'linear-gradient(135deg, #161626 0%, #1e1e36 100%)',
+        cursor:      isMobile ? 'pointer' : isDragging ? 'grabbing' : 'grab',
+        borderColor: isSelected
+          ? accentColor
+          : isDragging
+            ? accentColor
+            : '#3c3c68',
+        background: isSelected
+          ? `${accentColor}18`
+          : isDragging
+            ? `${accentColor}10`
+            : 'linear-gradient(135deg, #161626 0%, #1e1e36 100%)',
         transform:   isDragging ? 'scale(0.97)' : 'scale(1)',
+        boxShadow:   isSelected ? `0 0 0 1px ${accentColor}, 0 0 16px ${accentColor}33` : 'none',
+      }}
+      // Allow keyboard activation (Enter/Space) for accessibility
+      onKeyDown={e => {
+        if (isMobile && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault()
+          handleTap()
+        }
       }}
     >
       {/* Left accent bar */}
@@ -46,7 +85,7 @@ export default function DraggableCard({ component }) {
         />
 
         <div className="flex-1 min-w-0">
-          {/* Model number */}
+          {/* Model number + selected badge */}
           <div className="flex items-center justify-between gap-1">
             <span
               className="text-xs font-bold font-mono truncate"
@@ -54,9 +93,17 @@ export default function DraggableCard({ component }) {
             >
               {component.model_number}
             </span>
-            <span className="text-[9px] font-mono text-slate-400 flex-shrink-0">
-              {icon}
-            </span>
+            <div className="flex items-center gap-1 flex-shrink-0">
+              {isSelected && (
+                <span
+                  className="text-[8px] font-mono px-1 rounded"
+                  style={{ color: accentColor, background: accentColor + '22', border: `1px solid ${accentColor}44` }}
+                >
+                  SELECTED
+                </span>
+              )}
+              <span className="text-[9px] font-mono text-slate-400">{icon}</span>
+            </div>
           </div>
 
           {/* Manufacturer */}

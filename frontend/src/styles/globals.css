@@ -14,6 +14,20 @@
     background-color: #0b0b18;
     color: #e2e8f0;
     font-family: 'JetBrains Mono', Consolas, monospace;
+    /* Prevent iOS bounce / overscroll on the root */
+    overscroll-behavior: none;
+  }
+
+  /* WCAG 2.4.11 — Focus visible ring on keyboard navigation */
+  :focus-visible {
+    outline: 2px solid #00e5ff;
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  /* Remove focus outline for mouse/touch (only show for keyboard) */
+  :focus:not(:focus-visible) {
+    outline: none;
   }
 
   ::-webkit-scrollbar {
@@ -50,6 +64,42 @@
   .glow-green  { box-shadow: 0 0 12px #00ff8844, 0 0 24px #00ff8822; }
   .glow-red    { box-shadow: 0 0 12px #ff3d0044, 0 0 24px #ff3d0022; }
   .glow-amber  { box-shadow: 0 0 12px #ffb30044, 0 0 24px #ffb30022; }
+}
+
+/* ── Mobile / touch utilities ────────────────────────────────────────────────
+
+   WCAG 2.5.8 — minimum touch target 24×24 CSS px.
+   We target (pointer: coarse) so desktop mouses are unaffected.
+   Primary action buttons get 44px (Apple / Google HIG recommendation).
+   Small incidental controls (count steppers, filter pills) get 32px min.        */
+
+@media (pointer: coarse) {
+  /* Primary action buttons in header, modals, channel editor */
+  .touch-target-lg {
+    min-height: 44px;
+    min-width:  44px;
+  }
+
+  /* Count steppers, remove buttons, filter pills */
+  .touch-target {
+    min-height: 32px;
+    min-width:  32px;
+  }
+
+  /* Increase tap area of tiny pill filters without changing visual size */
+  .filter-pill {
+    padding-top:    6px;
+    padding-bottom: 6px;
+  }
+}
+
+/* Hide scrollbar visually but keep scrollable (all pointer types) */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width:    none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
 
 /* Drag-overlay card shimmer */

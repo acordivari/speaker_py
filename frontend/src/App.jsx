@@ -17,6 +17,7 @@ import ValidationPanel from './components/validation/ValidationPanel'
 import DragGhostCard from './components/palette/DragGhostCard'
 import SoundcheckModal from './components/soundcheck/SoundcheckModal'
 import GlossaryModal from './components/glossary/GlossaryModal'
+import MobileNavBar from './components/layout/MobileNavBar'
 import { fetchSoundcheckInfo } from './services/api'
 
 export default function App() {
@@ -27,11 +28,14 @@ export default function App() {
   const channels      = useStore(s => s.channels)
   const isLoadingData = useStore(s => s.isLoadingData)
   const dataError     = useStore(s => s.dataError)
+  const tapSelected   = useStore(s => s.tapSelectedComponent)
+  const clearTapSelected = useStore(s => s.clearTapSelected)
 
-  const [activeItem,      setActiveItem]      = useState(null)
-  const [soundcheckOpen,  setSoundcheckOpen]  = useState(false)
-  const [soundcheckInfo,  setSoundcheckInfo]  = useState({ available: false })
-  const [glossaryOpen,    setGlossaryOpen]    = useState(false)
+  const [activeItem,     setActiveItem]     = useState(null)
+  const [soundcheckOpen, setSoundcheckOpen] = useState(false)
+  const [soundcheckInfo, setSoundcheckInfo] = useState({ available: false })
+  const [glossaryOpen,   setGlossaryOpen]   = useState(false)
+  const [mobileTab,      setMobileTab]      = useState('library')
 
   // Debounced auto-validate on any channel change
   const validateTimer = useRef(null)
@@ -45,6 +49,15 @@ export default function App() {
   useEffect(() => {
     fetchSoundcheckInfo().then(setSoundcheckInfo).catch(() => {})
   }, [])
+
+  // When user picks a component on mobile, auto-navigate to Channels tab
+  const prevTapSelected = useRef(null)
+  useEffect(() => {
+    if (tapSelected && !prevTapSelected.current) {
+      setMobileTab('channels')
+    }
+    prevTapSelected.current = tapSelected
+  }, [tapSelected])
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } })
@@ -103,13 +116,12 @@ export default function App() {
           onGlossary={() => setGlossaryOpen(true)}
         />
 
-        <div className="flex flex-1 overflow-hidden gap-3 p-3 pt-0">
-          {/* Left: Component Palette */}
+        {/* ── Desktop layout (md+) ── unchanged 3-column ─────────────────── */}
+        <div className="hidden md:flex flex-1 overflow-hidden gap-3 p-3 pt-0">
           <aside className="w-72 flex-shrink-0 overflow-hidden flex flex-col">
             <ComponentPalette isLoading={isLoadingData} />
           </aside>
 
-          {/* Center: Venue map + Channel editor */}
           <main className="flex-1 flex flex-col gap-3 min-w-0 overflow-hidden">
             <div className="flex-1 min-h-0">
               <VenueLayout />
@@ -119,10 +131,57 @@ export default function App() {
             </div>
           </main>
 
-          {/* Right: Validation + Education */}
           <aside className="w-80 flex-shrink-0 overflow-hidden flex flex-col">
             <ValidationPanel />
           </aside>
+        </div>
+
+        {/* ── Mobile layout (<md) ── single-panel + bottom nav ───────────── */}
+        <div className="flex md:hidden flex-col flex-1 overflow-hidden">
+
+          {/* Tap-assign banner — shown when a component is held */}
+          {tapSelected && (
+            <div
+              className="flex items-center justify-between px-3 py-2 flex-shrink-0"
+              style={{ background: '#00e5ff14', borderBottom: '1px solid #00e5ff44' }}
+            >
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="text-[10px] font-mono" style={{ color: '#00e5ff' }}>▶</span>
+                <span className="text-[10px] font-mono font-bold truncate" style={{ color: '#00e5ff' }}>
+                  {tapSelected.model_number}
+                </span>
+                <span className="text-[10px] font-mono" style={{ color: '#7070a8' }}>
+                  — tap a slot to assign
+                </span>
+              </div>
+              <button
+                onClick={clearTapSelected}
+                aria-label="Cancel selection"
+                className="flex-shrink-0 text-[10px] font-mono px-2 py-1 rounded ml-2 touch-target"
+                style={{ color: '#7070a8', border: '1px solid #3c3c68' }}
+              >
+                × cancel
+              </button>
+            </div>
+          )}
+
+          {/* Panel area — all panels rendered, only active one visible */}
+          <div className="flex-1 overflow-hidden relative p-2">
+            <div className={mobileTab === 'library'  ? 'h-full' : 'hidden'}>
+              <ComponentPalette isLoading={isLoadingData} />
+            </div>
+            <div className={mobileTab === 'venue'    ? 'h-full' : 'hidden'}>
+              <VenueLayout />
+            </div>
+            <div className={mobileTab === 'channels' ? 'h-full' : 'hidden'}>
+              <ChannelEditor />
+            </div>
+            <div className={mobileTab === 'results'  ? 'h-full' : 'hidden'}>
+              <ValidationPanel />
+            </div>
+          </div>
+
+          <MobileNavBar tab={mobileTab} setTab={setMobileTab} />
         </div>
       </div>
 
