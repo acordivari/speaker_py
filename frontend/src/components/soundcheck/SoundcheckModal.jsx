@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
+import { useIsMobile } from '../../hooks/useIsMobile'
 
 const FFT_SIZE = 2048
 const CYAN    = '#00e5ff'
@@ -105,6 +106,8 @@ function drawSpectrum(canvas, analyser, freqBuf) {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function SoundcheckModal({ onClose, channels, soundcheckInfo }) {
+  const isMobile = useIsMobile()
+
   const [status,      setStatus]      = useState('idle')   // idle | loading | ready | playing | paused | error
   const [errMsg,      setErrMsg]      = useState('')
   const [currentTime, setCurrentTime] = useState(0)
@@ -264,28 +267,17 @@ export default function SoundcheckModal({ onClose, channels, soundcheckInfo }) {
       onClick={e => e.target === e.currentTarget && onClose()}
     >
       <div
-        className="relative flex flex-col overflow-hidden
-                   w-full sm:rounded-xl sm:border sm:max-h-[90vh]"
+        className="relative flex flex-col overflow-hidden"
         style={{
-          height:     '100dvh',
-          maxHeight:  '100dvh',
-          background: '#0f0f20',
-          borderColor: '#3c3c68',
-          boxShadow: `0 0 60px #00e5ff18, 0 24px 80px #00000088`,
+          // Mobile: full-screen. Desktop: centred modal (original dimensions).
+          width:        isMobile ? '100vw'        : 'min(92vw, 900px)',
+          height:       isMobile ? '100dvh'       : 'auto',
+          maxHeight:    isMobile ? '100dvh'       : '90vh',
+          borderRadius: isMobile ? '0'            : '0.75rem',
+          border:       isMobile ? 'none'         : '1px solid #3c3c68',
+          background:   '#0f0f20',
+          boxShadow:    isMobile ? 'none' : '0 0 60px #00e5ff18, 0 24px 80px #00000088',
         }}
-      >
-        <style>{`
-          @media (min-width: 640px) {
-            .soundcheck-inner {
-              width: min(92vw, 900px) !important;
-              height: auto !important;
-              max-height: 90vh !important;
-              border-radius: 0.75rem !important;
-            }
-          }
-        `}</style>
-        <div className="soundcheck-inner w-full h-full flex flex-col overflow-hidden"
-             style={{ background: '#0f0f20' }}
       >
         {/* ── Header bar ─────────────────────────────────────────────── */}
         <div className="flex items-center justify-between px-5 py-3 border-b"
@@ -434,7 +426,6 @@ export default function SoundcheckModal({ onClose, channels, soundcheckInfo }) {
           {/* Safe-area spacer for notched phones */}
           <div style={{ height: 'env(safe-area-inset-bottom, 0px)' }} />
         </div>
-      </div>  {/* .soundcheck-inner */}
       </div>
     </div>
   )

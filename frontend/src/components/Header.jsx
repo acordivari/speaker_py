@@ -170,7 +170,7 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary }) {
       </div>
 
       {/* ── Mobile: status dot + overflow menu ─────────────────────────── */}
-      <div className="flex md:hidden items-center gap-3" ref={menuRef}>
+      <div className="flex md:hidden items-center gap-3 relative" ref={menuRef}>
         {/* Status dot */}
         <div className="flex items-center gap-1.5">
           <div
@@ -208,7 +208,7 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary }) {
         {mobileMenuOpen && (
           <div
             role="menu"
-            className="absolute top-14 right-3 z-40 rounded-lg border overflow-hidden shadow-2xl"
+            className="absolute top-full right-0 mt-1 z-40 rounded-lg border overflow-hidden shadow-2xl"
             style={{
               background:   '#161626',
               borderColor:  '#3c3c68',

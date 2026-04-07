@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
+import { useIsMobile } from '../../hooks/useIsMobile'
 
 // ── Palette (matches app-wide tokens) ────────────────────────────────────────
 const C = {
@@ -515,6 +516,8 @@ function categoryColor(name) {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function GlossaryModal({ onClose }) {
+  const isMobile = useIsMobile()
+
   const [activeCategory, setActiveCategory] = useState('All Terms')
   const [search,         setSearch]         = useState('')
   const [expandedEli5,   setExpandedEli5]   = useState({})
@@ -554,35 +557,17 @@ export default function GlossaryModal({ onClose }) {
       onClick={e => e.target === e.currentTarget && onClose()}
     >
       <div
-        className="relative flex flex-col overflow-hidden
-                   w-full sm:rounded-xl sm:border"
+        className="relative flex flex-col overflow-hidden"
         style={{
-          /* Full-screen on mobile, constrained on desktop */
-          height:      '100dvh',
-          maxHeight:   '100dvh',
-          background:  '#0f0f20',
-          borderColor: '#3c3c68',
-          boxShadow:   '0 0 60px #00e5ff14, 0 24px 80px #00000088',
+          width:        isMobile ? '100vw'             : 'min(96vw, 1100px)',
+          height:       isMobile ? '100dvh'            : 'min(94vh, 820px)',
+          maxHeight:    isMobile ? '100dvh'            : 'min(94vh, 820px)',
+          borderRadius: isMobile ? '0'                 : '0.75rem',
+          border:       isMobile ? 'none'              : '1px solid #3c3c68',
+          background:   '#0f0f20',
+          boxShadow:    isMobile ? 'none' : '0 0 60px #00e5ff14, 0 24px 80px #00000088',
         }}
-        // Override to constrained modal on sm+
-        {...{}}
       >
-        <style>{`
-          @media (min-width: 640px) {
-            .glossary-inner {
-              width: min(96vw, 1100px) !important;
-              height: min(94vh, 820px) !important;
-              border-radius: 0.75rem !important;
-            }
-          }
-        `}</style>
-        <div
-          className="glossary-inner relative flex flex-col overflow-hidden w-full h-full"
-          style={{
-            background:  '#0f0f20',
-            borderColor: '#3c3c68',
-          }}
-        >
         {/* ── Header ────────────────────────────────────────────────── */}
         <div
           className="flex items-center justify-between px-4 py-3 border-b flex-shrink-0"
@@ -851,7 +836,6 @@ export default function GlossaryModal({ onClose }) {
           <span className="hidden sm:block text-[9px] font-mono" style={{ color: '#3c3c68' }}>
             Press <kbd className="px-1 rounded" style={{ background: '#1e1e36', color: '#7070a8' }}>Esc</kbd> to close
           </span>
-        </div>
         </div>
       </div>
     </div>
