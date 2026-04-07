@@ -5,6 +5,7 @@ const TABS = [
   { id: 'venue',    label: 'Venue',    icon: '⌂' },
   { id: 'channels', label: 'Channels', icon: '≡' },
   { id: 'results',  label: 'Results',  icon: '◎' },
+  { id: 'ref',      label: 'Ref',      icon: '⌁' },
 ]
 
 export default function MobileNavBar({ tab, setTab }) {

@@ -515,7 +515,7 @@ function categoryColor(name) {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export default function GlossaryModal({ onClose }) {
+export default function GlossaryModal({ onClose, inline = false }) {
   const isMobile = useIsMobile()
 
   const [activeCategory, setActiveCategory] = useState('All Terms')
@@ -550,24 +550,26 @@ export default function GlossaryModal({ onClose }) {
     document.getElementById(`glossary-entry-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
-  return (
+  // ── Inner panel ─────────────────────────────────────────────────────────────
+  // Shared by both inline (mobile tab) and modal (desktop overlay) modes.
+  // inline=true  → rendered directly inside the tab panel, no overlay wrapper
+  // inline=false → rendered inside a fixed full-screen modal overlay
+  const panel = (
     <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
-      style={{ background: '#000000cc', backdropFilter: 'blur(4px)' }}
-      onClick={e => e.target === e.currentTarget && onClose()}
+      className="relative flex flex-col overflow-hidden"
+      style={inline ? {
+        // Fills the tab panel container completely
+        width: '100%', height: '100%', background: '#0f0f20',
+      } : {
+        width:        isMobile ? '100vw'          : 'min(96vw, 1100px)',
+        height:       isMobile ? '100dvh'         : 'min(94vh, 820px)',
+        maxHeight:    isMobile ? '100dvh'         : 'min(94vh, 820px)',
+        borderRadius: isMobile ? '0'              : '0.75rem',
+        border:       isMobile ? 'none'           : '1px solid #3c3c68',
+        background:   '#0f0f20',
+        boxShadow:    isMobile ? 'none' : '0 0 60px #00e5ff14, 0 24px 80px #00000088',
+      }}
     >
-      <div
-        className="relative flex flex-col overflow-hidden"
-        style={{
-          width:        isMobile ? '100vw'             : 'min(96vw, 1100px)',
-          height:       isMobile ? '100dvh'            : 'min(94vh, 820px)',
-          maxHeight:    isMobile ? '100dvh'            : 'min(94vh, 820px)',
-          borderRadius: isMobile ? '0'                 : '0.75rem',
-          border:       isMobile ? 'none'              : '1px solid #3c3c68',
-          background:   '#0f0f20',
-          boxShadow:    isMobile ? 'none' : '0 0 60px #00e5ff14, 0 24px 80px #00000088',
-        }}
-      >
         {/* ── Header ────────────────────────────────────────────────── */}
         <div
           className="flex items-center justify-between px-4 py-3 border-b flex-shrink-0"
@@ -837,7 +839,20 @@ export default function GlossaryModal({ onClose }) {
             Press <kbd className="px-1 rounded" style={{ background: '#1e1e36', color: '#7070a8' }}>Esc</kbd> to close
           </span>
         </div>
-      </div>
+    </div>  // end panel
+  )
+
+  // Inline mode: panel fills the mobile tab container directly — no overlay
+  if (inline) return panel
+
+  // Modal mode: panel sits inside a fixed full-screen overlay
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
+      style={{ background: '#000000cc', backdropFilter: 'blur(4px)' }}
+      onClick={e => e.target === e.currentTarget && onClose()}
+    >
+      {panel}
     </div>
   )
 }

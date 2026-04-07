@@ -11,7 +11,7 @@ const MANUFACTURER_COLORS = {
   'Lab.gruppen':       '#c0392b',
 }
 
-export default function Header({ soundcheckInfo, onSoundcheck, onGlossary }) {
+export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNavigate }) {
   const validationResult = useStore(s => s.validationResult)
   const isValidating     = useStore(s => s.isValidating)
   const resetAll         = useStore(s => s.resetAll)
@@ -169,8 +169,8 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary }) {
         </button>
       </div>
 
-      {/* ── Mobile: status dot + overflow menu ─────────────────────────── */}
-      <div className="flex md:hidden items-center gap-3 relative" ref={menuRef}>
+      {/* ── Mobile: status + soundcheck icon + overflow menu ──────────── */}
+      <div className="flex md:hidden items-center gap-2 relative" ref={menuRef}>
         {/* Status dot */}
         <div className="flex items-center gap-1.5">
           <div
@@ -187,6 +187,18 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary }) {
             {statusText}
           </span>
         </div>
+
+        {/* Soundcheck icon — visible in header once a config + file exists */}
+        {hasConfig && soundcheckInfo?.available && (
+          <button
+            onClick={onSoundcheck}
+            aria-label="Run soundcheck"
+            className="flex items-center justify-center w-9 h-9 rounded border transition-colors touch-target-lg"
+            style={{ borderColor: '#00e5ff44', color: '#00e5ff', background: '#00e5ff0d' }}
+          >
+            <span className="text-sm leading-none">◉</span>
+          </button>
+        )}
 
         {/* ⋯ Menu button */}
         <button
@@ -208,37 +220,48 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary }) {
         {mobileMenuOpen && (
           <div
             role="menu"
-            className="absolute top-full right-0 mt-1 z-40 rounded-lg border overflow-hidden shadow-2xl"
+            className="absolute top-full right-0 mt-1 z-40 rounded-lg border overflow-hidden"
             style={{
-              background:   '#161626',
-              borderColor:  '#3c3c68',
-              minWidth:     '180px',
-              boxShadow:    '0 8px 32px #00000088',
+              background:  '#161626',
+              borderColor: '#3c3c68',
+              minWidth:    '160px',
+              boxShadow:   '0 8px 32px #00000088',
             }}
           >
-            {[
-              { label: 'F1 PRESET',    action: () => { loadPreset(FUNKTION_ONE_PRESET); setMobileMenuOpen(false) } },
-              { label: '⌁ REFERENCE',  action: () => { onGlossary(); setMobileMenuOpen(false) } },
-              ...(soundcheckInfo?.available && hasConfig
-                ? [{ label: '◉ SOUNDCHECK', action: () => { onSoundcheck(); setMobileMenuOpen(false) } }]
-                : []),
-              { label: 'RESET',        action: () => { resetAll(); setMobileMenuOpen(false) }, danger: true },
-            ].map(item => (
-              <button
-                key={item.label}
-                role="menuitem"
-                onClick={item.action}
-                className="w-full text-left px-4 py-3 text-xs font-mono border-b transition-colors touch-target-lg"
-                style={{
-                  borderColor: '#1e1e36',
-                  color:       item.danger ? '#ff8c00' : '#ff8c00',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.background = '#ff8c0011' }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
-              >
-                {item.label}
-              </button>
-            ))}
+            <button
+              role="menuitem"
+              onPointerDown={() => {
+                loadPreset(FUNKTION_ONE_PRESET)
+                onNavigate?.('venue')
+                setMobileMenuOpen(false)
+              }}
+              className="w-full text-left px-4 py-3 text-xs font-mono border-b"
+              style={{ borderColor: '#1e1e36', color: '#ff8c00' }}
+            >
+              F1 PRESET
+            </button>
+            <button
+              role="menuitem"
+              onPointerDown={() => {
+                onNavigate?.('ref')
+                setMobileMenuOpen(false)
+              }}
+              className="w-full text-left px-4 py-3 text-xs font-mono border-b"
+              style={{ borderColor: '#1e1e36', color: '#ff8c00' }}
+            >
+              ⌁ REFERENCE
+            </button>
+            <button
+              role="menuitem"
+              onPointerDown={() => {
+                resetAll()
+                setMobileMenuOpen(false)
+              }}
+              className="w-full text-left px-4 py-3 text-xs font-mono"
+              style={{ color: '#ff8c00' }}
+            >
+              RESET
+            </button>
           </div>
         )}
       </div>

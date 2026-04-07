@@ -114,6 +114,7 @@ export default function App() {
           soundcheckInfo={soundcheckInfo}
           onSoundcheck={() => setSoundcheckOpen(true)}
           onGlossary={() => setGlossaryOpen(true)}
+          onNavigate={setMobileTab}
         />
 
         {/* ── Desktop layout (md+) ── unchanged 3-column ─────────────────── */}
@@ -178,6 +179,10 @@ export default function App() {
             </div>
             <div className={mobileTab === 'results'  ? 'h-full' : 'hidden'}>
               <ValidationPanel />
+            </div>
+            {/* Reference tab — glossary rendered inline, no modal overlay */}
+            <div className={mobileTab === 'ref' ? 'h-full' : 'hidden'}>
+              <GlossaryModal inline onClose={() => setMobileTab('library')} />
             </div>
           </div>
 
