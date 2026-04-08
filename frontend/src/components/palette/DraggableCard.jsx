@@ -112,7 +112,7 @@ export default function DraggableCard({ component }) {
           </div>
 
           {/* Type + key spec */}
-          <div className="flex items-center gap-2 mt-0.5">
+          <div className="flex items-center gap-2 mt-0.5 flex-wrap">
             <span className="text-[8px] font-mono px-1 rounded"
                   style={{ color: accentColor + 'cc', border: `1px solid ${accentColor}33` }}>
               {typeLabel}

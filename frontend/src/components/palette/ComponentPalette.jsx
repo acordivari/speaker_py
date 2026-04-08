@@ -109,7 +109,7 @@ export default function ComponentPalette({ isLoading }) {
       </div>
 
       {/* Component list */}
-      <div className="flex-1 overflow-y-auto px-2 py-2 space-y-1.5">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden px-2 py-2 space-y-1.5">
         {isLoading && (
           <div className="text-center text-slate-400 text-xs font-mono py-8 animate-pulse">
             Loading components…

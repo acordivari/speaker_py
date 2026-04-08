@@ -63,7 +63,7 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
   return (
     <header
       className="flex items-center justify-between px-4 py-2 border-b border-venue-border
-                 bg-venue-panel/80 backdrop-blur-sm flex-shrink-0"
+                 bg-venue-panel/80 backdrop-blur-sm flex-shrink-0 relative z-20"
       role="banner"
     >
       {/* Logo / title */}
