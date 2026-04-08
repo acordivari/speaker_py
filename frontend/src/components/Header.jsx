@@ -230,10 +230,14 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
           >
             <button
               role="menuitem"
-              onPointerDown={() => {
-                loadPreset(FUNKTION_ONE_PRESET)
-                onNavigate?.('venue')
+              onClick={(e) => {
+                e.stopPropagation()
                 setMobileMenuOpen(false)
+                // Defer navigation so menu unmounts cleanly before tab switches
+                setTimeout(() => {
+                  loadPreset(FUNKTION_ONE_PRESET)
+                  onNavigate?.('venue')
+                }, 0)
               }}
               className="w-full text-left px-4 py-3 text-xs font-mono border-b"
               style={{ borderColor: '#1e1e36', color: '#ff8c00' }}
@@ -242,9 +246,10 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
             </button>
             <button
               role="menuitem"
-              onPointerDown={() => {
-                onNavigate?.('ref')
+              onClick={(e) => {
+                e.stopPropagation()
                 setMobileMenuOpen(false)
+                setTimeout(() => onNavigate?.('ref'), 0)
               }}
               className="w-full text-left px-4 py-3 text-xs font-mono border-b"
               style={{ borderColor: '#1e1e36', color: '#ff8c00' }}
@@ -253,7 +258,8 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
             </button>
             <button
               role="menuitem"
-              onPointerDown={() => {
+              onClick={(e) => {
+                e.stopPropagation()
                 resetAll()
                 setMobileMenuOpen(false)
               }}
