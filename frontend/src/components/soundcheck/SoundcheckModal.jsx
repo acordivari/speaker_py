@@ -398,6 +398,17 @@ export default function SoundcheckModal({ onClose, channels, soundcheckInfo }) {
               </button>
             )}
 
+            {/* Track attribution */}
+            <div className="flex flex-col leading-tight">
+              <span className="text-[9px] font-mono" style={{ color: '#7070a8' }}>
+                now playing
+              </span>
+              <span className="text-[10px] font-mono font-bold" style={{ color: '#c0c0d8' }}>
+                Fist Up
+                <span className="font-normal" style={{ color: '#7070a8' }}> · Gramatik</span>
+              </span>
+            </div>
+
             {/* Status badge */}
             <div className="ml-auto text-[9px] font-mono tracking-widest"
                  style={{ color: STATUS_COLOR[status] ?? '#7070a8' }}>
