@@ -5,7 +5,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  closestCenter,
+  pointerWithin,
 } from '@dnd-kit/core'
 
 import useStore from './store/useStore'
@@ -18,6 +18,7 @@ import DragGhostCard from './components/palette/DragGhostCard'
 import SoundcheckModal from './components/soundcheck/SoundcheckModal'
 import GlossaryModal from './components/glossary/GlossaryModal'
 import MobileNavBar from './components/layout/MobileNavBar'
+import { useIsMobile } from './hooks/useIsMobile'
 import { fetchSoundcheckInfo } from './services/api'
 
 export default function App() {
@@ -30,6 +31,8 @@ export default function App() {
   const dataError     = useStore(s => s.dataError)
   const tapSelected   = useStore(s => s.tapSelectedComponent)
   const clearTapSelected = useStore(s => s.clearTapSelected)
+
+  const isMobile = useIsMobile()
 
   const [activeItem,     setActiveItem]     = useState(null)
   const [soundcheckOpen, setSoundcheckOpen] = useState(false)
@@ -105,7 +108,7 @@ export default function App() {
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCenter}
+      collisionDetection={pointerWithin}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
@@ -117,8 +120,9 @@ export default function App() {
           onNavigate={setMobileTab}
         />
 
-        {/* ── Desktop layout (md+) ── unchanged 3-column ─────────────────── */}
-        <div className="hidden md:flex flex-1 overflow-hidden gap-3 p-3 pt-0">
+        {/* ── Desktop layout (md+) ── 3-column ────────────────────────────── */}
+        {!isMobile && (
+        <div className="flex flex-1 overflow-hidden gap-3 p-3 pt-0">
           <aside className="w-72 flex-shrink-0 overflow-hidden flex flex-col">
             <ComponentPalette isLoading={isLoadingData} />
           </aside>
@@ -136,9 +140,11 @@ export default function App() {
             <ValidationPanel />
           </aside>
         </div>
+        )}
 
         {/* ── Mobile layout (<md) ── single-panel + bottom nav ───────────── */}
-        <div className="flex md:hidden flex-col flex-1 overflow-hidden">
+        {isMobile && (
+        <div className="flex flex-col flex-1 overflow-hidden">
 
           {/* Tap-assign banner — shown when a component is held */}
           {tapSelected && (
@@ -188,6 +194,7 @@ export default function App() {
 
           <MobileNavBar tab={mobileTab} setTab={setMobileTab} />
         </div>
+        )}
       </div>
 
       <DragOverlay dropAnimation={null}>

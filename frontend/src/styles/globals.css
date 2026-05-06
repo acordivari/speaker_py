@@ -119,7 +119,11 @@
   50%  { transform: scale(1.3); opacity: 0.2; }
   100% { transform: scale(1);   opacity: 0.6; }
 }
-.pos-ring { animation: ring-pulse 2s ease-in-out infinite; }
+.pos-ring {
+  animation: ring-pulse 2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
 
 /* Connection line draw */
 @keyframes draw-line {
