@@ -18,6 +18,7 @@ import DragGhostCard from './components/palette/DragGhostCard'
 import SoundcheckModal from './components/soundcheck/SoundcheckModal'
 import GlossaryModal from './components/glossary/GlossaryModal'
 import MobileNavBar from './components/layout/MobileNavBar'
+import DemoTour from './components/demo/DemoTour'
 import { useIsMobile } from './hooks/useIsMobile'
 import { fetchSoundcheckInfo } from './services/api'
 
@@ -39,6 +40,8 @@ export default function App() {
   const [soundcheckInfo, setSoundcheckInfo] = useState({ available: false })
   const [glossaryOpen,   setGlossaryOpen]   = useState(false)
   const [mobileTab,      setMobileTab]      = useState('library')
+  const [demoActive,     setDemoActive]     = useState(false)
+  const [tourHighlight,  setTourHighlight]  = useState(false)
 
   // Debounced auto-validate on any channel change
   const validateTimer = useRef(null)
@@ -118,25 +121,27 @@ export default function App() {
           onSoundcheck={() => setSoundcheckOpen(true)}
           onGlossary={() => setGlossaryOpen(true)}
           onNavigate={setMobileTab}
+          onTour={() => setDemoActive(true)}
+          tourHighlight={tourHighlight}
         />
 
         {/* ── Desktop layout (md+) ── 3-column ────────────────────────────── */}
         {!isMobile && (
         <div className="flex flex-1 overflow-hidden gap-3 p-3 pt-0">
-          <aside className="w-72 flex-shrink-0 overflow-hidden flex flex-col">
+          <aside data-tour="palette" className="w-72 flex-shrink-0 overflow-hidden flex flex-col">
             <ComponentPalette isLoading={isLoadingData} />
           </aside>
 
           <main className="flex-1 flex flex-col gap-3 min-w-0 overflow-hidden">
-            <div className="flex-1 min-h-0">
+            <div data-tour="venue" className="flex-1 min-h-0">
               <VenueLayout />
             </div>
-            <div className="h-56 flex-shrink-0">
+            <div data-tour="channel-editor" className="h-56 flex-shrink-0">
               <ChannelEditor />
             </div>
           </main>
 
-          <aside className="w-80 flex-shrink-0 overflow-hidden flex flex-col">
+          <aside data-tour="validation" className="w-80 flex-shrink-0 overflow-hidden flex flex-col">
             <ValidationPanel />
           </aside>
         </div>
@@ -211,6 +216,14 @@ export default function App() {
 
       {glossaryOpen && (
         <GlossaryModal onClose={() => setGlossaryOpen(false)} />
+      )}
+
+      {demoActive && (
+        <DemoTour onClose={() => {
+          setDemoActive(false)
+          setTourHighlight(true)
+          setTimeout(() => setTourHighlight(false), 5000)
+        }} />
       )}
     </DndContext>
   )

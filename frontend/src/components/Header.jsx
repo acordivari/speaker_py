@@ -11,7 +11,7 @@ const MANUFACTURER_COLORS = {
   'Lab.gruppen':       '#c0392b',
 }
 
-export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNavigate }) {
+export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNavigate, onTour, tourHighlight }) {
   const validationResult = useStore(s => s.validationResult)
   const isValidating     = useStore(s => s.isValidating)
   const resetAll         = useStore(s => s.resetAll)
@@ -112,12 +112,15 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
 
         {hasConfig && (
           <button
+            data-tour="header-soundcheck"
             onClick={onSoundcheck}
             className="text-xs font-mono px-3 py-1 rounded border transition-all duration-200"
             style={{
               borderColor: soundcheckInfo?.available ? '#00e5ff66' : '#3c3c68',
               color:       soundcheckInfo?.available ? '#00e5ff'   : '#7070a8',
               background:  soundcheckInfo?.available ? '#00e5ff0d' : 'transparent',
+              boxShadow:   tourHighlight && soundcheckInfo?.available ? '0 0 0 0 #00e5ff66' : undefined,
+              animation:   tourHighlight && soundcheckInfo?.available ? 'tour-pulse-cyan 1s ease-in-out 4' : undefined,
             }}
             onMouseEnter={e => {
               if (!soundcheckInfo?.available) return
@@ -137,9 +140,13 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
         )}
 
         <button
+          data-tour="header-f1"
           onClick={() => loadPreset(FUNKTION_ONE_PRESET)}
           className="text-xs font-mono px-3 py-1 rounded border transition-colors duration-200"
-          style={actionBtn}
+          style={{
+            ...actionBtn,
+            animation: tourHighlight ? 'tour-pulse-orange 1s ease-in-out 4' : undefined,
+          }}
           onMouseEnter={actionBtnHover.enter}
           onMouseLeave={actionBtnHover.leave}
         >
@@ -158,6 +165,7 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
         </button>
 
         <button
+          data-tour="header-reset"
           onClick={resetAll}
           aria-label="Reset all channel configurations"
           className="text-xs font-mono px-3 py-1 rounded border transition-colors duration-200"
@@ -166,6 +174,16 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
           onMouseLeave={actionBtnHover.leave}
         >
           RESET
+        </button>
+
+        <button
+          onClick={onTour}
+          className="text-xs font-mono px-3 py-1 rounded border transition-colors duration-200"
+          style={{ borderColor: '#00e5ff44', color: '#00e5ff', background: 'transparent' }}
+          onMouseEnter={e => { e.currentTarget.style.background = '#00e5ff11'; e.currentTarget.style.borderColor = '#00e5ff88' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = '#00e5ff44' }}
+        >
+          ▶ TOUR
         </button>
       </div>
 

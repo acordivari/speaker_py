@@ -134,3 +134,13 @@
   stroke-dasharray: 200;
   animation: draw-line 0.6s ease-out forwards;
 }
+
+/* Post-tour button highlight pulses */
+@keyframes tour-pulse-orange {
+  0%, 100% { box-shadow: 0 0 0 0 #ff8c0000; }
+  50%       { box-shadow: 0 0 0 6px #ff8c0055, 0 0 16px #ff8c0033; }
+}
+@keyframes tour-pulse-cyan {
+  0%, 100% { box-shadow: 0 0 0 0 #00e5ff00; }
+  50%       { box-shadow: 0 0 0 6px #00e5ff55, 0 0 16px #00e5ff33; }
+}
