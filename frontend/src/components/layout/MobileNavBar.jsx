@@ -1,16 +1,17 @@
 import useStore from '../../store/useStore'
 
 const TABS = [
-  { id: 'library',  label: 'Library',  icon: '◫' },
-  { id: 'venue',    label: 'Venue',    icon: '⌂' },
-  { id: 'channels', label: 'Channels', icon: '≡' },
-  { id: 'results',  label: 'Results',  icon: '◎' },
-  { id: 'ref',      label: 'Ref',      icon: '⌁' },
+  { id: 'library',  label: 'LIBRARY', icon: '◫' },
+  { id: 'venue',    label: 'MAP',     icon: '⌂' },
+  { id: 'channels', label: 'ASSIGN',  icon: '⊕' },
+  { id: 'results',  label: 'CHECK',   icon: '◎' },
+  { id: 'ref',      label: 'GUIDE',   icon: '⌁' },
 ]
 
 export default function MobileNavBar({ tab, setTab }) {
-  const validationResult = useStore(s => s.validationResult)
-  const channels         = useStore(s => s.channels)
+  const validationResult     = useStore(s => s.validationResult)
+  const channels             = useStore(s => s.channels)
+  const tapSelectedComponent = useStore(s => s.tapSelectedComponent)
 
   const errorCount = validationResult
     ? validationResult.channel_results.flatMap(ch => ch.issues).filter(i => i.severity === 'error').length
@@ -42,14 +43,16 @@ export default function MobileNavBar({ tab, setTab }) {
       aria-label="Main navigation"
       className="flex-shrink-0 flex border-t"
       style={{
-        background:   '#0b0b18',
-        borderColor:  '#3c3c68',
+        background:    '#0b0b18',
+        borderColor:   '#3c3c68',
         paddingBottom: 'env(safe-area-inset-bottom, 0px)',
       }}
     >
       {TABS.map(t => {
-        const active = tab === t.id
-        const b      = badge(t.id)
+        const active               = tab === t.id
+        const b                    = badge(t.id)
+        const isAssignHighlighted  = t.id === 'channels' && !!tapSelectedComponent && !active
+
         return (
           <button
             key={t.id}
@@ -60,8 +63,9 @@ export default function MobileNavBar({ tab, setTab }) {
             className="flex-1 flex flex-col items-center justify-center py-2 gap-0.5
                        transition-colors duration-150 relative"
             style={{
-              color:      active ? '#00e5ff' : '#7070a8',
+              color:      active ? '#00e5ff' : isAssignHighlighted ? '#ff8c00' : '#7070a8',
               background: active ? '#00e5ff08' : 'transparent',
+              animation:  isAssignHighlighted ? 'nav-tab-pulse 1s ease-in-out infinite' : undefined,
               minHeight:  '56px',
             }}
           >

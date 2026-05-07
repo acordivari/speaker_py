@@ -8,7 +8,7 @@ import {
   pointerWithin,
 } from '@dnd-kit/core'
 
-import useStore from './store/useStore'
+import useStore, { FUNKTION_ONE_PRESET } from './store/useStore'
 import Header from './components/Header'
 import ComponentPalette from './components/palette/ComponentPalette'
 import VenueLayout from './components/venue/VenueLayout'
@@ -18,6 +18,7 @@ import DragGhostCard from './components/palette/DragGhostCard'
 import SoundcheckModal from './components/soundcheck/SoundcheckModal'
 import GlossaryModal from './components/glossary/GlossaryModal'
 import MobileNavBar from './components/layout/MobileNavBar'
+import MobileOnboarding from './components/layout/MobileOnboarding'
 import DemoTour from './components/demo/DemoTour'
 import { useIsMobile } from './hooks/useIsMobile'
 import { fetchSoundcheckInfo } from './services/api'
@@ -27,11 +28,14 @@ export default function App() {
   const validate      = useStore(s => s.validate)
   const assignAmp     = useStore(s => s.assignAmp)
   const addSpeaker    = useStore(s => s.addSpeaker)
+  const loadPreset    = useStore(s => s.loadPreset)
   const channels      = useStore(s => s.channels)
   const isLoadingData = useStore(s => s.isLoadingData)
   const dataError     = useStore(s => s.dataError)
   const tapSelected   = useStore(s => s.tapSelectedComponent)
   const clearTapSelected = useStore(s => s.clearTapSelected)
+
+  const hasConfig = channels.some(ch => ch.amp || ch.speakers.length > 0)
 
   const isMobile = useIsMobile()
 
@@ -179,8 +183,19 @@ export default function App() {
 
           {/* Panel area — all panels rendered, only active one visible */}
           <div className="flex-1 overflow-hidden relative p-2">
-            <div className={mobileTab === 'library'  ? 'h-full' : 'hidden'}>
-              <ComponentPalette isLoading={isLoadingData} />
+            <div className={mobileTab === 'library' ? 'h-full flex flex-col' : 'hidden'}>
+              {!hasConfig && (
+                <MobileOnboarding
+                  onTour={() => setDemoActive(true)}
+                  onPreset={() => {
+                    loadPreset(FUNKTION_ONE_PRESET)
+                    setMobileTab('venue')
+                  }}
+                />
+              )}
+              <div className="flex-1 min-h-0">
+                <ComponentPalette isLoading={isLoadingData} />
+              </div>
             </div>
             <div className={mobileTab === 'venue'    ? 'h-full' : 'hidden'}>
               <VenueLayout />

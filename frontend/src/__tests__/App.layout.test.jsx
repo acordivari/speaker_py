@@ -1,5 +1,5 @@
 /**
- * App layout exclusivity tests.
+ * App layout exclusivity and mobile UX tests.
  *
  * Regression guard for the duplicate dnd-kit ID bug:
  * Desktop and mobile layouts must never be mounted simultaneously.
@@ -7,6 +7,12 @@
  * registered two useDraggable hooks with the same ID; dnd-kit used
  * the hidden element's zero-rect, placing the drag ghost at the
  * viewport origin hundreds of pixels above the cursor.
+ *
+ * Also verifies mobile UX requirements:
+ *   - Critical header actions (TOUR, F1) are directly accessible —
+ *     no hidden overflow menu required
+ *   - Onboarding card shown on the Library tab when no channels are
+ *     configured, guiding new users through the assignment flow
  */
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -74,5 +80,54 @@ describe('App layout exclusivity', () => {
     useIsMobile.mockReturnValue(false)
     render(<App />)
     expect(screen.queryByRole('tablist', { name: 'Main navigation' })).not.toBeInTheDocument()
+  })
+})
+
+describe('Mobile header direct actions (no hidden menu required)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    useIsMobile.mockReturnValue(true)
+  })
+
+  it('one or more TOUR buttons are directly accessible on mobile (header chip + onboarding)', () => {
+    render(<App />)
+    // Header chip has aria-label="Take the tour"; MobileOnboarding has the same.
+    // Both are valid entry points — at least one must be present without any menu.
+    const tourBtns = screen.getAllByRole('button', { name: /take the tour/i })
+    expect(tourBtns.length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('one or more F1 preset buttons are directly accessible on mobile (header chip + onboarding)', () => {
+    render(<App />)
+    // Header chip has aria-label="Load F1 Preset"; MobileOnboarding shares the label.
+    const f1Btns = screen.getAllByRole('button', { name: /load f1 preset/i })
+    expect(f1Btns.length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('mobile layout renders MobileNavBar with action-oriented tab labels', () => {
+    render(<App />)
+    // ASSIGN (not "Channels") and CHECK (not "Results") confirm the new labels are live
+    expect(screen.getByRole('tab', { name: 'ASSIGN' })).toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: 'CHECK' })).toBeInTheDocument()
+  })
+})
+
+describe('Mobile library onboarding card', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    useIsMobile.mockReturnValue(true)
+  })
+
+  it('shows the GETTING STARTED card when no channels are configured', () => {
+    // Real Zustand store initialises all channels with amp=null and speakers=[],
+    // so hasConfig is false and MobileOnboarding renders.
+    render(<App />)
+    expect(screen.getByText(/getting started/i)).toBeInTheDocument()
+  })
+
+  it('onboarding card is not shown on desktop', () => {
+    useIsMobile.mockReturnValue(false)
+    render(<App />)
+    expect(screen.queryByText(/getting started/i)).not.toBeInTheDocument()
   })
 })

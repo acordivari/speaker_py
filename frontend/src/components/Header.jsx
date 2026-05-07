@@ -1,4 +1,3 @@
-import { useState, useEffect, useRef } from 'react'
 import useStore, { FUNKTION_ONE_PRESET } from '../store/useStore'
 
 const MANUFACTURER_COLORS = {
@@ -19,9 +18,6 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
   const manufacturers    = useStore(s => s.manufacturers)
   const channels         = useStore(s => s.channels)
 
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const menuRef = useRef(null)
-
   const hasConfig = channels.some(ch => ch.amp || ch.speakers.length > 0)
 
   const statusColor = !validationResult
@@ -37,18 +33,6 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
       : validationResult.is_valid
         ? 'VALID'
         : 'ISSUES'
-
-  // Close mobile menu on outside click
-  useEffect(() => {
-    if (!mobileMenuOpen) return
-    function onOutside(e) {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setMobileMenuOpen(false)
-      }
-    }
-    document.addEventListener('pointerdown', onOutside)
-    return () => document.removeEventListener('pointerdown', onOutside)
-  }, [mobileMenuOpen])
 
   // Shared action button style
   const actionBtn = {
@@ -187,9 +171,9 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
         </button>
       </div>
 
-      {/* ── Mobile: status + soundcheck icon + overflow menu ──────────── */}
-      <div className="flex md:hidden items-center gap-2 relative" ref={menuRef}>
-        {/* Status dot */}
+      {/* ── Mobile: status + direct action chips ─────────────────────── */}
+      <div className="flex md:hidden items-center gap-2">
+        {/* Validation status */}
         <div className="flex items-center gap-1.5">
           <div
             className="h-2 w-2 rounded-full flex-shrink-0"
@@ -199,95 +183,57 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
           <span
             role="status"
             aria-live="polite"
-            className="text-[10px] font-mono"
+            className="text-[9px] font-mono"
             style={{ color: statusColor }}
           >
             {statusText}
           </span>
         </div>
 
-        {/* Soundcheck icon — visible in header once a config + file exists */}
+        {/* Soundcheck — when available and configured */}
         {hasConfig && soundcheckInfo?.available && (
           <button
             onClick={onSoundcheck}
             aria-label="Run soundcheck"
-            className="flex items-center justify-center w-9 h-9 rounded border transition-colors touch-target-lg"
+            className="flex items-center justify-center w-8 h-8 rounded border touch-target"
             style={{ borderColor: '#00e5ff44', color: '#00e5ff', background: '#00e5ff0d' }}
           >
-            <span className="text-sm leading-none">◉</span>
+            <span className="text-xs leading-none">◉</span>
           </button>
         )}
 
-        {/* ⋯ Menu button */}
+        {/* TOUR chip */}
         <button
-          onClick={() => setMobileMenuOpen(o => !o)}
-          aria-label="Open actions menu"
-          aria-expanded={mobileMenuOpen}
-          aria-haspopup="menu"
-          className="flex items-center justify-center w-9 h-9 rounded border transition-colors touch-target-lg"
-          style={{
-            borderColor: mobileMenuOpen ? '#ff8c00' : '#3c3c68',
-            color:        mobileMenuOpen ? '#ff8c00' : '#7070a8',
-            background:   mobileMenuOpen ? '#ff8c0011' : 'transparent',
-          }}
+          onClick={onTour}
+          aria-label="Take the tour"
+          className="text-[9px] font-mono px-2 py-1.5 rounded border touch-target"
+          style={{ borderColor: '#00e5ff44', color: '#00e5ff', background: 'transparent' }}
         >
-          <span className="text-lg leading-none">⋯</span>
+          TOUR
         </button>
 
-        {/* Dropdown menu */}
-        {mobileMenuOpen && (
-          <div
-            role="menu"
-            className="absolute top-full right-0 mt-1 z-40 rounded-lg border overflow-hidden"
-            style={{
-              background:  '#161626',
-              borderColor: '#3c3c68',
-              minWidth:    '160px',
-              boxShadow:   '0 8px 32px #00000088',
-            }}
-          >
-            <button
-              role="menuitem"
-              onClick={(e) => {
-                e.stopPropagation()
-                setMobileMenuOpen(false)
-                // Defer navigation so menu unmounts cleanly before tab switches
-                setTimeout(() => {
-                  loadPreset(FUNKTION_ONE_PRESET)
-                  onNavigate?.('venue')
-                }, 0)
-              }}
-              className="w-full text-left px-4 py-3 text-xs font-mono border-b"
-              style={{ borderColor: '#1e1e36', color: '#ff8c00' }}
-            >
-              F1 PRESET
-            </button>
-            <button
-              role="menuitem"
-              onClick={(e) => {
-                e.stopPropagation()
-                setMobileMenuOpen(false)
-                setTimeout(() => onNavigate?.('ref'), 0)
-              }}
-              className="w-full text-left px-4 py-3 text-xs font-mono border-b"
-              style={{ borderColor: '#1e1e36', color: '#ff8c00' }}
-            >
-              ⌁ REFERENCE
-            </button>
-            <button
-              role="menuitem"
-              onClick={(e) => {
-                e.stopPropagation()
-                resetAll()
-                setMobileMenuOpen(false)
-              }}
-              className="w-full text-left px-4 py-3 text-xs font-mono"
-              style={{ color: '#ff8c00' }}
-            >
-              RESET
-            </button>
-          </div>
-        )}
+        {/* F1 chip */}
+        <button
+          onClick={() => {
+            loadPreset(FUNKTION_ONE_PRESET)
+            onNavigate?.('venue')
+          }}
+          aria-label="Load F1 Preset"
+          className="text-[9px] font-mono px-2 py-1.5 rounded border touch-target"
+          style={{ borderColor: '#ff8c0066', color: '#ff8c00', background: 'transparent' }}
+        >
+          F1
+        </button>
+
+        {/* Reset */}
+        <button
+          onClick={resetAll}
+          aria-label="Reset all channel configurations"
+          className="flex items-center justify-center w-8 h-8 rounded border touch-target"
+          style={{ borderColor: '#3c3c68', color: '#7070a8', background: 'transparent' }}
+        >
+          <span className="text-base leading-none">↺</span>
+        </button>
       </div>
     </header>
   )

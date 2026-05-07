@@ -144,3 +144,9 @@
   0%, 100% { box-shadow: 0 0 0 0 #00e5ff00; }
   50%       { box-shadow: 0 0 0 6px #00e5ff55, 0 0 16px #00e5ff33; }
 }
+
+/* Mobile nav ASSIGN tab pulse — guides user to tap after selecting a component */
+@keyframes nav-tab-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 #ff8c0000; }
+  50%       { box-shadow: 0 0 0 4px #ff8c0055, 0 0 12px #ff8c0033; }
+}
