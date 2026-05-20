@@ -44,7 +44,7 @@ export default function App() {
   const [soundcheckInfo, setSoundcheckInfo] = useState({ available: false })
   const [glossaryOpen,   setGlossaryOpen]   = useState(false)
   const [mobileTab,      setMobileTab]      = useState('library')
-  const [demoActive,     setDemoActive]     = useState(false)
+  const [demoActive,     setDemoActive]     = useState(() => !localStorage.getItem('sdl_tour_seen'))
   const [tourHighlight,  setTourHighlight]  = useState(false)
 
   // Debounced auto-validate on any channel change
@@ -235,6 +235,7 @@ export default function App() {
 
       {demoActive && (
         <DemoTour onClose={() => {
+          localStorage.setItem('sdl_tour_seen', '1')
           setDemoActive(false)
           setTourHighlight(true)
           setTimeout(() => setTourHighlight(false), 5000)
