@@ -2,6 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Theme tokens ──────────────────────────────────────────────────────────── */
+
+:root {
+  /* RGB channels (no wrapper) so Tailwind opacity modifiers work */
+  --venue-bg-rgb:      11 11 24;
+  --venue-panel-rgb:   22 22 38;
+  --venue-surface-rgb: 30 30 54;
+  --venue-border-rgb:  60 60 104;
+  --venue-muted-rgb:   112 112 168;
+
+  /* Full-hex aliases for inline styles */
+  --color-bg:           #0b0b18;
+  --color-panel:        #161626;
+  --color-surface:      #1e1e36;
+  --color-surface-alt:  #0f0f20;
+  --color-border:       #3c3c68;
+  --color-border-dim:   #28284e;
+  --color-border-inner: #1e1e36;
+  --color-muted:        #7070a8;
+  --color-text:         #e2e8f0;
+  --color-text-2:       #c0c0d8;
+  --color-text-3:       #9090b8;
+  --color-text-dim:     #4a4a6a;
+  --color-scrollbar-track: #161626;
+}
+
+[data-theme="light"] {
+  --venue-bg-rgb:      244 246 255;
+  --venue-panel-rgb:   255 255 255;
+  --venue-surface-rgb: 238 240 251;
+  --venue-border-rgb:  192 199 232;
+  --venue-muted-rgb:   85 88 160;
+
+  --color-bg:           #f4f6ff;
+  --color-panel:        #ffffff;
+  --color-surface:      #eef0fb;
+  --color-surface-alt:  #f8f9ff;
+  --color-border:       #c0c7e8;
+  --color-border-dim:   #d0d5ed;
+  --color-border-inner: #e0e4f4;
+  --color-muted:        #5558a0;
+  --color-text:         #1a1c38;
+  --color-text-2:       #2a2d50;
+  --color-text-3:       #3a3d6a;
+  --color-text-dim:     #6870b0;
+  --color-scrollbar-track: #eef0fb;
+}
+
+/* Adapt Tailwind's static dark-era text utilities for light mode.
+   [data-theme="light"] + class = specificity [0,2,0], beats Tailwind's [0,1,0]. */
+[data-theme="light"] .text-white,
+[data-theme="light"] .text-slate-50,
+[data-theme="light"] .text-slate-100,
+[data-theme="light"] .text-slate-200 { color: var(--color-text); }
+
+[data-theme="light"] .text-slate-300 { color: var(--color-text-2); }
+
+[data-theme="light"] .text-slate-400 { color: var(--color-muted); }
+
+[data-theme="light"] .text-slate-500,
+[data-theme="light"] .text-slate-600 { color: var(--color-text-dim); }
+
 @layer base {
   * {
     box-sizing: border-box;
@@ -14,8 +76,8 @@
     overflow-x: hidden;
     margin: 0;
     padding: 0;
-    background-color: #0b0b18;
-    color: #e2e8f0;
+    background-color: var(--color-bg);
+    color: var(--color-text);
     font-family: 'JetBrains Mono', Consolas, monospace;
     /* Prevent iOS bounce / overscroll on the root */
     overscroll-behavior: none;
@@ -38,10 +100,10 @@
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #161626;
+    background: var(--color-scrollbar-track);
   }
   ::-webkit-scrollbar-thumb {
-    background: #7070a8;
+    background: var(--color-muted);
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {

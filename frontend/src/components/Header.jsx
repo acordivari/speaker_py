@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import useStore, { FUNKTION_ONE_PRESET } from '../store/useStore'
 
 const MANUFACTURER_COLORS = {
@@ -20,6 +21,16 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
 
   const hasConfig = channels.some(ch => ch.amp || ch.speakers.length > 0)
 
+  const [isDark, setIsDark] = useState(
+    () => (localStorage.getItem('sdl_theme') ?? 'dark') !== 'light'
+  )
+  function handleThemeToggle() {
+    const next = isDark ? 'light' : 'dark'
+    document.documentElement.dataset.theme = next
+    localStorage.setItem('sdl_theme', next)
+    setIsDark(!isDark)
+  }
+
   const statusColor = !validationResult
     ? '#7878a8'
     : validationResult.is_valid
@@ -34,7 +45,6 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
         ? 'VALID'
         : 'ISSUES'
 
-  // Shared action button style
   const actionBtn = {
     borderColor: '#ff8c0066',
     color:       '#ff8c00',
@@ -43,11 +53,29 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
     enter: e => { e.currentTarget.style.borderColor = '#ff8c00'; e.currentTarget.style.background = '#ff8c0011' },
     leave: e => { e.currentTarget.style.borderColor = '#ff8c0066'; e.currentTarget.style.background = 'transparent' },
   }
+  const themeBtnStyle = {
+    borderColor: 'var(--color-border)',
+    color:       'var(--color-muted)',
+    background:  'transparent',
+    fontSize:    '14px',
+    lineHeight:  1,
+    width:       '32px',
+    height:      '32px',
+    borderRadius: '6px',
+    border:       '1px solid var(--color-border)',
+    cursor:       'pointer',
+    display:      'flex',
+    alignItems:   'center',
+    justifyContent: 'center',
+    transition:   'border-color 0.2s, background 0.2s',
+    flexShrink:   0,
+  }
 
   return (
     <header
       className="flex items-center justify-between px-4 py-2 border-b border-venue-border
-                 bg-venue-panel/80 backdrop-blur-sm flex-shrink-0 relative z-20"
+                 backdrop-blur-sm flex-shrink-0 relative z-20"
+      style={{ background: 'rgb(var(--venue-panel-rgb) / 0.92)' }}
       role="banner"
     >
       {/* Logo / title */}
@@ -56,7 +84,7 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
           <span className="text-xs font-mono uppercase tracking-widest" style={{ color: '#ff8c00' }}>
             Sound Design Lab
           </span>
-          <span className="text-sm font-bold tracking-wide text-white">
+          <span className="text-sm font-bold tracking-wide" style={{ color: 'var(--color-text)' }}>
             Mission Ballroom
             <span className="font-normal text-xs ml-2" style={{ color: '#ff8c00' }}>Denver, CO</span>
           </span>
@@ -171,6 +199,17 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
         >
           ▶ TOUR
         </button>
+
+        <button
+          onClick={handleThemeToggle}
+          aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
+          title={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
+          style={themeBtnStyle}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-muted)'; e.currentTarget.style.background = 'var(--color-surface)' }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; e.currentTarget.style.background = 'transparent' }}
+        >
+          {isDark ? '☀' : '☾'}
+        </button>
       </div>
 
       {/* ── Mobile: status + direct action chips ─────────────────────── */}
@@ -238,6 +277,16 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
             <span className="text-base leading-none">↺</span>
           </button>
         )}
+
+        {/* Theme toggle */}
+        <button
+          onClick={handleThemeToggle}
+          aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
+          className="flex items-center justify-center w-8 h-8 rounded border touch-target"
+          style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted)', background: 'transparent' }}
+        >
+          <span className="text-sm leading-none">{isDark ? '☀' : '☾'}</span>
+        </button>
       </div>
     </header>
   )

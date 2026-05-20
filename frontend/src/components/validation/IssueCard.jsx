@@ -15,7 +15,7 @@ export default function IssueCard({ issue }) {
       className="rounded border text-xs font-mono overflow-hidden transition-all duration-200"
       style={{
         borderColor: style.borderColor,
-        background:  `linear-gradient(135deg, #161626 0%, #1e1e36 100%)`,
+        background:  `linear-gradient(135deg, var(--color-panel) 0%, var(--color-surface) 100%)`,
       }}
     >
       {/* Summary row */}
@@ -24,8 +24,8 @@ export default function IssueCard({ issue }) {
         onClick={() => setExpanded(e => !e)}
       >
         <span className={style.badge}>{style.icon} {issue.severity.toUpperCase()}</span>
-        <span className="flex-1 text-slate-200 leading-snug">{issue.message}</span>
-        <span className="flex-shrink-0 text-slate-400 mt-0.5">
+        <span className="flex-1 leading-snug" style={{ color: 'var(--color-text)' }}>{issue.message}</span>
+        <span className="flex-shrink-0 mt-0.5" style={{ color: 'var(--color-muted)' }}>
           {expanded ? '▲' : '▼'}
         </span>
       </button>
@@ -38,7 +38,7 @@ export default function IssueCard({ issue }) {
             <div className="text-[9px] uppercase tracking-widest text-venue-muted mb-1">
               Why this matters
             </div>
-            <p className="text-slate-300 text-[10px] leading-relaxed whitespace-pre-line">
+            <p className="text-[10px] leading-relaxed whitespace-pre-line" style={{ color: 'var(--color-text-2)' }}>
               {issue.educational_explanation}
             </p>
           </div>

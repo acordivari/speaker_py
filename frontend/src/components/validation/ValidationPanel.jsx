@@ -5,9 +5,9 @@ function MetricRow({ label, value, unit, color }) {
   return (
     <div className="flex items-baseline justify-between py-0.5">
       <span className="text-[9px] font-mono text-slate-400">{label}</span>
-      <span className="text-xs font-mono font-bold" style={{ color: color ?? '#e2e8f0' }}>
+      <span className="text-xs font-mono font-bold" style={{ color: color ?? 'var(--color-text)' }}>
         {value}
-        {unit && <span className="text-[9px] font-normal text-slate-200 ml-1">{unit}</span>}
+        {unit && <span className="text-[9px] font-normal ml-1" style={{ color: 'var(--color-text-2)' }}>{unit}</span>}
       </span>
     </div>
   )
@@ -61,7 +61,7 @@ export default function ValidationPanel() {
             className="text-[9px] font-mono px-2 py-0.5 rounded border transition-colors"
             style={{
               borderColor: '#00e5ff44',
-              color:       isValidating ? '#7070a0' : '#00e5ff',
+              color:       isValidating ? 'var(--color-muted)' : '#00e5ff',
               background:  isValidating ? 'transparent' : '#00e5ff0a',
             }}
           >

@@ -5,11 +5,11 @@ export default {
     extend: {
       colors: {
         venue: {
-          bg:       '#0b0b18',
-          panel:    '#161626',
-          surface:  '#1e1e36',
-          border:   '#3c3c68',
-          muted:    '#7070a8',
+          bg:      'rgb(var(--venue-bg-rgb) / <alpha-value>)',
+          panel:   'rgb(var(--venue-panel-rgb) / <alpha-value>)',
+          surface: 'rgb(var(--venue-surface-rgb) / <alpha-value>)',
+          border:  'rgb(var(--venue-border-rgb) / <alpha-value>)',
+          muted:   'rgb(var(--venue-muted-rgb) / <alpha-value>)',
         },
         brand: {
           cyan:   '#00e5ff',

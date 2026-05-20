@@ -13,7 +13,7 @@ export default function MobileOnboarding({ onTour, onPreset }) {
   return (
     <div
       className="flex-shrink-0 mx-2 mt-2 rounded-lg border"
-      style={{ background: '#0f0f22', borderColor: '#2a2a50' }}
+      style={{ background: 'var(--color-surface-alt)', borderColor: 'var(--color-border-dim)' }}
     >
       <div className="p-3">
         <div
@@ -24,14 +24,14 @@ export default function MobileOnboarding({ onTour, onPreset }) {
         </div>
 
         <ol className="space-y-1 mb-3">
-          <li className="text-[10px] font-mono" style={{ color: '#7070a8' }}>
-            1. Tap a component in <strong style={{ color: '#e0e0ff' }}>LIBRARY</strong>
+          <li className="text-[10px] font-mono" style={{ color: 'var(--color-muted)' }}>
+            1. Tap a component in <strong style={{ color: 'var(--color-text)' }}>LIBRARY</strong>
           </li>
-          <li className="text-[10px] font-mono" style={{ color: '#7070a8' }}>
+          <li className="text-[10px] font-mono" style={{ color: 'var(--color-muted)' }}>
             2. Switch to <strong style={{ color: '#ff8c00' }}>ASSIGN</strong> — tap a slot to place it
           </li>
-          <li className="text-[10px] font-mono" style={{ color: '#7070a8' }}>
-            3. See compatibility results in <strong style={{ color: '#e0e0ff' }}>CHECK</strong>
+          <li className="text-[10px] font-mono" style={{ color: 'var(--color-muted)' }}>
+            3. See compatibility results in <strong style={{ color: 'var(--color-text)' }}>CHECK</strong>
           </li>
         </ol>
 

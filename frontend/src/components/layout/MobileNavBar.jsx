@@ -48,8 +48,8 @@ export default function MobileNavBar({ tab, setTab }) {
       aria-label="Main navigation"
       className="flex-shrink-0 flex border-t"
       style={{
-        background:    '#0b0b18',
-        borderColor:   '#3c3c68',
+        background:    'var(--color-bg)',
+        borderColor:   'var(--color-border)',
         paddingBottom: 'env(safe-area-inset-bottom, 0px)',
         overflow:      'visible',
       }}

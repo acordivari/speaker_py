@@ -52,8 +52,9 @@ export default function ComponentPalette({ isLoading }) {
           value={search}
           onChange={e => setSearch(e.target.value)}
           className="w-full text-xs font-mono bg-venue-surface border border-venue-border
-                     rounded px-2 py-1 text-white placeholder-venue-muted focus:outline-none
+                     rounded px-2 py-1 placeholder-venue-muted focus:outline-none
                      focus:border-brand-cyan mb-2"
+          style={{ color: 'var(--color-text)' }}
         />
 
         {/* Type filter pills */}
@@ -64,8 +65,8 @@ export default function ComponentPalette({ isLoading }) {
               onClick={() => setType(opt.value)}
               className="text-[8px] font-mono px-1.5 py-0.5 rounded border transition-colors"
               style={{
-                borderColor: selectedType === opt.value ? '#00e5ff' : '#3c3c68',
-                color:       selectedType === opt.value ? '#00e5ff' : '#7878a8',
+                borderColor: selectedType === opt.value ? '#00e5ff' : 'var(--color-border)',
+                color:       selectedType === opt.value ? '#00e5ff' : 'var(--color-muted)',
                 background:  selectedType === opt.value ? '#00e5ff11' : 'transparent',
               }}
             >
@@ -80,8 +81,8 @@ export default function ComponentPalette({ isLoading }) {
             onClick={() => setMfr(null)}
             className="text-[8px] font-mono px-1.5 py-0.5 rounded border transition-colors"
             style={{
-              borderColor: selectedMfr === null ? '#00e5ff' : '#3c3c68',
-              color:       selectedMfr === null ? '#00e5ff' : '#7878a8',
+              borderColor: selectedMfr === null ? '#00e5ff' : 'var(--color-border)',
+              color:       selectedMfr === null ? '#00e5ff' : 'var(--color-muted)',
             }}
           >
             ALL
@@ -95,8 +96,8 @@ export default function ComponentPalette({ isLoading }) {
                 onClick={() => setMfr(active ? null : m.name)}
                 className="text-[8px] font-mono px-1.5 py-0.5 rounded border transition-colors"
                 style={{
-                  borderColor: active ? color : '#3c3c68',
-                  color:       active ? color : '#7878a8',
+                  borderColor: active ? color : 'var(--color-border)',
+                  color:       active ? color : 'var(--color-muted)',
                   background:  active ? `${color}11` : 'transparent',
                 }}
                 title={m.name}

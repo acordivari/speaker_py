@@ -86,9 +86,9 @@ npm test          # single pass
 npm run test:watch  # interactive watch mode
 ```
 
-61 tests across 6 files covering layout exclusivity, drag interaction
-modes, drop routing, drop slot behavior, venue position rendering, and
-demo tour mobile/desktop gating.
+79 tests across 10 files covering layout exclusivity, drag interaction
+modes, drop routing, drop slot behavior, venue position rendering,
+demo tour mobile/desktop gating, limiter controls, and theme toggle.
 
 ---
 
@@ -137,16 +137,113 @@ diagram and intercept pointer events in other panels.
 
 ### UI text and color
 
-- Use explicit color tokens for text (`text-slate-400`, `#7070a8`) — not
-  opacity modifiers stacked on dim base colors. Compounded opacity makes
-  helper text unreadably faint.
+- Never use compounded opacity on dim base colors — it makes helper text
+  unreadably faint in both themes.
 - Labels that logically precede a content block belong in normal document
   flow (flex row), not `position: absolute` overlays.
+- **All structural colors must use CSS custom properties** — see the
+  Theming section below. Never use raw hex values for backgrounds, borders,
+  or text that should adapt to the light/dark toggle.
 
 ### Static / educational components
 
 Inline all static data directly in the component file (as the GlossaryModal
 does). No backend coupling needed for display-only reference content.
+
+---
+
+## Theming — dark / light toggle
+
+The app supports a dark/light theme toggle (☀/☾ in the header). The toggle
+sets `document.documentElement.dataset.theme` to `"light"` or `"dark"` and
+persists the choice to `localStorage` under the key `sdl_theme`. `main.jsx`
+reads this key and applies it before React mounts to prevent a flash.
+
+### How the system works
+
+1. **CSS custom properties** in `globals.css` define two token sets:
+   - `:root` — dark defaults
+   - `[data-theme="light"]` — light overrides
+
+2. **Tailwind venue colors** in `tailwind.config.js` reference those vars
+   using the space-separated RGB channel format required for opacity support:
+   ```js
+   venue: {
+     panel: 'rgb(var(--venue-panel-rgb) / <alpha-value>)',
+   }
+   ```
+   This means all Tailwind classes (`bg-venue-panel`, `border-venue-border`,
+   `.panel`, etc.) automatically pick up the active theme at runtime.
+
+3. **Global light-mode overrides** in `globals.css` adapt Tailwind's static
+   text utilities that don't know about the theme:
+   ```css
+   [data-theme="light"] .text-white,
+   [data-theme="light"] .text-slate-200 { color: var(--color-text); }
+   [data-theme="light"] .text-slate-400  { color: var(--color-muted); }
+   ```
+
+4. **Inline styles** must use `var(--color-*)` references — never raw hex.
+
+### CSS token reference
+
+| Token | Dark | Light | Use for |
+|-------|------|-------|---------|
+| `--color-bg` | `#0b0b18` | `#f4f6ff` | Page background |
+| `--color-panel` | `#161626` | `#ffffff` | Panel/card backgrounds |
+| `--color-surface` | `#1e1e36` | `#eef0fb` | Elevated surfaces, inputs |
+| `--color-surface-alt` | `#0f0f20` | `#f8f9ff` | Modals, overlays |
+| `--color-border` | `#3c3c68` | `#c0c7e8` | Standard borders |
+| `--color-border-dim` | `#28284e` | `#d0d5ed` | Subtle / secondary borders |
+| `--color-border-inner` | `#1e1e36` | `#e0e4f4` | Inner dividers |
+| `--color-muted` | `#7070a8` | `#5558a0` | Muted / secondary text |
+| `--color-text` | `#e2e8f0` | `#1a1c38` | Primary body text |
+| `--color-text-2` | `#c0c0d8` | `#2a2d50` | Secondary text |
+| `--color-text-3` | `#9090b8` | `#3a3d6a` | Tertiary text |
+| `--color-text-dim` | `#4a4a6a` | `#6870b0` | Dim / placeholder text |
+
+Brand accent colors (`#00e5ff`, `#00ff88`, `#ffb300`, `#ff3d00`, `#ff8c00`)
+do not change between themes — they are always used at full saturation.
+
+### Rules for every new component or style change
+
+1. **No raw hex for structural colors.** If you find yourself typing `#161626`,
+   `#3c3c68`, `#7070a8`, or any of the dark-era palette values as an inline
+   style, stop. Use the CSS var from the table above instead.
+
+2. **No `text-white` or `text-slate-*` for body text.** Use `var(--color-text)`,
+   `var(--color-text-2)`, or `var(--color-muted)` in an inline style, or add a
+   CSS-var-backed Tailwind token. The global overrides in `globals.css` catch
+   existing usages but are a fallback, not a license to add new ones.
+
+3. **Tailwind classes backed by venue tokens are safe.** `bg-venue-panel`,
+   `border-venue-border`, `text-venue-muted`, `.panel` all adapt automatically.
+
+4. **Brand accent colors with alpha suffixes are safe.** `#00e5ff44`,
+   `#ff8c0011` etc. are intentional semi-transparent tints on accent colors —
+   these stay the same in both themes.
+
+5. **Restart the dev server after changing `tailwind.config.js`.** Vite watches
+   source files but Tailwind's config is processed at startup; changes to
+   venue token definitions require a server restart to regenerate the CSS.
+
+6. **Write a test for any new theme-sensitive UI.** `ThemeToggle.test.jsx`
+   covers the toggle mechanism. Component-level tests should verify that
+   aria attributes and text content are correct regardless of theme state.
+
+### How we got here (context)
+
+The original codebase was built dark-only with hardcoded hex values
+everywhere (`#161626`, `#3c3c68`, `#7070a8`, etc.) in inline `style` props,
+and Tailwind's static text utilities (`text-white`, `text-slate-200`) used
+throughout. When the light theme was added, the CSS custom properties
+cascaded correctly for Tailwind venue classes, but all the hardcoded inline
+styles and static text utilities were invisible to the cascade — they just
+kept their fixed dark values. The fix required converting every structural
+color to a `var()` reference and adding global CSS overrides for the Tailwind
+utilities. The dev server also needed a full restart because `tailwind.config.js`
+changes aren't hot-reloaded. Total scope: 10+ components, ~80 color
+references, one full dev server cycle.
 
 ---
 

@@ -40,7 +40,7 @@ export default function ChannelEditor() {
                          flex items-center justify-center"
               style={{
                 borderBottomColor: isActive ? '#00e5ff' : 'transparent',
-                color: isActive ? '#00e5ff' : populated ? '#6060a0' : '#7070a8',
+                color: isActive ? '#00e5ff' : populated ? 'var(--color-muted)' : 'var(--color-muted)',
                 background:  isActive ? '#00e5ff0a' : 'transparent',
                 fontSize:    '9px',
                 fontFamily:  'inherit',
@@ -82,8 +82,8 @@ export default function ChannelEditor() {
                   className="flex-1 text-[9px] font-mono py-1.5 rounded border transition-colors
                              whitespace-nowrap touch-target-lg"
                   style={{
-                    borderColor: channel.wiring === w ? '#00e5ff' : '#3c3c68',
-                    color:       channel.wiring === w ? '#00e5ff' : '#7070a0',
+                    borderColor: channel.wiring === w ? '#00e5ff' : 'var(--color-border)',
+                    color:       channel.wiring === w ? '#00e5ff' : 'var(--color-muted)',
                     background:  channel.wiring === w ? '#00e5ff0d' : 'transparent',
                     minHeight:   '36px',
                     padding:     '6px 8px',
@@ -102,21 +102,21 @@ export default function ChannelEditor() {
               role="switch"
               aria-checked={channel.bridged}
               aria-label="Bridged mono mode"
-              className="w-7 h-4 rounded-full border transition-all relative flex-shrink-0"
+              className="w-9 h-5 rounded-full border transition-all relative flex-shrink-0"
               style={{
-                borderColor: channel.bridged ? '#ffb300' : '#7070a8',
-                background:  channel.bridged ? '#ffb30033' : '#161626',
+                borderColor: channel.bridged ? '#ffb300' : 'var(--color-muted)',
+                background:  channel.bridged ? '#ffb30033' : 'var(--color-surface)',
               }}
             >
               <div
-                className="absolute top-0.5 w-3 h-3 rounded-full transition-all"
+                className="absolute top-[2px] w-4 h-4 rounded-full transition-all"
                 style={{
-                  left:       channel.bridged ? 'calc(100% - 14px)' : '2px',
-                  background: channel.bridged ? '#ffb300' : '#7070a8',
+                  left:       channel.bridged ? 'calc(100% - 18px)' : '2px',
+                  background: channel.bridged ? '#ffb300' : 'var(--color-muted)',
                 }}
               />
             </button>
-            <span className="text-[9px] font-mono" style={{ color: channel.bridged ? '#ffb300' : '#7070a0' }}>
+            <span className="text-[9px] font-mono" style={{ color: channel.bridged ? '#ffb300' : 'var(--color-muted)' }}>
               BRIDGED
             </span>
           </div>
@@ -141,8 +141,8 @@ export default function ChannelEditor() {
                     className="text-[9px] font-mono py-1 px-2 rounded border transition-colors
                                whitespace-nowrap touch-target text-center"
                     style={{
-                      borderColor: active ? opt.activeColor : '#3c3c68',
-                      color:       active ? opt.activeColor : '#7070a0',
+                      borderColor: active ? opt.activeColor : 'var(--color-border)',
+                      color:       active ? opt.activeColor : 'var(--color-muted)',
                       background:  active ? opt.activeColor + '1a' : 'transparent',
                       minHeight:   '32px',
                     }}

@@ -606,30 +606,29 @@ export default function GlossaryModal({ onClose, inline = false }) {
     <div
       className="relative flex flex-col overflow-hidden"
       style={inline ? {
-        // Fills the tab panel container completely
-        width: '100%', height: '100%', background: '#0f0f20',
+        width: '100%', height: '100%', background: 'var(--color-surface-alt)',
       } : {
         width:        isMobile ? '100vw'          : 'min(96vw, 1100px)',
         height:       isMobile ? '100dvh'         : 'min(94vh, 820px)',
         maxHeight:    isMobile ? '100dvh'         : 'min(94vh, 820px)',
         borderRadius: isMobile ? '0'              : '0.75rem',
-        border:       isMobile ? 'none'           : '1px solid #3c3c68',
-        background:   '#0f0f20',
+        border:       isMobile ? 'none'           : '1px solid var(--color-border)',
+        background:   'var(--color-surface-alt)',
         boxShadow:    isMobile ? 'none' : '0 0 60px #00e5ff14, 0 24px 80px #00000088',
       }}
     >
         {/* ── Header ────────────────────────────────────────────────── */}
         <div
           className="flex items-center justify-between px-4 py-3 border-b flex-shrink-0"
-          style={{ borderColor: '#28284e' }}
+          style={{ borderColor: 'var(--color-border-dim)' }}
         >
           <div>
             <div className="text-xs font-mono uppercase tracking-widest" style={{ color: C.cyan }}>
               Sound Design Lab · Reference
             </div>
-            <div className="text-sm font-bold text-white font-mono tracking-wide">
+            <div className="text-sm font-bold font-mono tracking-wide" style={{ color: 'var(--color-text)' }}>
               Glossary
-              <span className="text-xs font-normal ml-2 font-mono" style={{ color: '#7070a8' }}>
+              <span className="text-xs font-normal ml-2 font-mono" style={{ color: 'var(--color-muted)' }}>
                 {GLOSSARY.length} terms
               </span>
             </div>
@@ -643,9 +642,9 @@ export default function GlossaryModal({ onClose, inline = false }) {
             onChange={e => { setSearch(e.target.value); setActiveCategory('All Terms') }}
             className="text-xs font-mono px-3 py-1.5 rounded border outline-none mx-3 flex-1 max-w-[200px]"
             style={{
-              background:  '#161626',
-              borderColor: '#3c3c68',
-              color:       '#e0e0f0',
+              background:  'var(--color-surface)',
+              borderColor: 'var(--color-border)',
+              color:       'var(--color-text)',
             }}
             onFocus={e => { e.target.style.borderColor = C.cyan }}
             onBlur={e  => { e.target.style.borderColor = '#3c3c68' }}
@@ -665,7 +664,7 @@ export default function GlossaryModal({ onClose, inline = false }) {
         {/* ── Mobile category pills ──────────────────────────────────── */}
         <div
           className="flex sm:hidden overflow-x-auto gap-2 px-3 py-2 flex-shrink-0 scrollbar-none border-b"
-          style={{ borderColor: '#1e1e36' }}
+          style={{ borderColor: 'var(--color-border-inner)' }}
           role="tablist"
           aria-label="Filter by category"
         >
@@ -696,7 +695,7 @@ export default function GlossaryModal({ onClose, inline = false }) {
           {/* Sidebar — desktop only */}
           <nav
             className="hidden sm:flex w-52 flex-shrink-0 border-r flex-col overflow-y-auto py-2"
-            style={{ borderColor: '#28284e', background: '#0b0b18' }}
+            style={{ borderColor: 'var(--color-border-dim)', background: 'var(--color-bg)' }}
             aria-label="Category navigation"
           >
             {CATEGORIES.map(cat => {
@@ -721,8 +720,8 @@ export default function GlossaryModal({ onClose, inline = false }) {
                   <span
                     className="text-[9px] font-mono rounded px-1"
                     style={{
-                      background: active ? cat.color + '22' : '#1e1e36',
-                      color:      active ? cat.color : '#4a4a6a',
+                      background: active ? cat.color + '22' : 'var(--color-surface)',
+                      color:      active ? cat.color : 'var(--color-text-dim)',
                     }}
                   >
                     {count}
@@ -732,8 +731,8 @@ export default function GlossaryModal({ onClose, inline = false }) {
             })}
 
             {/* Quick Rules callout */}
-            <div className="mt-4 mx-3 border-t pt-3" style={{ borderColor: '#1e1e36' }}>
-              <div className="text-[8px] font-mono uppercase tracking-widest mb-2" style={{ color: '#4a4a6a' }}>
+            <div className="mt-4 mx-3 border-t pt-3" style={{ borderColor: 'var(--color-border-inner)' }}>
+              <div className="text-[8px] font-mono uppercase tracking-widest mb-2" style={{ color: 'var(--color-text-dim)' }}>
                 Quick Rules
               </div>
               {[
@@ -743,7 +742,7 @@ export default function GlossaryModal({ onClose, inline = false }) {
                 { label: 'Bridged min', rule: '2× min load',    color: C.purple },
               ].map(r => (
                 <div key={r.label} className="mb-1.5">
-                  <div className="text-[8px] font-mono" style={{ color: '#4a4a6a' }}>{r.label}</div>
+                  <div className="text-[8px] font-mono" style={{ color: 'var(--color-text-dim)' }}>{r.label}</div>
                   <div className="text-[9px] font-mono" style={{ color: r.color }}>{r.rule}</div>
                 </div>
               ))}
@@ -756,7 +755,7 @@ export default function GlossaryModal({ onClose, inline = false }) {
               <div className="flex items-center justify-center h-full">
                 <div className="text-center">
                   <div className="text-2xl mb-2">⌕</div>
-                  <div className="text-sm font-mono" style={{ color: '#4a4a6a' }}>No terms match "{search}"</div>
+                  <div className="text-sm font-mono" style={{ color: 'var(--color-text-dim)' }}>No terms match "{search}"</div>
                 </div>
               </div>
             )}
@@ -771,16 +770,16 @@ export default function GlossaryModal({ onClose, inline = false }) {
                   id={`glossary-entry-${entry.id}`}
                   key={entry.id}
                   className="rounded-lg border overflow-hidden"
-                  style={{ borderColor: '#28284e', background: '#161626' }}
+                  style={{ borderColor: 'var(--color-border-dim)', background: 'var(--color-panel)' }}
                 >
                   {/* Term header */}
                   <div
                     className="flex items-start gap-3 px-4 py-3 border-b"
-                    style={{ borderColor: '#1e1e36', borderLeft: `3px solid ${color}` }}
+                    style={{ borderColor: 'var(--color-border-inner)', borderLeft: `3px solid ${color}` }}
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-baseline gap-2">
-                        <span className="text-sm font-bold font-mono text-white">{entry.term}</span>
+                        <span className="text-sm font-bold font-mono" style={{ color: 'var(--color-text)' }}>{entry.term}</span>
                         {entry.symbol && (
                           <span className="text-xs font-mono px-1.5 py-0.5 rounded" style={{ color, background: color + '18' }}>
                             {entry.symbol}
@@ -798,10 +797,10 @@ export default function GlossaryModal({ onClose, inline = false }) {
 
                   {/* Formal definition */}
                   <div className="px-4 pt-3 pb-2">
-                    <div className="text-[9px] font-mono uppercase tracking-widest mb-1.5" style={{ color: '#4a4a6a' }}>
+                    <div className="text-[9px] font-mono uppercase tracking-widest mb-1.5" style={{ color: 'var(--color-text-dim)' }}>
                       Formal Definition
                     </div>
-                    <p className="text-xs leading-relaxed" style={{ color: '#c0c0d8' }}>
+                    <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-2)' }}>
                       {entry.formal}
                     </p>
                   </div>
@@ -814,7 +813,7 @@ export default function GlossaryModal({ onClose, inline = false }) {
                       className="flex items-center gap-2 text-[9px] font-mono uppercase
                                  tracking-widest mb-1.5 transition-colors touch-target"
                       style={{
-                        color: (isDefaultOpen || eli5Open) ? C.amber : '#4a4a6a',
+                        color: (isDefaultOpen || eli5Open) ? C.amber : 'var(--color-text-dim)',
                         minHeight: '32px',
                       }}
                     >
@@ -836,14 +835,14 @@ export default function GlossaryModal({ onClose, inline = false }) {
 
                   {/* Setup Guide — entries with step-by-step guidance */}
                   {entry.steps && (
-                    <div className="px-4 pb-3 border-t" style={{ borderColor: '#1e1e36' }}>
+                    <div className="px-4 pb-3 border-t" style={{ borderColor: 'var(--color-border-inner)' }}>
                       <button
                         onClick={() => toggleGuide(entry.id)}
                         aria-expanded={!!expandedGuide[entry.id]}
                         className="flex items-center gap-2 text-[9px] font-mono uppercase
                                    tracking-widest mt-2 mb-1.5 transition-colors touch-target w-full"
                         style={{
-                          color: expandedGuide[entry.id] ? C.green : '#4a4a6a',
+                          color: expandedGuide[entry.id] ? C.green : 'var(--color-text-dim)',
                           minHeight: '32px',
                         }}
                       >
@@ -896,7 +895,7 @@ export default function GlossaryModal({ onClose, inline = false }) {
                             <div>
                               <div
                                 className="text-[9px] font-mono uppercase tracking-widest mb-2"
-                                style={{ color: '#4a4a6a' }}
+                                style={{ color: 'var(--color-text-dim)' }}
                               >
                                 Where to insert it
                               </div>
@@ -906,8 +905,8 @@ export default function GlossaryModal({ onClose, inline = false }) {
                                     key={i}
                                     className="rounded-md p-3"
                                     style={{
-                                      background: '#111126',
-                                      border: `1px solid ${i === 0 ? C.cyan + '33' : '#2a2a50'}`,
+                                      background: 'var(--color-surface)',
+                                      border: `1px solid ${i === 0 ? C.cyan + '33' : 'var(--color-border-dim)'}`,
                                     }}
                                   >
                                     <div className="flex items-center gap-2 mb-1.5 flex-wrap">
@@ -929,7 +928,7 @@ export default function GlossaryModal({ onClose, inline = false }) {
                                     </div>
                                     <code
                                       className="block text-[9px] font-mono mb-2 px-2 py-1 rounded"
-                                      style={{ background: '#0b0b1a', color: C.amber }}
+                                      style={{ background: 'var(--color-bg)', color: C.amber }}
                                     >
                                       {p.chain}
                                     </code>
@@ -968,9 +967,9 @@ export default function GlossaryModal({ onClose, inline = false }) {
                   {entry.seeAlso && entry.seeAlso.length > 0 && (
                     <div
                       className="px-4 py-2 border-t flex items-center gap-2 flex-wrap"
-                      style={{ borderColor: '#1e1e36' }}
+                      style={{ borderColor: 'var(--color-border-inner)' }}
                     >
-                      <span className="text-[8px] font-mono uppercase tracking-widest" style={{ color: '#4a4a6a' }}>
+                      <span className="text-[8px] font-mono uppercase tracking-widest" style={{ color: 'var(--color-text-dim)' }}>
                         See also:
                       </span>
                       {entry.seeAlso.map(ref => {
@@ -1005,16 +1004,16 @@ export default function GlossaryModal({ onClose, inline = false }) {
         <div
           className="px-4 py-2 border-t flex items-center justify-between flex-shrink-0"
           style={{
-            borderColor: '#1e1e36',
-            background:  '#0b0b18',
+            borderColor: 'var(--color-border-inner)',
+            background:  'var(--color-bg)',
             paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
           }}
         >
-          <span className="text-[9px] font-mono" style={{ color: '#3c3c68' }}>
+          <span className="text-[9px] font-mono" style={{ color: 'var(--color-border)' }}>
             {filtered.length} of {GLOSSARY.length} terms
           </span>
-          <span className="hidden sm:block text-[9px] font-mono" style={{ color: '#3c3c68' }}>
-            Press <kbd className="px-1 rounded" style={{ background: '#1e1e36', color: '#7070a8' }}>Esc</kbd> to close
+          <span className="hidden sm:block text-[9px] font-mono" style={{ color: 'var(--color-border)' }}>
+            Press <kbd className="px-1 rounded" style={{ background: 'var(--color-surface)', color: 'var(--color-muted)' }}>Esc</kbd> to close
           </span>
         </div>
     </div>  // end panel

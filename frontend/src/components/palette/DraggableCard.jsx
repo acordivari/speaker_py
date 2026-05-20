@@ -65,7 +65,7 @@ export default function DraggableCard({ component }) {
           ? `${accentColor}18`
           : isDragging
             ? `${accentColor}10`
-            : 'linear-gradient(135deg, #161626 0%, #1e1e36 100%)',
+            : 'linear-gradient(135deg, var(--color-panel) 0%, var(--color-surface) 100%)',
         transform:   isDragging ? 'scale(0.97)' : 'scale(1)',
         boxShadow:   isSelected ? `0 0 0 1px ${accentColor}, 0 0 16px ${accentColor}33` : 'none',
       }}
@@ -102,12 +102,12 @@ export default function DraggableCard({ component }) {
                   SELECTED
                 </span>
               )}
-              <span className="text-[9px] font-mono text-slate-400">{icon}</span>
+              <span className="text-[9px] font-mono" style={{ color: 'var(--color-muted)' }}>{icon}</span>
             </div>
           </div>
 
           {/* Manufacturer */}
-          <div className="text-[9px] text-slate-400 font-mono truncate">
+          <div className="text-[9px] font-mono truncate" style={{ color: 'var(--color-muted)' }}>
             {component.manufacturer_name}
           </div>
 
@@ -125,13 +125,13 @@ export default function DraggableCard({ component }) {
             )}
 
             {!isActive && component.nominal_impedance_ohms && (
-              <span className="text-[8px] font-mono text-slate-400">
+              <span className="text-[8px] font-mono" style={{ color: 'var(--color-muted)' }}>
                 {component.nominal_impedance_ohms}Ω
               </span>
             )}
 
             {component.power_handling_rms_watts && (
-              <span className="text-[8px] font-mono text-slate-400">
+              <span className="text-[8px] font-mono" style={{ color: 'var(--color-muted)' }}>
                 {component.power_handling_rms_watts}W
               </span>
             )}

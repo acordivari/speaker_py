@@ -76,7 +76,7 @@ export default function DroppableSlot({
         ? '#00e5ff06'
         : occupied
           ? `${accentColor}08`
-          : '#161626'
+          : 'var(--color-panel)'
 
   function handleTapAssign() {
     if (!isMobile || !tapSelected) return
@@ -125,7 +125,7 @@ export default function DroppableSlot({
       {/* Slot type label */}
       <div
         className="text-[9px] font-mono flex-shrink-0 w-8 text-center rounded px-1 py-1"
-        style={{ color: isOver ? '#00e5ff' : '#7070a0', border: `1px solid ${borderColor}33` }}
+        style={{ color: isOver ? '#00e5ff' : 'var(--color-muted)', border: `1px solid ${borderColor}33` }}
       >
         {label}
       </div>
@@ -182,7 +182,7 @@ export default function DroppableSlot({
               >
                 −
               </button>
-              <span className="text-xs font-mono text-white w-5 text-center">
+              <span className="text-xs font-mono w-5 text-center" style={{ color: 'var(--color-text)' }}>
                 {count}
               </span>
               <button

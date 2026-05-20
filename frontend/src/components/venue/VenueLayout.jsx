@@ -20,10 +20,10 @@ export default function VenueLayout() {
     <div className="panel h-full flex flex-col overflow-hidden">
       {/* Venue label */}
       <div className="px-3 pt-2 pb-1 flex-shrink-0 border-b border-venue-border">
-        <span className="text-[10px] font-mono text-venue-muted uppercase tracking-widest">
+        <span className="text-[10px] font-mono uppercase tracking-widest" style={{ color: 'var(--color-muted)' }}>
           Mission Ballroom · Denver
         </span>
-        <span className="block text-[9px] text-slate-400 mt-0.5">
+        <span className="block text-[9px] mt-0.5" style={{ color: 'var(--color-text-3)' }}>
           Overhead view — click any speaker position to configure that channel
         </span>
       </div>
@@ -36,12 +36,12 @@ export default function VenueLayout() {
         {/* ── Ambient glow background ──────────────────────────────── */}
         <defs>
           <radialGradient id="floorGlow" cx="50%" cy="60%" r="55%">
-            <stop offset="0%"   stopColor="#0a1628" />
-            <stop offset="100%" stopColor="#0b0b18" />
+            <stop offset="0%"   style={{ stopColor: 'var(--color-surface)' }} />
+            <stop offset="100%" style={{ stopColor: 'var(--color-bg)' }} />
           </radialGradient>
           <radialGradient id="stageGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stopColor="#1a1a3e" />
-            <stop offset="100%" stopColor="#161626" />
+            <stop offset="0%"   style={{ stopColor: 'var(--color-surface)' }} />
+            <stop offset="100%" style={{ stopColor: 'var(--color-panel)' }} />
           </radialGradient>
           <filter id="bloom">
             <feGaussianBlur stdDeviation="3" result="blur" />
@@ -50,72 +50,72 @@ export default function VenueLayout() {
         </defs>
 
         {/* ── Outer venue shell ─────────────────────────────────────── */}
-        <rect x="0" y="0" width="800" height="560" fill="#0b0b18" />
+        <rect x="0" y="0" width="800" height="560" style={{ fill: 'var(--color-bg)' }} />
         <rect
           x="30" y="30" width="740" height="500" rx="14"
-          fill="#141426" stroke="#3c3c68" strokeWidth="1.5"
+          style={{ fill: 'var(--color-surface-alt)', stroke: 'var(--color-border)' }} strokeWidth="1.5"
         />
 
         {/* ── Balcony back ─────────────────────────────────────────── */}
         <rect x="90"  y="50"  width="620" height="85" rx="8"
-              fill="#1b1b34" stroke="#3c3c68" strokeWidth="1" />
-        <text x="400" y="98" textAnchor="middle" fill="#7070a8"
+              style={{ fill: 'var(--color-surface)', stroke: 'var(--color-border)' }} strokeWidth="1" />
+        <text x="400" y="98" textAnchor="middle" style={{ fill: 'var(--color-muted)' }}
               fontSize="9" fontFamily="monospace" letterSpacing="3">
           BALCONY
         </text>
 
         {/* ── Balcony sides ─────────────────────────────────────────── */}
         <rect x="30" y="135" width="90" height="230" rx="6"
-              fill="#18182e" stroke="#3c3c68" strokeWidth="1" />
+              style={{ fill: 'var(--color-surface)', stroke: 'var(--color-border)' }} strokeWidth="1" />
         <rect x="680" y="135" width="90" height="230" rx="6"
-              fill="#18182e" stroke="#3c3c68" strokeWidth="1" />
-        <text x="75"  y="255" textAnchor="middle" fill="#7070a8"
+              style={{ fill: 'var(--color-surface)', stroke: 'var(--color-border)' }} strokeWidth="1" />
+        <text x="75"  y="255" textAnchor="middle" style={{ fill: 'var(--color-muted)' }}
               fontSize="8" fontFamily="monospace" transform="rotate(-90,75,255)" letterSpacing="2">
           BALCONY
         </text>
-        <text x="725" y="255" textAnchor="middle" fill="#7070a8"
+        <text x="725" y="255" textAnchor="middle" style={{ fill: 'var(--color-muted)' }}
               fontSize="8" fontFamily="monospace" transform="rotate(90,725,255)" letterSpacing="2">
           BALCONY
         </text>
 
         {/* ── Main floor ────────────────────────────────────────────── */}
         <rect x="120" y="135" width="560" height="250" rx="4"
-              fill="url(#floorGlow)" stroke="#1a1a38" strokeWidth="1" />
-        <text x="400" y="265" textAnchor="middle" fill="#1a1a38"
+              fill="url(#floorGlow)" style={{ stroke: 'var(--color-border-inner)' }} strokeWidth="1" />
+        <text x="400" y="265" textAnchor="middle" style={{ fill: 'var(--color-text-dim)' }}
               fontSize="11" fontFamily="monospace" letterSpacing="4">
           GENERAL ADMISSION
         </text>
 
         {/* FOH mix position marker */}
-        <circle cx="400" cy="295" r="16" fill="#0d1a30" stroke="#1e3a5a"
+        <circle cx="400" cy="295" r="16" style={{ fill: 'var(--color-bg)', stroke: 'var(--color-border-dim)' }}
                 strokeWidth="1" strokeDasharray="4 3" />
-        <text x="400" y="299" textAnchor="middle" fill="#1e4a7a"
+        <text x="400" y="299" textAnchor="middle" style={{ fill: 'var(--color-text-dim)' }}
               fontSize="7" fontFamily="monospace" letterSpacing="1">
           FOH
         </text>
 
         {/* ── Stage area ────────────────────────────────────────────── */}
         <rect x="120" y="385" width="560" height="115" rx="6"
-              fill="url(#stageGlow)" stroke="#1e1e4a" strokeWidth="1.5" />
-        <rect x="140" y="390" width="520" height="2" rx="1" fill="#2a2a6a" opacity="0.5" />
-        <text x="400" y="448" textAnchor="middle" fill="#2a2a6a"
+              fill="url(#stageGlow)" style={{ stroke: 'var(--color-border-inner)' }} strokeWidth="1.5" />
+        <rect x="140" y="390" width="520" height="2" rx="1" style={{ fill: 'var(--color-border-dim)' }} opacity="0.5" />
+        <text x="400" y="448" textAnchor="middle" style={{ fill: 'var(--color-muted)' }}
               fontSize="13" fontFamily="monospace" letterSpacing="8">
           STAGE
         </text>
 
         {/* Stage lip highlight */}
         <line x1="155" y1="388" x2="645" y2="388"
-              stroke="#2a2a8a" strokeWidth="2" opacity="0.6" />
+              style={{ stroke: 'var(--color-border)' }} strokeWidth="2" opacity="0.6" />
 
         {/* ── Rigging / truss indicators ────────────────────────────── */}
         {/* Left truss */}
-        <line x1="105" y1="55"  x2="105" y2="385" stroke="#1a1a3a"
+        <line x1="105" y1="55"  x2="105" y2="385" style={{ stroke: 'var(--color-border-inner)' }}
               strokeWidth="1" strokeDasharray="6 6" opacity="0.5" />
         {/* Right truss */}
-        <line x1="695" y1="55"  x2="695" y2="385" stroke="#1a1a3a"
+        <line x1="695" y1="55"  x2="695" y2="385" style={{ stroke: 'var(--color-border-inner)' }}
               strokeWidth="1" strokeDasharray="6 6" opacity="0.5" />
         {/* Center sub cluster rigging */}
-        <line x1="400" y1="55" x2="400" y2="375" stroke="#1a1a3a"
+        <line x1="400" y1="55" x2="400" y2="375" style={{ stroke: 'var(--color-border-inner)' }}
               strokeWidth="1" strokeDasharray="4 8" opacity="0.3" />
 
         {/* ── Speaker position nodes ────────────────────────────────── */}
@@ -143,11 +143,11 @@ export default function VenueLayout() {
         })}
 
         {/* ── Room boundary labels ──────────────────────────────────── */}
-        <text x="400" y="540" textAnchor="middle" fill="#1a1a30"
+        <text x="400" y="540" textAnchor="middle" style={{ fill: 'var(--color-text-dim)' }}
               fontSize="8" fontFamily="monospace" letterSpacing="6">
           SOUTH ENTRANCE
         </text>
-        <text x="400" y="44" textAnchor="middle" fill="#1a1a30"
+        <text x="400" y="44" textAnchor="middle" style={{ fill: 'var(--color-text-dim)' }}
               fontSize="8" fontFamily="monospace" letterSpacing="6">
           NORTH / STAGE END
         </text>

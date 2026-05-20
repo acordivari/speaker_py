@@ -168,7 +168,7 @@ export default function App() {
                 <span className="text-[10px] font-mono font-bold truncate" style={{ color: '#00e5ff' }}>
                   {tapSelected.model_number}
                 </span>
-                <span className="text-[10px] font-mono" style={{ color: '#7070a8' }}>
+                <span className="text-[10px] font-mono" style={{ color: 'var(--color-muted)' }}>
                   — tap a slot to assign
                 </span>
               </div>
@@ -176,7 +176,7 @@ export default function App() {
                 onClick={clearTapSelected}
                 aria-label="Cancel selection"
                 className="flex-shrink-0 text-[10px] font-mono px-2 py-1 rounded ml-2 touch-target"
-                style={{ color: '#7070a8', border: '1px solid #3c3c68' }}
+                style={{ color: 'var(--color-muted)', border: '1px solid var(--color-border)' }}
               >
                 × cancel
               </button>
