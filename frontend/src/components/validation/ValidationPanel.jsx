@@ -18,6 +18,9 @@ export default function ValidationPanel() {
   const isValidating     = useStore(s => s.isValidating)
   const validationError  = useStore(s => s.validationError)
   const validate         = useStore(s => s.validate)
+  const channels         = useStore(s => s.channels)
+
+  const hasConfig = channels.some(ch => ch.amp || ch.speakers.length > 0)
 
   // Flatten all issues across all channels
   const allIssues = validationResult
@@ -206,7 +209,7 @@ export default function ValidationPanel() {
         )}
 
         {/* Empty state */}
-        {!validationResult && !isValidating && (
+        {!hasConfig && !isValidating && (
           <div className="flex flex-col items-center justify-center h-48 text-slate-400 font-mono text-xs text-center px-6 gap-3">
             <div className="text-3xl opacity-20">⚡</div>
             <div>

@@ -148,17 +148,19 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
           ⌁ REFERENCE
         </button>
 
-        <button
-          data-tour="header-reset"
-          onClick={resetAll}
-          aria-label="Reset all channel configurations"
-          className="text-xs font-mono px-3 py-1 rounded border transition-colors duration-200"
-          style={actionBtn}
-          onMouseEnter={actionBtnHover.enter}
-          onMouseLeave={actionBtnHover.leave}
-        >
-          RESET
-        </button>
+        {hasConfig && (
+          <button
+            data-tour="header-reset"
+            onClick={resetAll}
+            aria-label="Reset all channel configurations"
+            className="text-xs font-mono px-3 py-1 rounded border transition-colors duration-200"
+            style={actionBtn}
+            onMouseEnter={actionBtnHover.enter}
+            onMouseLeave={actionBtnHover.leave}
+          >
+            RESET
+          </button>
+        )}
 
         <button
           onClick={onTour}
@@ -226,14 +228,16 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
         </button>
 
         {/* Reset */}
-        <button
-          onClick={resetAll}
-          aria-label="Reset all channel configurations"
-          className="flex items-center justify-center w-8 h-8 rounded border touch-target"
-          style={{ borderColor: '#3c3c68', color: '#7070a8', background: 'transparent' }}
-        >
-          <span className="text-base leading-none">↺</span>
-        </button>
+        {hasConfig && (
+          <button
+            onClick={resetAll}
+            aria-label="Reset all channel configurations"
+            className="flex items-center justify-center w-8 h-8 rounded border touch-target"
+            style={{ borderColor: '#3c3c68', color: '#7070a8', background: 'transparent' }}
+          >
+            <span className="text-base leading-none">↺</span>
+          </button>
+        )}
       </div>
     </header>
   )
