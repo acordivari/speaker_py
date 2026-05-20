@@ -9,6 +9,8 @@
  *   - The dark overlay is removed after close
  *   - Step counter displays correctly
  *   - NEXT button advances the step
+ *   - Step 7→8 transition does NOT cause a blank screen (no loadPreset mid-render)
+ *   - loadPreset fires on FINISH click, not on step transition
  */
 import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
@@ -194,5 +196,71 @@ describe('DemoTour — panel renders correctly', () => {
 
     // Step 2 should now be visible
     expect(screen.getByText('STEP 2 / 8')).toBeInTheDocument()
+  })
+})
+
+describe('DemoTour — step 7→8 blank screen regression', () => {
+  // Regression for: loadPreset called from useEffect on step transition caused
+  // a Zustand store update mid-render, producing a second DemoTour re-render
+  // that left the panel invisible behind the full-screen overlay on mobile.
+  // Fix: loadPreset moved to handleNext (click handler) so React 18 batches
+  // the store update with setDemoActive(false) into one atomic render.
+  let originalInnerWidth
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(null)
+    vi.spyOn(Storage.prototype, 'setItem')
+    originalInnerWidth = window.innerWidth
+    Object.defineProperty(window, 'innerWidth', { value: 1280, configurable: true, writable: true })
+    useIsMobile.mockReturnValue(false)
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+    Object.defineProperty(window, 'innerWidth', { value: originalInnerWidth, configurable: true, writable: true })
+  })
+
+  it('step 8 panel is still visible after advancing through all 7 preceding steps', () => {
+    render(<App />)
+
+    // Advance through steps 1–7 (click NEXT 7 times)
+    for (let i = 0; i < 7; i++) {
+      fireEvent.click(screen.getByRole('button', { name: /next →/i }))
+    }
+
+    // Should now be on step 8 — panel must still be in the document
+    expect(screen.getByText('STEP 8 / 8')).toBeInTheDocument()
+    // The FINISH button must be present and interactive
+    expect(screen.getByRole('button', { name: /finish →/i })).toBeInTheDocument()
+  })
+
+  it('FINISH on step 8 closes the tour (overlay removed)', () => {
+    render(<App />)
+
+    // Advance to step 8
+    for (let i = 0; i < 7; i++) {
+      fireEvent.click(screen.getByRole('button', { name: /next →/i }))
+    }
+
+    expect(screen.getByText('STEP 8 / 8')).toBeInTheDocument()
+
+    // Click FINISH — tour should close
+    fireEvent.click(screen.getByRole('button', { name: /finish →/i }))
+
+    // Tour panel must be gone
+    expect(screen.queryByText('STEP 8 / 8')).not.toBeInTheDocument()
+  })
+
+  it('FINISH on step 8 writes sdl_tour_seen to localStorage', () => {
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem')
+    render(<App />)
+
+    for (let i = 0; i < 7; i++) {
+      fireEvent.click(screen.getByRole('button', { name: /next →/i }))
+    }
+    fireEvent.click(screen.getByRole('button', { name: /finish →/i }))
+
+    expect(setItemSpy).toHaveBeenCalledWith('sdl_tour_seen', '1')
   })
 })

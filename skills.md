@@ -110,6 +110,44 @@ tab so the user isn't left on an empty screen:
 if (isMobile) setMobileTab('venue')   // or whichever tab makes sense
 ```
 
+### Never trigger Zustand store updates from a useEffect that fires on step transitions
+
+**Bug**: calling a store action (e.g. `loadPreset`) from a `useEffect` whose
+dependency is a step index causes a mid-render cascade on the last step:
+
+```
+setStepIndex(lastStep)
+  → React renders DemoTour
+  → useEffect fires: loadPreset() → Zustand set()
+  → App (subscribed to channels) re-renders → new onClose closure
+  → DemoTour re-renders again mid-cycle
+  → portal content enters intermediate state → blank screen on mobile
+```
+
+**Fix**: move the store action into the click handler (e.g. `handleNext`) so
+React 18 batches it with the close call in a single render:
+
+```jsx
+// WRONG — causes mid-render cascade
+useEffect(() => {
+  if (step.isLast) loadPreset(FUNKTION_ONE_PRESET)
+}, [stepIndex])
+
+// CORRECT — batched in the event handler, one render
+const handleNext = useCallback(() => {
+  if (stepIndex < DEMO_STEPS.length - 1) {
+    setStepIndex(i => i + 1)
+  } else {
+    loadPreset(FUNKTION_ONE_PRESET)  // batched with onClose
+    onClose()
+  }
+}, [stepIndex, onClose, loadPreset])
+```
+
+**Rule**: store actions that should fire "when the user completes a step" belong
+in the event handler for that completion action — not in a `useEffect` that
+watches for the step number to change.
+
 ---
 
 ## Touch target sizing
