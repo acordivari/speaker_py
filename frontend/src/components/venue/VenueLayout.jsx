@@ -19,11 +19,11 @@ export default function VenueLayout() {
   return (
     <div className="panel h-full flex flex-col overflow-hidden">
       {/* Venue label */}
-      <div className="flex items-baseline gap-3 px-3 pt-2 pb-1 flex-shrink-0 border-b border-venue-border overflow-hidden">
-        <span className="text-[10px] font-mono text-venue-muted uppercase tracking-widest whitespace-nowrap flex-shrink-0">
+      <div className="px-3 pt-2 pb-1 flex-shrink-0 border-b border-venue-border">
+        <span className="text-[10px] font-mono text-venue-muted uppercase tracking-widest">
           Mission Ballroom · Denver
         </span>
-        <span className="text-[9px] text-slate-400 truncate">
+        <span className="block text-[9px] text-slate-400 mt-0.5">
           Overhead view — click any speaker position to configure that channel
         </span>
       </div>
