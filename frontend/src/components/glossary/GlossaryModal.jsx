@@ -285,6 +285,49 @@ const GLOSSARY = [
     eli5:
       'A limiter is an automatic brick wall. Set the ceiling at 500 watts, and no matter how loud the mix gets, the limiter makes sure the speaker never sees more than 500 watts. It\'s like a governor on a car engine — you can push the gas pedal to the floor, but the car won\'t go above 100 mph. In a speaker system, limiters are the last line of defense against burned voice coils and blown tweeters. Without them, one accidental feedback squeal could destroy thousands of dollars of equipment in seconds.',
     seeAlso: ['dsp', 'clipping', 'power-ratio'],
+    steps: [
+      {
+        n: 1,
+        title: 'Determine your threshold',
+        detail: "Set the limiter ceiling to the speaker's RMS power rating. If the amp-to-speaker ratio is 2×, the limiter holds output at 1× RMS — the speaker never sees more than its safe continuous rating. For higher-headroom builds (3–4× ratio), you may allow up to the speaker's program power rating (typically 2× RMS) — but never above it.",
+      },
+      {
+        n: 2,
+        title: 'Place the limiter in the signal chain',
+        detail: "Preferred: the amplifier's built-in DSP limiter (the last device before the speaker, most direct protection). Alternative: an external DSP rack unit between the console output and the amp inputs. Avoid relying on a console insert alone — it operates before the amp's input sensitivity stage and cannot account for the actual voltage reaching the speaker.",
+      },
+      {
+        n: 3,
+        title: 'Set attack and release',
+        detail: "Attack: 1–5 ms — fast enough to catch transient peaks before they exceed the ceiling, slow enough to avoid audible pumping on kick drums. Release: 50–200 ms — too fast causes pumping on loud passages; too slow keeps the limiter engaged through quiet passages and flattens dynamics.",
+      },
+      {
+        n: 4,
+        title: 'Verify with a test signal',
+        detail: "Drive the amp to the level that would produce speaker RMS output. Confirm the limiter LED engages at that level and the GR (gain reduction) meter shows attenuation. Then check with program material — if you hear pumping or breathing, slow the attack by 1–2 ms increments until it disappears.",
+      },
+    ],
+    placement: [
+      {
+        where: 'Inside the amplifier',
+        badge: 'Recommended',
+        how: "Most modern touring amplifiers (Crown, Lab.gruppen, QSC PL, Powersoft) include configurable DSP limiters. Access via the front-panel menu or management software (Crown HiQnet, Lab.gruppen NomadLink, QSC IQDSP). Because this is the last device before the speaker, it is the most direct protection regardless of what happens earlier in the chain.",
+        chain: 'CONSOLE → AMP [ ← LIMITER HERE ] → SPEAKER',
+      },
+      {
+        where: 'External DSP rack unit',
+        badge: null,
+        how: "Rack a dedicated processor (dbx DriveRack PA2, BSS Audio BLU, Lake LM 44) between the console outputs and the amp inputs. Gives independent per-channel control across multiple amps from one unit — preferred for complex multi-zone systems or when the amplifiers lack built-in DSP.",
+        chain: 'CONSOLE → [ DSP / LIMITER ] → AMP → SPEAKER',
+      },
+      {
+        where: 'Console insert (monitoring only)',
+        badge: 'Not sufficient alone',
+        how: "An insert point on the FOH console channel strip before the amplifier. Does not account for amp input sensitivity, gain staging after the insert, or output voltage at the speaker. Use this position only to observe gain structure — it is not a substitute for in-amp or rack DSP limiting.",
+        chain: '[ LIMITER ] → CONSOLE → AMP → SPEAKER',
+      },
+    ],
+    impact: "With limiting engaged at 1× speaker RMS, the amp-to-speaker power ratio can safely reach 3–4× — the limiter physically prevents more than 1× RMS from reaching the speaker regardless of input level. This is exactly why the over-powered warning in this tool is a WARNING and not an ERROR: the hardware risk disappears once a correctly calibrated limiter is active. The excess headroom (the ratio above 1×) becomes exclusively available for clean transient peaks that are too brief to cause thermal damage — giving the system punch without putting the drivers at risk.",
   },
   {
     id: 'cross-manufacturer-dsp',
@@ -521,6 +564,7 @@ export default function GlossaryModal({ onClose, inline = false }) {
   const [activeCategory, setActiveCategory] = useState('All Terms')
   const [search,         setSearch]         = useState('')
   const [expandedEli5,   setExpandedEli5]   = useState({})
+  const [expandedGuide,  setExpandedGuide]  = useState({})
 
   useEffect(() => {
     function onKey(e) { if (e.key === 'Escape') onClose() }
@@ -544,6 +588,10 @@ export default function GlossaryModal({ onClose, inline = false }) {
 
   function toggleEli5(id) {
     setExpandedEli5(prev => ({ ...prev, [id]: !prev[id] }))
+  }
+
+  function toggleGuide(id) {
+    setExpandedGuide(prev => ({ ...prev, [id]: !prev[id] }))
   }
 
   function scrollToTerm(id) {
@@ -785,6 +833,136 @@ export default function GlossaryModal({ onClose, inline = false }) {
                       </div>
                     )}
                   </div>
+
+                  {/* Setup Guide — entries with step-by-step guidance */}
+                  {entry.steps && (
+                    <div className="px-4 pb-3 border-t" style={{ borderColor: '#1e1e36' }}>
+                      <button
+                        onClick={() => toggleGuide(entry.id)}
+                        aria-expanded={!!expandedGuide[entry.id]}
+                        className="flex items-center gap-2 text-[9px] font-mono uppercase
+                                   tracking-widest mt-2 mb-1.5 transition-colors touch-target w-full"
+                        style={{
+                          color: expandedGuide[entry.id] ? C.green : '#4a4a6a',
+                          minHeight: '32px',
+                        }}
+                      >
+                        <span aria-hidden="true">{expandedGuide[entry.id] ? '▾' : '▸'}</span>
+                        Setup Guide — how &amp; where to apply
+                        <span
+                          className="ml-auto text-[8px] px-1.5 py-0.5 rounded border"
+                          style={{
+                            color: C.green,
+                            borderColor: C.green + '44',
+                            background: C.green + '0d',
+                          }}
+                        >
+                          {entry.steps.length} steps
+                        </span>
+                      </button>
+
+                      {expandedGuide[entry.id] && (
+                        <div className="space-y-4">
+
+                          {/* Numbered steps */}
+                          <div className="space-y-2">
+                            {entry.steps.map(step => (
+                              <div
+                                key={step.n}
+                                className="rounded-md px-3 py-2.5 flex gap-3"
+                                style={{ background: '#0d1a0d', borderLeft: `2px solid ${C.green}44` }}
+                              >
+                                <span
+                                  className="flex-shrink-0 w-5 h-5 rounded-full text-[9px] font-mono font-bold
+                                             flex items-center justify-center mt-0.5"
+                                  style={{ background: C.green + '22', color: C.green }}
+                                >
+                                  {step.n}
+                                </span>
+                                <div>
+                                  <div className="text-[10px] font-mono font-bold mb-1" style={{ color: C.green }}>
+                                    {step.title}
+                                  </div>
+                                  <p className="text-xs leading-relaxed" style={{ color: '#a0b8a0' }}>
+                                    {step.detail}
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Placement options */}
+                          {entry.placement && (
+                            <div>
+                              <div
+                                className="text-[9px] font-mono uppercase tracking-widest mb-2"
+                                style={{ color: '#4a4a6a' }}
+                              >
+                                Where to insert it
+                              </div>
+                              <div className="space-y-2">
+                                {entry.placement.map((p, i) => (
+                                  <div
+                                    key={i}
+                                    className="rounded-md p-3"
+                                    style={{
+                                      background: '#111126',
+                                      border: `1px solid ${i === 0 ? C.cyan + '33' : '#2a2a50'}`,
+                                    }}
+                                  >
+                                    <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                                      <span className="text-[10px] font-mono font-bold" style={{ color: C.cyan }}>
+                                        {p.where}
+                                      </span>
+                                      {p.badge && (
+                                        <span
+                                          className="text-[8px] font-mono px-1.5 py-0.5 rounded border"
+                                          style={{
+                                            color:       i === 0 ? C.green : C.amber,
+                                            borderColor: (i === 0 ? C.green : C.amber) + '44',
+                                            background:  (i === 0 ? C.green : C.amber) + '0d',
+                                          }}
+                                        >
+                                          {p.badge}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <code
+                                      className="block text-[9px] font-mono mb-2 px-2 py-1 rounded"
+                                      style={{ background: '#0b0b1a', color: C.amber }}
+                                    >
+                                      {p.chain}
+                                    </code>
+                                    <p className="text-[10px] leading-relaxed" style={{ color: '#8090a8' }}>
+                                      {p.how}
+                                    </p>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Impact on configuration */}
+                          {entry.impact && (
+                            <div
+                              className="rounded-md px-3 py-2.5"
+                              style={{ background: '#0a1a12', borderLeft: `2px solid ${C.green}` }}
+                            >
+                              <div
+                                className="text-[9px] font-mono uppercase tracking-widest mb-1.5"
+                                style={{ color: C.green + 'aa' }}
+                              >
+                                Impact on your configuration
+                              </div>
+                              <p className="text-xs leading-relaxed" style={{ color: '#90c8a0' }}>
+                                {entry.impact}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   {/* See also */}
                   {entry.seeAlso && entry.seeAlso.length > 0 && (

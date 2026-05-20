@@ -77,6 +77,7 @@ const makeDefaultChannel = (def) => ({
   speakers: [],       // [{ component: Component, count: number }]
   wiring: 'parallel',
   bridged: false,
+  limiterMode: 'none', // 'none' | 'amp_dsp' | 'external_rack' | 'console_insert'
 })
 
 // ── Funktion-One full-venue preset ───────────────────────────────────────────
@@ -286,6 +287,13 @@ const useStore = create((set, get) => ({
       }
     }),
 
+  setLimiterMode: (channelId, mode) =>
+    set(state => ({
+      channels: state.channels.map(ch =>
+        ch.id === channelId ? { ...ch, limiterMode: mode } : ch
+      ),
+    })),
+
   setManufacturerFilter: (id) => set({ activeManufacturerId: id }),
   setTypeFilter: (type) => set({ activeTypeFilter: type }),
 
@@ -308,6 +316,7 @@ const useStore = create((set, get) => ({
         })),
         wiring: ch.wiring,
         bridged: ch.bridged,
+        limiter_mode: ch.limiterMode,
       }))
 
     if (payload.length === 0) {

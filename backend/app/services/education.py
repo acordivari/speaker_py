@@ -100,7 +100,42 @@ EXPLANATIONS: dict[IssueCode, dict[str, str]] = {
         "recommendation": (
             "Use a DSP processor or built-in amp limiter to set a hard output ceiling no higher "
             "than 2× the speaker's RMS rating. Many touring engineers run 2× headroom "
-            "intentionally — but always with limiting engaged."
+            "intentionally — but always with limiting engaged. "
+            "In the channel editor, set the LIMITER field to 'AMP DSP' or 'EXT RACK' to mark "
+            "limiting as active and clear this warning."
+        ),
+    },
+    IssueCode.LIMITER_ENGAGED: {
+        "explanation": (
+            "The amplifier output is 2–4× the speaker's RMS rating, but a hardware limiter is "
+            "declared active on this channel. The limiter sets a hard ceiling on the signal "
+            "before it reaches the speaker, preventing the amplifier from delivering more than "
+            "the speaker's rated power regardless of input level. This is standard practice in "
+            "professional touring: systems are intentionally over-amplified (2–4×) for headroom, "
+            "then protected by calibrated limiting on the amplifier DSP or an external rack processor."
+        ),
+        "recommendation": (
+            "Confirm the limiter threshold is set to the speaker's RMS power rating (or at most "
+            "its program power rating, which is typically 2× RMS). Verify the limiter attack time "
+            "is 1–5 ms and the release is 50–200 ms. Test by driving the channel to expected "
+            "operating level and confirming the gain-reduction meter engages before the output "
+            "exceeds the speaker's rating."
+        ),
+    },
+    IssueCode.LIMITER_CONSOLE_ONLY: {
+        "explanation": (
+            "A console insert limiter is declared on this channel, but a console insert operates "
+            "before the amplifier's input sensitivity stage and cannot account for the actual "
+            "voltage delivered to the speaker. Gain changes at the amp input, bridged mode, or "
+            "any downstream processing after the insert point can all cause the speaker to receive "
+            "more power than the console-side ceiling allows. A console insert limiter provides "
+            "gain-structure monitoring but is not a substitute for hardware speaker protection."
+        ),
+        "recommendation": (
+            "Add a limiter at the amplifier's built-in DSP stage or in an external rack processor "
+            "between the console output and the amp inputs. The console insert limiter can remain "
+            "for gain monitoring, but speaker protection must be the last device in the chain "
+            "before the speaker."
         ),
     },
     IssueCode.AMP_UNDERPOWERED: {

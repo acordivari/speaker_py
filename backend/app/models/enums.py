@@ -33,6 +33,13 @@ class WiringMode(str, Enum):
     SERIES = "series"       # Impedance adds: Z = Z1 + Z2 ...
 
 
+class LimiterMode(str, Enum):
+    NONE = "none"                    # No limiter declared
+    AMP_DSP = "amp_dsp"              # Built-in amplifier DSP limiter (recommended)
+    EXTERNAL_RACK = "external_rack"  # External DSP rack unit between console and amp
+    CONSOLE_INSERT = "console_insert"  # Console insert only — NOT sufficient for speaker protection
+
+
 class IssueSeverity(str, Enum):
     ERROR = "error"         # Will cause hardware damage or failure
     WARNING = "warning"     # May cause performance degradation
@@ -68,3 +75,7 @@ class IssueCode(str, Enum):
     CHANNEL_OVERLOADED = "CHANNEL_OVERLOADED"
     NO_SPEAKERS_ON_CHANNEL = "NO_SPEAKERS_ON_CHANNEL"
     NON_AMPLIFIER_AS_AMP = "NON_AMPLIFIER_AS_AMP"
+
+    # Limiter rules
+    LIMITER_ENGAGED = "LIMITER_ENGAGED"           # INFO: 2-4× ratio with proper limiter active
+    LIMITER_CONSOLE_ONLY = "LIMITER_CONSOLE_ONLY" # WARNING: console insert declared but insufficient

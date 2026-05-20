@@ -29,6 +29,7 @@ from app.models.enums import (
     PowerType,
     ConnectorType,
     WiringMode,
+    LimiterMode,
     IssueSeverity,
     IssueCode,
 )
@@ -282,14 +283,45 @@ def _validate_channel(
                     is_valid = False
 
                 elif power_ratio > 2.0:
-                    issues.append(
-                        _issue(
-                            IssueSeverity.WARNING,
-                            IssueCode.AMP_OVERPOWERED,
-                            f"Amplifier output {amp_output:.0f} W is {power_ratio:.1f}× "
-                            f"speakers' combined {total_rms:.0f} W RMS — use a limiter.",
-                        )
+                    hw_limiter = channel.limiter_mode in (
+                        LimiterMode.AMP_DSP, LimiterMode.EXTERNAL_RACK
                     )
+                    console_only = channel.limiter_mode == LimiterMode.CONSOLE_INSERT
+
+                    if hw_limiter:
+                        placement = (
+                            "built-in amp DSP"
+                            if channel.limiter_mode == LimiterMode.AMP_DSP
+                            else "external rack DSP"
+                        )
+                        issues.append(
+                            _issue(
+                                IssueSeverity.INFO,
+                                IssueCode.LIMITER_ENGAGED,
+                                f"Amplifier output {amp_output:.0f} W is {power_ratio:.1f}× "
+                                f"speakers' combined {total_rms:.0f} W RMS — "
+                                f"limiter active ({placement}).",
+                            )
+                        )
+                    elif console_only:
+                        issues.append(
+                            _issue(
+                                IssueSeverity.WARNING,
+                                IssueCode.LIMITER_CONSOLE_ONLY,
+                                f"Amplifier output {amp_output:.0f} W is {power_ratio:.1f}× "
+                                f"speakers' combined {total_rms:.0f} W RMS — "
+                                f"console insert only: add amp DSP or rack DSP for hardware protection.",
+                            )
+                        )
+                    else:
+                        issues.append(
+                            _issue(
+                                IssueSeverity.WARNING,
+                                IssueCode.AMP_OVERPOWERED,
+                                f"Amplifier output {amp_output:.0f} W is {power_ratio:.1f}× "
+                                f"speakers' combined {total_rms:.0f} W RMS — use a limiter.",
+                            )
+                        )
 
                 elif power_ratio < 0.5:
                     issues.append(

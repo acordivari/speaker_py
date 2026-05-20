@@ -7,6 +7,7 @@ export default function ChannelEditor() {
   const selectChannel     = useStore(s => s.selectChannel)
   const setWiring         = useStore(s => s.setWiring)
   const setBridged        = useStore(s => s.setBridged)
+  const setLimiterMode    = useStore(s => s.setLimiterMode)
   const removeAmp         = useStore(s => s.removeAmp)
   const removeSpeaker     = useStore(s => s.removeSpeaker)
   const setSpeakerCount   = useStore(s => s.setSpeakerCount)
@@ -121,6 +122,49 @@ export default function ChannelEditor() {
             <span className="text-[9px] font-mono" style={{ color: channel.bridged ? '#ffb300' : '#7070a0' }}>
               BRIDGED
             </span>
+          </div>
+
+          {/* Limiter mode */}
+          <div className="flex-shrink-0">
+            <div className="text-[9px] font-mono text-venue-muted mb-1">LIMITER</div>
+            <div className="flex gap-1 flex-wrap">
+              {[
+                { value: 'none',          label: 'OFF',      title: 'No limiter declared',                    activeColor: '#7070a8' },
+                { value: 'amp_dsp',       label: 'AMP DSP',  title: 'Built-in amplifier DSP (recommended)',   activeColor: '#00ff88' },
+                { value: 'external_rack', label: 'EXT RACK', title: 'External DSP rack unit',                 activeColor: '#00e5ff' },
+                { value: 'console_insert',label: 'CONSOLE',  title: 'Console insert only — not sufficient alone', activeColor: '#ffb300' },
+              ].map(opt => {
+                const active = channel.limiterMode === opt.value
+                return (
+                  <button
+                    key={opt.value}
+                    onClick={() => setLimiterMode(channel.id, opt.value)}
+                    aria-pressed={active}
+                    title={opt.title}
+                    className="text-[8px] font-mono py-1 px-1.5 rounded border transition-colors
+                               whitespace-nowrap touch-target"
+                    style={{
+                      borderColor: active ? opt.activeColor : '#3c3c68',
+                      color:       active ? opt.activeColor : '#7070a0',
+                      background:  active ? opt.activeColor + '1a' : 'transparent',
+                      minHeight:   '28px',
+                    }}
+                  >
+                    {opt.label}
+                  </button>
+                )
+              })}
+            </div>
+            {channel.limiterMode === 'console_insert' && (
+              <div className="text-[8px] font-mono mt-1 leading-tight" style={{ color: '#ffb30099' }}>
+                ⚠ monitoring only
+              </div>
+            )}
+            {(channel.limiterMode === 'amp_dsp' || channel.limiterMode === 'external_rack') && (
+              <div className="text-[8px] font-mono mt-1 leading-tight" style={{ color: '#00ff8899' }}>
+                ✔ hardware protection active
+              </div>
+            )}
           </div>
 
           {/* Clear button */}

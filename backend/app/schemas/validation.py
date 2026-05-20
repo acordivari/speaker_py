@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
-from app.models.enums import IssueSeverity, IssueCode, WiringMode
+from app.models.enums import IssueSeverity, IssueCode, WiringMode, LimiterMode
 from app.schemas.component import ComponentSummary
 
 
@@ -24,6 +24,7 @@ class ChannelConfig(BaseModel):
     speakers: list[SpeakerPlacement] = Field(default_factory=list)
     wiring: WiringMode = WiringMode.PARALLEL
     bridged: bool = False
+    limiter_mode: LimiterMode = LimiterMode.NONE
 
 
 class ValidationRequest(BaseModel):
