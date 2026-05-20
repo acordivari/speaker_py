@@ -61,15 +61,12 @@ export default function ChannelEditor() {
         {/* Channel metadata + controls */}
         <div
           className="flex-shrink-0 p-3 border-b md:border-b-0 md:border-r border-venue-border
-                     flex flex-row md:flex-col gap-3 md:gap-2 md:w-48 overflow-x-auto scrollbar-none"
+                     flex flex-row md:flex-col gap-3 md:gap-2 md:w-52 overflow-x-auto scrollbar-none"
         >
-          {/* Channel name + description */}
+          {/* Channel name */}
           <div className="flex-shrink-0 md:flex-shrink">
             <div className="text-[9px] font-mono text-venue-muted uppercase tracking-widest">
               {channel.label}
-            </div>
-            <div className="text-[8px] font-mono text-slate-400 mt-0.5 leading-relaxed hidden md:block">
-              {chanDef?.description}
             </div>
           </div>
 
@@ -126,13 +123,13 @@ export default function ChannelEditor() {
 
           {/* Limiter mode */}
           <div className="flex-shrink-0">
-            <div className="text-[9px] font-mono text-venue-muted mb-1">LIMITER</div>
-            <div className="flex gap-1 flex-wrap">
+            <div className="text-[9px] font-mono text-venue-muted mb-1.5">LIMITER</div>
+            <div className="grid grid-cols-2 gap-1">
               {[
-                { value: 'none',          label: 'OFF',      title: 'No limiter declared',                    activeColor: '#7070a8' },
-                { value: 'amp_dsp',       label: 'AMP DSP',  title: 'Built-in amplifier DSP (recommended)',   activeColor: '#00ff88' },
-                { value: 'external_rack', label: 'EXT RACK', title: 'External DSP rack unit',                 activeColor: '#00e5ff' },
-                { value: 'console_insert',label: 'CONSOLE',  title: 'Console insert only — not sufficient alone', activeColor: '#ffb300' },
+                { value: 'none',           label: 'Off',      title: 'No limiter — speakers rely on amp headroom alone', activeColor: '#7070a8' },
+                { value: 'amp_dsp',        label: 'Amp DSP',  title: 'Built-in amplifier DSP limiter (recommended)',     activeColor: '#00ff88' },
+                { value: 'external_rack',  label: 'Ext Rack', title: 'External DSP rack unit between console and amp',   activeColor: '#00e5ff' },
+                { value: 'console_insert', label: 'Console',  title: 'Console insert only — not sufficient for speaker protection', activeColor: '#ffb300' },
               ].map(opt => {
                 const active = channel.limiterMode === opt.value
                 return (
@@ -141,13 +138,13 @@ export default function ChannelEditor() {
                     onClick={() => setLimiterMode(channel.id, opt.value)}
                     aria-pressed={active}
                     title={opt.title}
-                    className="text-[8px] font-mono py-1 px-1.5 rounded border transition-colors
-                               whitespace-nowrap touch-target"
+                    className="text-[9px] font-mono py-1 px-2 rounded border transition-colors
+                               whitespace-nowrap touch-target text-center"
                     style={{
                       borderColor: active ? opt.activeColor : '#3c3c68',
                       color:       active ? opt.activeColor : '#7070a0',
                       background:  active ? opt.activeColor + '1a' : 'transparent',
-                      minHeight:   '28px',
+                      minHeight:   '32px',
                     }}
                   >
                     {opt.label}
@@ -156,12 +153,12 @@ export default function ChannelEditor() {
               })}
             </div>
             {channel.limiterMode === 'console_insert' && (
-              <div className="text-[8px] font-mono mt-1 leading-tight" style={{ color: '#ffb30099' }}>
+              <div className="text-[9px] font-mono mt-1.5 leading-tight" style={{ color: '#ffb300cc' }}>
                 ⚠ monitoring only
               </div>
             )}
             {(channel.limiterMode === 'amp_dsp' || channel.limiterMode === 'external_rack') && (
-              <div className="text-[8px] font-mono mt-1 leading-tight" style={{ color: '#00ff8899' }}>
+              <div className="text-[9px] font-mono mt-1.5 leading-tight" style={{ color: '#00ff88cc' }}>
                 ✔ hardware protection active
               </div>
             )}

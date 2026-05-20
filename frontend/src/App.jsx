@@ -142,7 +142,7 @@ export default function App() {
             <div data-tour="venue" className="flex-1 min-h-0">
               <VenueLayout />
             </div>
-            <div data-tour="channel-editor" className="h-56 flex-shrink-0">
+            <div data-tour="channel-editor" className="h-72 flex-shrink-0">
               <ChannelEditor />
             </div>
           </main>
