@@ -44,7 +44,9 @@ export default function App() {
   const [soundcheckInfo, setSoundcheckInfo] = useState({ available: false })
   const [glossaryOpen,   setGlossaryOpen]   = useState(false)
   const [mobileTab,      setMobileTab]      = useState('library')
-  const [demoActive,     setDemoActive]     = useState(() => !localStorage.getItem('sdl_tour_seen'))
+  const [demoActive,     setDemoActive]     = useState(() =>
+    typeof window !== 'undefined' && window.innerWidth >= 768 && !localStorage.getItem('sdl_tour_seen')
+  )
   const [tourHighlight,  setTourHighlight]  = useState(false)
 
   // Debounced auto-validate on any channel change
@@ -266,6 +268,7 @@ export default function App() {
           localStorage.setItem('sdl_tour_seen', '1')
           setDemoActive(false)
           setTourHighlight(true)
+          if (isMobile) setMobileTab('venue')
           setTimeout(() => setTourHighlight(false), 5000)
         }} />
       )}

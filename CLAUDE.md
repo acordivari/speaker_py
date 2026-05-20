@@ -86,8 +86,9 @@ npm test          # single pass
 npm run test:watch  # interactive watch mode
 ```
 
-28 tests across 5 files covering layout exclusivity, drag interaction
-modes, drop routing, drop slot behavior, and venue position rendering.
+61 tests across 6 files covering layout exclusivity, drag interaction
+modes, drop routing, drop slot behavior, venue position rendering, and
+demo tour mobile/desktop gating.
 
 ---
 
@@ -146,6 +147,48 @@ diagram and intercept pointer events in other panels.
 
 Inline all static data directly in the component file (as the GlossaryModal
 does). No backend coupling needed for display-only reference content.
+
+---
+
+## Cross-device compatibility
+
+### The interactive tour is desktop-only (auto-start)
+
+The demo tour (`DemoTour`, `DemoSpotlight`, `DemoPanel`) highlights elements via
+`data-tour` attributes that only exist in the desktop layout. It must **not**
+auto-start on mobile. The initialiser in App.jsx gates auto-start behind
+`window.innerWidth >= 768`.
+
+Users can still manually trigger the tour on mobile via the TOUR chip. After
+tour close on mobile, `setMobileTab('venue')` is called so users see a
+meaningful state (the populated venue map) rather than an empty library panel.
+
+### iOS Safari portal touch events
+
+React portals rendered into `document.body` with multiple sibling
+`position: fixed` children can cause touch event routing bugs on iOS Safari —
+the wrong element receives the touch even when z-index stacking should prevent
+it. The fix: render all portal content into **a single fixed container element**
+appended to `document.body`. The container (not individual children) owns the
+`pointer-events: auto` and `z-index`. Visual overlay children can then be
+`pointer-events: none`. DemoTour implements this pattern.
+
+### New features with full-screen overlays
+
+Any new modal, overlay, or portal that:
+- Renders via `createPortal`
+- Has `position: fixed` sibling elements within the portal
+- Needs to intercept touch events on mobile
+
+...must follow the single-container pattern from DemoTour, NOT the
+multiple-sibling fixed-element pattern.
+
+### Never test pointer/touch behaviour with CSS media queries
+
+jsdom does not process CSS media queries (`md:flex`, `hidden md:block` etc.).
+Layout exclusivity between desktop and mobile must be enforced via
+conditional rendering (`{!isMobile && ...}` / `{isMobile && ...}`), never
+via Tailwind responsive prefixes alone.
 
 ---
 

@@ -15,7 +15,7 @@
  *     configured, guiding new users through the assignment flow
  */
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import App from '../App'
 
 vi.mock('../services/api', () => ({
@@ -54,6 +54,11 @@ import { useIsMobile } from '../hooks/useIsMobile'
 describe('App layout exclusivity', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(null)
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
 
   it('mounts ComponentPalette exactly once on desktop', () => {
@@ -129,5 +134,38 @@ describe('Mobile library onboarding card', () => {
     useIsMobile.mockReturnValue(false)
     render(<App />)
     expect(screen.queryByText(/getting started/i)).not.toBeInTheDocument()
+  })
+})
+
+describe('DemoTour auto-start gating (App.jsx initialiser)', () => {
+  let originalInnerWidth
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(null)
+    originalInnerWidth = window.innerWidth
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+    Object.defineProperty(window, 'innerWidth', { value: originalInnerWidth, configurable: true, writable: true })
+  })
+
+  it('demoActive does not auto-start on mobile', () => {
+    // Narrow mobile viewport — below the 768px gate
+    Object.defineProperty(window, 'innerWidth', { value: 375, configurable: true, writable: true })
+    useIsMobile.mockReturnValue(true)
+    render(<App />)
+    // Tour panel title for step 1 must NOT be present on mobile
+    expect(screen.queryByText('Welcome to Sound Design Lab')).not.toBeInTheDocument()
+  })
+
+  it('demoActive auto-starts on desktop with no tour_seen flag', () => {
+    // Wide desktop viewport — above the 768px gate
+    Object.defineProperty(window, 'innerWidth', { value: 1280, configurable: true, writable: true })
+    useIsMobile.mockReturnValue(false)
+    render(<App />)
+    // Tour panel title for step 1 must be present on desktop first visit
+    expect(screen.getByText('Welcome to Sound Design Lab')).toBeInTheDocument()
   })
 })

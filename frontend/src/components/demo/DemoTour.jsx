@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import useStore, { FUNKTION_ONE_PRESET } from '../../store/useStore'
 import DemoSpotlight from './DemoSpotlight'
@@ -16,6 +16,26 @@ export default function DemoTour({ onClose }) {
   const [targetRect, setTargetRect] = useState(null)
   const [dragRects,  setDragRects]  = useState(null)
   const loadPreset = useStore(s => s.loadPreset)
+
+  // Single fixed container appended to document.body.
+  // All portal content lives inside one compositing layer, which fixes
+  // the iOS Safari touch-event routing bug where sibling position:fixed
+  // elements in portals bypass z-index stacking for touch events.
+  const containerRef = useRef(null)
+  if (!containerRef.current) {
+    const el = document.createElement('div')
+    el.style.cssText = 'position:fixed;inset:0;z-index:999;pointer-events:auto'
+    containerRef.current = el
+  }
+
+  useEffect(() => {
+    document.body.appendChild(containerRef.current)
+    return () => {
+      if (containerRef.current && containerRef.current.parentNode) {
+        document.body.removeChild(containerRef.current)
+      }
+    }
+  }, [])
 
   const step = DEMO_STEPS[stepIndex]
 
@@ -53,9 +73,13 @@ export default function DemoTour({ onClose }) {
     setStepIndex(i => Math.max(0, i - 1))
   }, [])
 
+  if (!containerRef.current) return null
+
   return createPortal(
     <>
+      {/* pointerEvents:none — the container handles blocking; overlays are decorative */}
       <DemoSpotlight rect={targetRect} />
+      {/* zIndex relative to container */}
       <DemoPanel
         step={step}
         stepIndex={stepIndex}
@@ -69,6 +93,6 @@ export default function DemoTour({ onClose }) {
         <DemoDragAnimation fromRect={dragRects.from} toRect={dragRects.to} />
       )}
     </>,
-    document.body
+    containerRef.current
   )
 }

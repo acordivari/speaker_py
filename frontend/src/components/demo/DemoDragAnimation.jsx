@@ -36,7 +36,7 @@ export default function DemoDragAnimation({ fromRect, toRect }) {
       left:         fromX,
       top:          fromY,
       width:        CARD_WIDTH,
-      zIndex:       1100,
+      zIndex:       3,
       pointerEvents: 'none',
       opacity:      visible ? 1 : 0,
       transform:    atDest ? `translate(${dx}px, ${dy}px)` : 'translate(0, 0)',

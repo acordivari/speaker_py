@@ -1,4 +1,4 @@
-const PANEL_WIDTH = 380
+const PANEL_WIDTH = typeof window !== 'undefined' ? Math.min(380, window.innerWidth - 24) : 380
 const GAP = 20
 
 function getPanelStyle(panelSide, rect) {
@@ -58,12 +58,13 @@ export default function DemoPanel({ step, stepIndex, totalSteps, targetRect, onN
   return (
     <div style={{
       ...panelStyle,
-      zIndex:       1001,
-      background:   '#111122',
-      border:       '1px solid #2a2a50',
-      borderRadius: 12,
-      padding:      '24px',
-      boxShadow:    '0 24px 64px #000000cc, 0 0 48px #00e5ff0d',
+      zIndex:        2,
+      background:    '#111122',
+      border:        '1px solid #2a2a50',
+      borderRadius:  12,
+      padding:       '24px',
+      boxShadow:     '0 24px 64px #000000cc, 0 0 48px #00e5ff0d',
+      touchAction:   'manipulation',
     }}>
       <div style={{ color: '#00e5ff', fontSize: 10, fontFamily: 'monospace', letterSpacing: '0.12em', marginBottom: 12 }}>
         STEP {stepIndex + 1} / {totalSteps}
@@ -85,7 +86,7 @@ export default function DemoPanel({ step, stepIndex, totalSteps, targetRect, onN
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 24, paddingTop: 16, borderTop: '1px solid #1e1e36' }}>
         <button
           onClick={onSkip}
-          style={{ color: '#3c3c60', fontSize: 11, fontFamily: 'monospace', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+          style={{ color: '#3c3c60', fontSize: 11, fontFamily: 'monospace', background: 'none', border: 'none', cursor: 'pointer', padding: 0, touchAction: 'manipulation' }}
           onMouseEnter={e => { e.currentTarget.style.color = '#6060a0' }}
           onMouseLeave={e => { e.currentTarget.style.color = '#3c3c60' }}
         >
@@ -99,7 +100,7 @@ export default function DemoPanel({ step, stepIndex, totalSteps, targetRect, onN
               style={{
                 fontSize: 11, fontFamily: 'monospace', padding: '6px 16px',
                 borderRadius: 6, border: '1px solid #2a2a50', color: '#6060a0',
-                background: 'transparent', cursor: 'pointer',
+                background: 'transparent', cursor: 'pointer', touchAction: 'manipulation',
               }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = '#4a4a80'; e.currentTarget.style.color = '#9090c0' }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = '#2a2a50'; e.currentTarget.style.color = '#6060a0' }}
@@ -112,7 +113,7 @@ export default function DemoPanel({ step, stepIndex, totalSteps, targetRect, onN
             style={{
               fontSize: 11, fontFamily: 'monospace', padding: '6px 20px',
               borderRadius: 6, border: '1px solid #00e5ff66', color: '#00e5ff',
-              background: '#00e5ff0d', cursor: 'pointer',
+              background: '#00e5ff0d', cursor: 'pointer', touchAction: 'manipulation',
             }}
             onMouseEnter={e => { e.currentTarget.style.background = '#00e5ff1a'; e.currentTarget.style.borderColor = '#00e5ffaa' }}
             onMouseLeave={e => { e.currentTarget.style.background = '#00e5ff0d'; e.currentTarget.style.borderColor = '#00e5ff66' }}
