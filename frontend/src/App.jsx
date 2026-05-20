@@ -212,6 +212,34 @@ export default function App() {
             </div>
           </div>
 
+          {/* "Now playing" soundcheck strip — appears when system is valid and audio is ready */}
+          {soundcheckInfo?.available && hasConfig && validationResult?.is_valid && (
+            <button
+              onClick={() => setSoundcheckOpen(true)}
+              aria-label="Run soundcheck — system valid"
+              className="flex-shrink-0 flex items-center justify-between w-full px-4 transition-all"
+              style={{
+                background:    'linear-gradient(135deg, #00ff8810 0%, #00e5ff08 100%)',
+                borderTop:     '1px solid #00ff8844',
+                minHeight:     '48px',
+                animation:     'soundcheck-breathe 2.5s ease-in-out infinite',
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <span style={{ color: '#00ff88', fontSize: '20px', lineHeight: 1 }}>◉</span>
+                <div className="flex flex-col items-start leading-tight">
+                  <span className="text-[8px] font-mono tracking-widest" style={{ color: '#00ff8888' }}>
+                    SYSTEM VALID
+                  </span>
+                  <span className="text-[12px] font-mono font-bold" style={{ color: '#00e5ff' }}>
+                    RUN SOUNDCHECK
+                  </span>
+                </div>
+              </div>
+              <span className="text-sm font-mono" style={{ color: '#00e5ff66' }}>▶</span>
+            </button>
+          )}
+
           <MobileNavBar tab={mobileTab} setTab={setMobileTab} />
         </div>
         )}

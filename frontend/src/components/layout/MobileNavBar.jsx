@@ -13,6 +13,8 @@ export default function MobileNavBar({ tab, setTab }) {
   const channels             = useStore(s => s.channels)
   const tapSelectedComponent = useStore(s => s.tapSelectedComponent)
 
+  const isValid = validationResult?.is_valid ?? false
+
   const errorCount = validationResult
     ? validationResult.channel_results.flatMap(ch => ch.issues).filter(i => i.severity === 'error').length
       + validationResult.global_issues.filter(i => i.severity === 'error').length
@@ -24,6 +26,9 @@ export default function MobileNavBar({ tab, setTab }) {
     : 0
 
   const channelCount = channels.filter(ch => ch.amp || ch.speakers.length > 0).length
+
+  // Key changes when badge state changes, forcing re-mount and replaying the pop animation
+  const badgeKey = validationResult ? `${errorCount}-${warnCount}-${isValid}` : 'none'
 
   function badge(tabId) {
     if (tabId === 'results') {
@@ -46,6 +51,7 @@ export default function MobileNavBar({ tab, setTab }) {
         background:    '#0b0b18',
         borderColor:   '#3c3c68',
         paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+        overflow:      'visible',
       }}
     >
       {TABS.map(t => {
@@ -69,6 +75,24 @@ export default function MobileNavBar({ tab, setTab }) {
               minHeight:  '56px',
             }}
           >
+            {/* "See results" callout — floats above CHECK tab when valid and not active */}
+            {t.id === 'results' && !active && isValid && (
+              <div
+                className="absolute bottom-full left-1/2 whitespace-nowrap text-[8px]
+                           font-mono px-1.5 py-0.5 rounded pointer-events-none"
+                style={{
+                  transform:    'translateX(-50%)',
+                  marginBottom: '5px',
+                  color:        '#00ff88',
+                  background:   '#00ff8814',
+                  border:       '1px solid #00ff8866',
+                }}
+                aria-hidden="true"
+              >
+                see results ↑
+              </div>
+            )}
+
             {/* Active indicator bar */}
             {active && (
               <div
@@ -82,9 +106,15 @@ export default function MobileNavBar({ tab, setTab }) {
               <span className="text-base leading-none">{t.icon}</span>
               {b && (
                 <span
+                  key={badgeKey}
                   className="absolute -top-1.5 -right-2.5 text-[8px] font-mono font-bold
                              rounded-full px-1 min-w-[14px] text-center leading-4"
-                  style={{ background: b.color + '22', color: b.color, border: `1px solid ${b.color}66` }}
+                  style={{
+                    background: b.color + '22',
+                    color:      b.color,
+                    border:     `1px solid ${b.color}66`,
+                    animation:  'badge-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+                  }}
                 >
                   {b.label}
                 </span>

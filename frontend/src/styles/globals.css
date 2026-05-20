@@ -150,3 +150,16 @@
   0%, 100% { box-shadow: 0 0 0 0 #ff8c0000; }
   50%       { box-shadow: 0 0 0 4px #ff8c0055, 0 0 12px #ff8c0033; }
 }
+
+/* CHECK / ASSIGN badge pop-in — one-shot when badge state changes */
+@keyframes badge-pop {
+  0%   { transform: scale(0.5); opacity: 0.5; }
+  60%  { transform: scale(1.35); }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+/* Soundcheck "now playing" strip breathing glow */
+@keyframes soundcheck-breathe {
+  0%, 100% { box-shadow: 0 0 0 0 #00ff8800;   border-top-color: #00ff8844; }
+  50%       { box-shadow: 0 0 14px #00ff8830; border-top-color: #00ff8899; }
+}
