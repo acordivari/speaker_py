@@ -20,5 +20,14 @@ export const fetchComponents = (params = {}) =>
 export const validateConfiguration = (channels) =>
   client.post('/validate/', { channels }).then(r => r.data)
 
+/**
+ * Predict the SPL coverage map for a positioned rig.
+ *
+ * @param {Array} channels  Channel configs including position_key:
+ *   { position_key, label, amplifier_id, speakers: [{component_id, count}], wiring, bridged }
+ */
+export const fetchCoverage = (channels) =>
+  client.post('/coverage/', { channels }).then(r => r.data)
+
 export const fetchSoundcheckInfo = () =>
   client.get('/soundcheck/info').then(r => r.data)

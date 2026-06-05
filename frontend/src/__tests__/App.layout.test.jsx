@@ -22,6 +22,7 @@ vi.mock('../services/api', () => ({
   fetchManufacturers:   vi.fn(() => Promise.resolve([])),
   fetchComponents:      vi.fn(() => Promise.resolve([])),
   validateConfiguration: vi.fn(() => Promise.resolve(null)),
+  fetchCoverage:         vi.fn(() => Promise.resolve(null)),
   fetchSoundcheckInfo:  vi.fn(() => Promise.resolve({ available: false })),
 }))
 

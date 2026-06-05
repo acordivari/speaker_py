@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { fetchManufacturers, fetchComponents, validateConfiguration } from '../services/api'
+import { fetchManufacturers, fetchComponents, validateConfiguration, fetchCoverage } from '../services/api'
 
 // ── Venue channel definitions ────────────────────────────────────────────────
 // Each channel maps to a physical speaker position in Mission Ballroom.
@@ -150,6 +150,12 @@ const useStore = create((set, get) => ({
   validationResult: null,
   isValidating: false,
   validationError: null,
+
+  // ── Coverage (SPL map) ─────────────────────────────────────────────────────
+  coverageResult: null,
+  isComputingCoverage: false,
+  coverageError: null,
+  showCoverage: true,
 
   // ── Component palette filter ───────────────────────────────────────────────
   activeManufacturerId: null,
@@ -330,6 +336,42 @@ const useStore = create((set, get) => ({
       set({ validationResult: result, isValidating: false })
     } catch (err) {
       set({ validationError: err.message, isValidating: false })
+    }
+  },
+
+  // ── Coverage ──────────────────────────────────────────────────────────────
+  toggleCoverage: () => set(state => ({ showCoverage: !state.showCoverage })),
+
+  computeCoverage: async () => {
+    const { channels } = get()
+
+    // Same payload as validate, plus the venue position of each channel.
+    const payload = channels
+      .filter(ch => ch.amp || ch.speakers.length > 0)
+      .map(ch => ({
+        position_key: ch.positionKey,
+        label: ch.label,
+        amplifier_id: ch.amp ? ch.amp.id : null,
+        speakers: ch.speakers.map(s => ({
+          component_id: s.component.id,
+          count: s.count,
+        })),
+        wiring: ch.wiring,
+        bridged: ch.bridged,
+        limiter_mode: ch.limiterMode,
+      }))
+
+    if (payload.length === 0) {
+      set({ coverageResult: null })
+      return
+    }
+
+    set({ isComputingCoverage: true, coverageError: null })
+    try {
+      const result = await fetchCoverage(payload)
+      set({ coverageResult: result, isComputingCoverage: false })
+    } catch (err) {
+      set({ coverageError: err.message, isComputingCoverage: false })
     }
   },
 }))

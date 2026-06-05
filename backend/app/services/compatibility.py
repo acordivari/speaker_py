@@ -65,6 +65,49 @@ def combined_impedance(impedances: list[float], wiring: WiringMode) -> float:
     return series_impedance(impedances)
 
 
+# ── Amplifier power delivery ─────────────────────────────────────────────────
+
+def amp_output_at_load(
+    amp: Component, load_impedance_ohms: float, bridged: bool
+) -> float | None:
+    """
+    Power (W) an amplifier delivers into a known load impedance.
+
+    Bridged mode sees half the load per internal channel but roughly doubles
+    the combined output. Single source of truth shared by the compatibility
+    engine and the coverage engine.
+    """
+    effective_z = load_impedance_ohms / 2 if bridged else load_impedance_ohms
+    output = amp.output_power_at_impedance(effective_z)
+    if bridged and output is not None:
+        output = output * 2
+    return output
+
+
+def channel_amp_output_watts(
+    amp: Component | None,
+    passive_speakers: list[Component],
+    wiring: WiringMode,
+    bridged: bool,
+) -> float | None:
+    """
+    Delivered amp power (W) for a channel's passive load, resolving the combined
+    load impedance from the cabinets first. Returns None when there is no amp or
+    no impedance data. Used by the coverage engine to drive SPL prediction.
+    """
+    if amp is None:
+        return None
+    impedances = [
+        s.nominal_impedance_ohms
+        for s in passive_speakers
+        if s.nominal_impedance_ohms is not None
+    ]
+    if not impedances:
+        return None
+    z = combined_impedance(impedances, wiring)
+    return amp_output_at_load(amp, z, bridged)
+
+
 # ── Issue factory ────────────────────────────────────────────────────────────
 
 def _issue(
@@ -255,11 +298,8 @@ def _validate_channel(
                     )
                 )
 
-            # Power analysis
-            effective_z_for_power = z / 2 if channel.bridged else z
-            amp_output = amp.output_power_at_impedance(effective_z_for_power)
-            if channel.bridged and amp_output is not None:
-                amp_output = amp_output * 2  # bridged roughly doubles per-channel power
+            # Power analysis (shared formula — see amp_output_at_load)
+            amp_output = amp_output_at_load(amp, z, channel.bridged)  # bridged roughly doubles per-channel power
 
             total_rms = sum(
                 s.power_handling_rms_watts

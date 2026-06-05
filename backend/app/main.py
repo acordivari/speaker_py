@@ -12,6 +12,7 @@ from app.api.manufacturers import router as manufacturers_router
 from app.api.components import router as components_router
 from app.api.validation import router as validation_router
 from app.api.soundcheck import router as soundcheck_router
+from app.api.coverage import router as coverage_router
 
 
 @asynccontextmanager
@@ -73,6 +74,7 @@ app.include_router(manufacturers_router, prefix=API_PREFIX)
 app.include_router(components_router, prefix=API_PREFIX)
 app.include_router(validation_router, prefix=API_PREFIX)
 app.include_router(soundcheck_router, prefix=API_PREFIX)
+app.include_router(coverage_router, prefix=API_PREFIX)
 
 # Serve the audio directory so the browser can stream the FLAC file directly.
 # StaticFiles handles Range requests, so large files stream correctly.

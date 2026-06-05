@@ -26,6 +26,7 @@ import { fetchSoundcheckInfo } from './services/api'
 export default function App() {
   const loadData      = useStore(s => s.loadData)
   const validate      = useStore(s => s.validate)
+  const computeCoverage = useStore(s => s.computeCoverage)
   const assignAmp     = useStore(s => s.assignAmp)
   const addSpeaker    = useStore(s => s.addSpeaker)
   const loadPreset    = useStore(s => s.loadPreset)
@@ -49,12 +50,15 @@ export default function App() {
   )
   const [tourHighlight,  setTourHighlight]  = useState(false)
 
-  // Debounced auto-validate on any channel change
+  // Debounced auto-validate + coverage recompute on any channel change
   const validateTimer = useRef(null)
   const scheduleValidate = useCallback(() => {
     clearTimeout(validateTimer.current)
-    validateTimer.current = setTimeout(validate, 600)
-  }, [validate])
+    validateTimer.current = setTimeout(() => {
+      validate()
+      computeCoverage()
+    }, 600)
+  }, [validate, computeCoverage])
 
   useEffect(() => { loadData() }, [loadData])
   useEffect(() => { scheduleValidate() }, [channels, scheduleValidate])

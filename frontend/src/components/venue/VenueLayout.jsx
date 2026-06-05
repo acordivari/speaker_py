@@ -1,5 +1,7 @@
 import useStore from '../../store/useStore'
 import VenuePosition from './VenuePosition'
+import CoverageHeatmap from './CoverageHeatmap'
+import CoverageLegend from './CoverageLegend'
 import { POSITION_COORDS } from './venueConfig'
 
 export default function VenueLayout() {
@@ -7,6 +9,8 @@ export default function VenueLayout() {
   const selectedChannelId = useStore(s => s.selectedChannelId)
   const selectChannel     = useStore(s => s.selectChannel)
   const validationResult  = useStore(s => s.validationResult)
+  const showCoverage      = useStore(s => s.showCoverage)
+  const toggleCoverage    = useStore(s => s.toggleCoverage)
 
   // Build a map of positionKey → channel result for coloring
   const resultByLabel = {}
@@ -19,13 +23,29 @@ export default function VenueLayout() {
   return (
     <div className="panel h-full flex flex-col overflow-hidden">
       {/* Venue label */}
-      <div className="px-3 pt-2 pb-1 flex-shrink-0 border-b border-venue-border">
-        <span className="text-[10px] font-mono uppercase tracking-widest" style={{ color: 'var(--color-muted)' }}>
-          Mission Ballroom · Denver
-        </span>
-        <span className="block text-[9px] mt-0.5" style={{ color: 'var(--color-text-3)' }}>
-          Overhead view — click any speaker position to configure that channel
-        </span>
+      <div className="px-3 pt-2 pb-1 flex-shrink-0 border-b border-venue-border flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <span className="text-[10px] font-mono uppercase tracking-widest" style={{ color: 'var(--color-muted)' }}>
+            Mission Ballroom · Denver
+          </span>
+          <span className="block text-[9px] mt-0.5" style={{ color: 'var(--color-text-3)' }}>
+            Overhead view — click any speaker position to configure that channel
+          </span>
+        </div>
+        <button
+          type="button"
+          onClick={toggleCoverage}
+          aria-pressed={showCoverage}
+          className="flex-shrink-0 px-2 py-1 rounded text-[9px] font-mono uppercase tracking-wider border transition-colors"
+          style={{
+            color: showCoverage ? '#00e5ff' : 'var(--color-muted)',
+            borderColor: showCoverage ? '#00e5ff66' : 'var(--color-border)',
+            background: showCoverage ? '#00e5ff11' : 'transparent',
+          }}
+          title="Toggle the predicted SPL coverage map"
+        >
+          SPL Map
+        </button>
       </div>
 
       <svg
@@ -118,6 +138,9 @@ export default function VenueLayout() {
         <line x1="400" y1="55" x2="400" y2="375" style={{ stroke: 'var(--color-border-inner)' }}
               strokeWidth="1" strokeDasharray="4 8" opacity="0.3" />
 
+        {/* ── SPL coverage heatmap (under the speaker nodes) ────────── */}
+        <CoverageHeatmap />
+
         {/* ── Speaker position nodes ────────────────────────────────── */}
         {channels.map(ch => {
           const coords = POSITION_COORDS[ch.positionKey]
@@ -152,6 +175,9 @@ export default function VenueLayout() {
           NORTH / STAGE END
         </text>
       </svg>
+
+      {/* ── Coverage legend + headline stats ──────────────────────────── */}
+      <CoverageLegend />
     </div>
   )
 }
