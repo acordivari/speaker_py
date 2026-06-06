@@ -17,6 +17,8 @@ import ValidationPanel from './components/validation/ValidationPanel'
 import DragGhostCard from './components/palette/DragGhostCard'
 import SoundcheckModal from './components/soundcheck/SoundcheckModal'
 import GlossaryModal from './components/glossary/GlossaryModal'
+import ScenarioBar from './components/scenarios/ScenarioBar'
+import ScenarioPicker from './components/scenarios/ScenarioPicker'
 import MobileNavBar from './components/layout/MobileNavBar'
 import MobileOnboarding from './components/layout/MobileOnboarding'
 import DemoTour from './components/demo/DemoTour'
@@ -44,6 +46,7 @@ export default function App() {
   const [soundcheckOpen, setSoundcheckOpen] = useState(false)
   const [soundcheckInfo, setSoundcheckInfo] = useState({ available: false })
   const [glossaryOpen,   setGlossaryOpen]   = useState(false)
+  const [scenarioPickerOpen, setScenarioPickerOpen] = useState(false)
   const [mobileTab,      setMobileTab]      = useState('library')
   const [demoActive,     setDemoActive]     = useState(() =>
     typeof window !== 'undefined' && window.innerWidth >= 768 && !localStorage.getItem('sdl_tour_seen')
@@ -132,8 +135,11 @@ export default function App() {
           onGlossary={() => setGlossaryOpen(true)}
           onNavigate={setMobileTab}
           onTour={() => setDemoActive(true)}
+          onScenarios={() => setScenarioPickerOpen(true)}
           tourHighlight={tourHighlight}
         />
+
+        <ScenarioBar />
 
         {/* ── Desktop layout (md+) ── 3-column ────────────────────────────── */}
         {!isMobile && (
@@ -265,6 +271,10 @@ export default function App() {
 
       {glossaryOpen && (
         <GlossaryModal onClose={() => setGlossaryOpen(false)} />
+      )}
+
+      {scenarioPickerOpen && (
+        <ScenarioPicker onClose={() => setScenarioPickerOpen(false)} />
       )}
 
       {demoActive && (

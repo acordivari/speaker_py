@@ -1,5 +1,23 @@
 import { create } from 'zustand'
 import { fetchManufacturers, fetchComponents, validateConfiguration, fetchCoverage } from '../services/api'
+import { bestMedal } from '../scenarios/scoreScenario'
+
+// ── Scenario completion persistence ──────────────────────────────────────────
+const SCENARIOS_KEY = 'sdl_scenarios'
+
+function loadCompletedScenarios() {
+  try {
+    return JSON.parse(localStorage.getItem(SCENARIOS_KEY)) || {}
+  } catch {
+    return {}
+  }
+}
+
+function saveCompletedScenarios(map) {
+  try {
+    localStorage.setItem(SCENARIOS_KEY, JSON.stringify(map))
+  } catch { /* storage unavailable — keep in-memory only */ }
+}
 
 // ── Venue channel definitions ────────────────────────────────────────────────
 // Each channel maps to a physical speaker position in Mission Ballroom.
@@ -156,6 +174,10 @@ const useStore = create((set, get) => ({
   isComputingCoverage: false,
   coverageError: null,
   showCoverage: true,
+
+  // ── Scenarios (guided missions) ────────────────────────────────────────────
+  activeScenarioId: null,
+  completedScenarios: loadCompletedScenarios(), // { [id]: 'bronze'|'silver'|'gold' }
 
   // ── Component palette filter ───────────────────────────────────────────────
   activeManufacturerId: null,
@@ -374,6 +396,21 @@ const useStore = create((set, get) => ({
       set({ coverageError: err.message, isComputingCoverage: false })
     }
   },
+
+  // ── Scenarios ───────────────────────────────────────────────────────────────
+  startScenario: (id) => set({ activeScenarioId: id }),
+  exitScenario:  ()   => set({ activeScenarioId: null }),
+
+  /** Record a scenario as completed, keeping the best medal earned. */
+  recordCompletion: (id, medal) =>
+    set(state => {
+      const prev = state.completedScenarios[id]
+      const next = bestMedal(prev, medal)
+      if (next === prev) return state // no improvement — avoid needless writes
+      const completedScenarios = { ...state.completedScenarios, [id]: next }
+      saveCompletedScenarios(completedScenarios)
+      return { completedScenarios }
+    }),
 }))
 
 export default useStore

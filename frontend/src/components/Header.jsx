@@ -11,7 +11,7 @@ const MANUFACTURER_COLORS = {
   'Lab.gruppen':       '#c0392b',
 }
 
-export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNavigate, onTour, tourHighlight }) {
+export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNavigate, onTour, onScenarios, tourHighlight }) {
   const validationResult = useStore(s => s.validationResult)
   const isValidating     = useStore(s => s.isValidating)
   const resetAll         = useStore(s => s.resetAll)
@@ -201,6 +201,17 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
         </button>
 
         <button
+          onClick={onScenarios}
+          aria-label="Open guided training missions"
+          className="text-xs font-mono px-3 py-1 rounded border transition-colors duration-200"
+          style={{ borderColor: '#00ff8844', color: '#00ff88', background: 'transparent' }}
+          onMouseEnter={e => { e.currentTarget.style.background = '#00ff8811'; e.currentTarget.style.borderColor = '#00ff8888' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = '#00ff8844' }}
+        >
+          ◎ MISSIONS
+        </button>
+
+        <button
           onClick={handleThemeToggle}
           aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
           title={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
@@ -251,6 +262,16 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
           style={{ borderColor: '#00e5ff44', color: '#00e5ff', background: 'transparent' }}
         >
           TOUR
+        </button>
+
+        {/* MISSIONS chip */}
+        <button
+          onClick={onScenarios}
+          aria-label="Open guided training missions"
+          className="text-[9px] font-mono px-2 py-1.5 rounded border touch-target"
+          style={{ borderColor: '#00ff8844', color: '#00ff88', background: 'transparent' }}
+        >
+          ◎
         </button>
 
         {/* F1 chip */}
