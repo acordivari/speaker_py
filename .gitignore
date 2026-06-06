@@ -30,8 +30,12 @@ htmlcov/
 
 # Node
 node_modules/
+
+# Environment files — NEVER commit secrets / machine-specific config.
+# Bare pattern (no leading slash) matches .env in any dir, incl. frontend/.env.
 .env
-.env.local
+.env.*
+!.env.example
 
 # Audio files — committed directly to repo (static, <100 MB)
 # backend/audio/*.flac
