@@ -201,6 +201,7 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
         </button>
 
         <button
+          data-tour="header-missions"
           onClick={onScenarios}
           aria-label="Open guided training missions"
           className="text-xs font-mono px-3 py-1 rounded border transition-colors duration-200"

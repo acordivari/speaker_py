@@ -4,7 +4,7 @@ export const DEMO_STEPS = [
     title: 'Welcome to Sound Design Lab',
     body: [
       'This tool lets you design a professional PA system for Mission Ballroom in Denver, CO — the same way a live sound engineer would approach a real venue.',
-      'This 2-minute tour walks you through the full workflow from picking components to validating your rig.',
+      'This guided tour walks you through the full workflow, then the three ways you learn here: SEE the coverage, HEAR the faults, and DO the guided missions.',
     ],
     target: null,
     panelSide: 'center',
@@ -14,7 +14,7 @@ export const DEMO_STEPS = [
     title: 'The Component Library',
     body: [
       'On the left you have your component library. Browse professional amplifiers and speakers from manufacturers like Funktion-One, L-Acoustics, and d&b audiotechnik.',
-      'Each card shows the component type, power handling, and impedance rating so you can make informed choices.',
+      'Each card shows the component type, power handling (in watts), and impedance — the electrical resistance a speaker presents to an amp, measured in ohms (Ω). Matching these correctly is the heart of the job.',
     ],
     target: 'palette',
     panelSide: 'right',
@@ -41,11 +41,21 @@ export const DEMO_STEPS = [
     panelSide: 'right',
   },
   {
+    id: 'coverage',
+    title: 'See It: The SPL Coverage Map',
+    body: [
+      'Click the SPL Map toggle above the venue to paint a heatmap predicting how loud each part of the audience will be. SPL (Sound Pressure Level) is just loudness, measured in decibels (dB).',
+      'The readout below the map reports the level at the FOH mix position (where the engineer stands), the front row, the back wall, and Δ — the front-to-back variation. A good design is loud enough everywhere and even (a small Δ), because sound naturally loses about 6 dB every time you double the distance from a speaker.',
+    ],
+    target: 'venue',
+    panelSide: 'right',
+  },
+  {
     id: 'validation',
     title: 'Real-Time Validation',
     body: [
       'Every configuration change triggers an immediate electrical check: impedance matching, amplifier power ratios, and wiring safety.',
-      'The status indicator in the header tells you at a glance whether your rig is valid. Green means all systems go.',
+      'The status indicator in the header tells you at a glance whether your rig is valid. Green means all systems go; red means the system found issues to fix.',
     ],
     target: 'validation',
     panelSide: 'left',
@@ -54,8 +64,18 @@ export const DEMO_STEPS = [
     id: 'debugging',
     title: 'Reading the Error Messages',
     body: [
-      'When issues appear, each message identifies the affected channel and explains the specific problem — an underpowered amp, an impedance mismatch, or an unsafe wiring configuration.',
-      'Fix issues by swapping to a more powerful amp, adjusting speaker count, or toggling between parallel and series wiring in the Channel Editor.',
+      'When issues appear, each message identifies the affected channel and explains the specific problem — an underpowered amp, an impedance mismatch, or an unsafe wiring configuration. Expand a card for the physics behind the warning and a recommended fix.',
+      'Fix issues by swapping to a more powerful amp, adjusting speaker count, switching between parallel and series wiring, or enabling a limiter (a safety circuit that caps power before it can damage a driver) in the Channel Editor.',
+    ],
+    target: 'validation',
+    panelSide: 'left',
+  },
+  {
+    id: 'audition',
+    title: 'Hear It: Audition the Fault',
+    body: [
+      'Many issue cards include a ▶ Hear it button. Press it to play a short loop demonstrating what that fault actually sounds like — clipping, dropout, a limiter clamping down, and more.',
+      'While it plays, flip the Clean ↔ Faulted toggle to A/B the same audio with and without the problem. Training your ears to recognize these artifacts is exactly what a live engineer does at soundcheck.',
     ],
     target: 'validation',
     panelSide: 'left',
@@ -71,11 +91,21 @@ export const DEMO_STEPS = [
     panelSide: 'bottom',
   },
   {
+    id: 'missions',
+    title: 'Do It: Guided Missions',
+    body: [
+      'When you are ready to practice, open MISSIONS for a sequence of guided challenges — power up a single hang, build stereo mains, cover the back of the room, then protect your drivers.',
+      'Each mission shows its objectives in a bar below the header and grades your live rig as you build — no submit button. Meet every required goal to complete it, and hit the stretch goals to earn silver or gold.',
+    ],
+    target: 'header-missions',
+    panelSide: 'bottom',
+  },
+  {
     id: 'preset',
     title: "You're All Set",
     body: [
-      "We've loaded a complete Funktion-One configuration across all 8 channels of Mission Ballroom. The validation panel is showing the full system health.",
-      'Try RUN SOUNDCHECK to hear the system, or dig into the Channel Editor to explore and modify the configuration yourself.',
+      "We've loaded a complete Funktion-One configuration across all 8 channels of Mission Ballroom. The validation panel shows the full system health and the SPL Map will preview its coverage.",
+      'Try RUN SOUNDCHECK to hear the system, open MISSIONS to start a guided challenge, or dig into the Channel Editor to explore and modify the configuration yourself.',
     ],
     target: null,
     panelSide: 'center',

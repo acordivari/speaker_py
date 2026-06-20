@@ -15,6 +15,9 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import App from '../App'
+import { DEMO_STEPS } from '../components/demo/demoSteps'
+
+const TOTAL_STEPS = DEMO_STEPS.length
 
 // ── API mock ──────────────────────────────────────────────────────────────────
 vi.mock('../services/api', () => ({
@@ -178,10 +181,10 @@ describe('DemoTour — panel renders correctly', () => {
     Object.defineProperty(window, 'innerWidth', { value: originalInnerWidth, configurable: true, writable: true })
   })
 
-  it('shows step 1 of 8 on the welcome step', () => {
+  it('shows step 1 on the welcome step', () => {
     useIsMobile.mockReturnValue(false)
     render(<App />)
-    expect(screen.getByText('STEP 1 / 8')).toBeInTheDocument()
+    expect(screen.getByText(`STEP 1 / ${TOTAL_STEPS}`)).toBeInTheDocument()
   })
 
   it('NEXT button advances to step 2', () => {
@@ -189,18 +192,18 @@ describe('DemoTour — panel renders correctly', () => {
     render(<App />)
 
     // Step 1 should be visible
-    expect(screen.getByText('STEP 1 / 8')).toBeInTheDocument()
+    expect(screen.getByText(`STEP 1 / ${TOTAL_STEPS}`)).toBeInTheDocument()
 
     // Click NEXT
     const nextBtn = screen.getByRole('button', { name: /next/i })
     fireEvent.click(nextBtn)
 
     // Step 2 should now be visible
-    expect(screen.getByText('STEP 2 / 8')).toBeInTheDocument()
+    expect(screen.getByText(`STEP 2 / ${TOTAL_STEPS}`)).toBeInTheDocument()
   })
 })
 
-describe('DemoTour — step 7→8 blank screen regression', () => {
+describe('DemoTour — final-step blank screen regression', () => {
   // Regression for: loadPreset called from useEffect on step transition caused
   // a Zustand store update mid-render, producing a second DemoTour re-render
   // that left the panel invisible behind the full-screen overlay on mobile.
@@ -222,42 +225,42 @@ describe('DemoTour — step 7→8 blank screen regression', () => {
     Object.defineProperty(window, 'innerWidth', { value: originalInnerWidth, configurable: true, writable: true })
   })
 
-  it('step 8 panel is still visible after advancing through all 7 preceding steps', () => {
+  it('last-step panel is still visible after advancing through all preceding steps', () => {
     render(<App />)
 
-    // Advance through steps 1–7 (click NEXT 7 times)
-    for (let i = 0; i < 7; i++) {
+    // Advance through every step but the last (click NEXT N-1 times)
+    for (let i = 0; i < TOTAL_STEPS - 1; i++) {
       fireEvent.click(screen.getByRole('button', { name: /next →/i }))
     }
 
-    // Should now be on step 8 — panel must still be in the document
-    expect(screen.getByText('STEP 8 / 8')).toBeInTheDocument()
+    // Should now be on the final step — panel must still be in the document
+    expect(screen.getByText(`STEP ${TOTAL_STEPS} / ${TOTAL_STEPS}`)).toBeInTheDocument()
     // The FINISH button must be present and interactive
     expect(screen.getByRole('button', { name: /finish →/i })).toBeInTheDocument()
   })
 
-  it('FINISH on step 8 closes the tour (overlay removed)', () => {
+  it('FINISH on the last step closes the tour (overlay removed)', () => {
     render(<App />)
 
-    // Advance to step 8
-    for (let i = 0; i < 7; i++) {
+    // Advance to the final step
+    for (let i = 0; i < TOTAL_STEPS - 1; i++) {
       fireEvent.click(screen.getByRole('button', { name: /next →/i }))
     }
 
-    expect(screen.getByText('STEP 8 / 8')).toBeInTheDocument()
+    expect(screen.getByText(`STEP ${TOTAL_STEPS} / ${TOTAL_STEPS}`)).toBeInTheDocument()
 
     // Click FINISH — tour should close
     fireEvent.click(screen.getByRole('button', { name: /finish →/i }))
 
     // Tour panel must be gone
-    expect(screen.queryByText('STEP 8 / 8')).not.toBeInTheDocument()
+    expect(screen.queryByText(`STEP ${TOTAL_STEPS} / ${TOTAL_STEPS}`)).not.toBeInTheDocument()
   })
 
-  it('FINISH on step 8 writes sdl_tour_seen to localStorage', () => {
+  it('FINISH on the last step writes sdl_tour_seen to localStorage', () => {
     const setItemSpy = vi.spyOn(Storage.prototype, 'setItem')
     render(<App />)
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < TOTAL_STEPS - 1; i++) {
       fireEvent.click(screen.getByRole('button', { name: /next →/i }))
     }
     fireEvent.click(screen.getByRole('button', { name: /finish →/i }))
