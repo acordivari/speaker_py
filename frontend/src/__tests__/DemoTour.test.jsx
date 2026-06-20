@@ -235,11 +235,12 @@ describe('DemoTour — final-step blank screen regression', () => {
 
     // Should now be on the final step — panel must still be in the document
     expect(screen.getByText(`STEP ${TOTAL_STEPS} / ${TOTAL_STEPS}`)).toBeInTheDocument()
-    // The FINISH button must be present and interactive
-    expect(screen.getByRole('button', { name: /finish →/i })).toBeInTheDocument()
+    // Both final-step CTAs must be present and interactive
+    expect(screen.getByRole('button', { name: /explore freely →/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /start mission 1 →/i })).toBeInTheDocument()
   })
 
-  it('FINISH on the last step closes the tour (overlay removed)', () => {
+  it('EXPLORE FREELY on the last step closes the tour (overlay removed)', () => {
     render(<App />)
 
     // Advance to the final step
@@ -249,22 +250,37 @@ describe('DemoTour — final-step blank screen regression', () => {
 
     expect(screen.getByText(`STEP ${TOTAL_STEPS} / ${TOTAL_STEPS}`)).toBeInTheDocument()
 
-    // Click FINISH — tour should close
-    fireEvent.click(screen.getByRole('button', { name: /finish →/i }))
+    // Click EXPLORE FREELY — tour should close
+    fireEvent.click(screen.getByRole('button', { name: /explore freely →/i }))
 
     // Tour panel must be gone
     expect(screen.queryByText(`STEP ${TOTAL_STEPS} / ${TOTAL_STEPS}`)).not.toBeInTheDocument()
   })
 
-  it('FINISH on the last step writes sdl_tour_seen to localStorage', () => {
+  it('EXPLORE FREELY on the last step writes sdl_tour_seen to localStorage', () => {
     const setItemSpy = vi.spyOn(Storage.prototype, 'setItem')
     render(<App />)
 
     for (let i = 0; i < TOTAL_STEPS - 1; i++) {
       fireEvent.click(screen.getByRole('button', { name: /next →/i }))
     }
-    fireEvent.click(screen.getByRole('button', { name: /finish →/i }))
+    fireEvent.click(screen.getByRole('button', { name: /explore freely →/i }))
 
     expect(setItemSpy).toHaveBeenCalledWith('sdl_tour_seen', '1')
+  })
+
+  it('START MISSION 1 closes the tour and activates the first guided mission', () => {
+    render(<App />)
+
+    for (let i = 0; i < TOTAL_STEPS - 1; i++) {
+      fireEvent.click(screen.getByRole('button', { name: /next →/i }))
+    }
+    fireEvent.click(screen.getByRole('button', { name: /start mission 1 →/i }))
+
+    // Tour closes...
+    expect(screen.queryByText(`STEP ${TOTAL_STEPS} / ${TOTAL_STEPS}`)).not.toBeInTheDocument()
+    // ...and the live mission bar takes over with the first scenario.
+    const bar = screen.getByTestId('scenario-bar')
+    expect(bar).toHaveTextContent(/First Power-Up/i)
   })
 })

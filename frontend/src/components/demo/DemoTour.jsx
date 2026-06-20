@@ -5,6 +5,9 @@ import DemoSpotlight from './DemoSpotlight'
 import DemoPanel from './DemoPanel'
 import DemoDragAnimation from './DemoDragAnimation'
 import { DEMO_STEPS } from './demoSteps'
+import { SCENARIOS } from '../../scenarios/scenarios'
+
+const FIRST_MISSION_ID = SCENARIOS[0].id
 
 // loadPreset must fire inside handleNext (the click handler), NOT a useEffect.
 //
@@ -28,7 +31,9 @@ export default function DemoTour({ onClose }) {
   const [stepIndex, setStepIndex] = useState(0)
   const [targetRect, setTargetRect] = useState(null)
   const [dragRects,  setDragRects]  = useState(null)
-  const loadPreset = useStore(s => s.loadPreset)
+  const loadPreset    = useStore(s => s.loadPreset)
+  const resetAll      = useStore(s => s.resetAll)
+  const startScenario = useStore(s => s.startScenario)
 
   // Single fixed container appended to document.body.
   // All portal content lives inside one compositing layer, which fixes
@@ -85,6 +90,17 @@ export default function DemoTour({ onClose }) {
     setStepIndex(i => Math.max(0, i - 1))
   }, [])
 
+  // Close-the-loop CTA on the final step: clear the stage and drop the student
+  // straight into the first guided mission (missions are build-it-yourself, so
+  // we do NOT load the preset here). Same batching guarantee as handleNext —
+  // both store updates run in one click handler, so React 18 commits them with
+  // onClose's setDemoActive(false) in a single render, no intermediate state.
+  const handleStartMission = useCallback(() => {
+    resetAll()
+    startScenario(FIRST_MISSION_ID)
+    onClose()
+  }, [resetAll, startScenario, onClose])
+
   if (!containerRef.current) return null
 
   return createPortal(
@@ -100,6 +116,7 @@ export default function DemoTour({ onClose }) {
         onNext={handleNext}
         onBack={handleBack}
         onSkip={onClose}
+        onStartMission={handleStartMission}
       />
       {step.dragAnimation && dragRects && (
         <DemoDragAnimation fromRect={dragRects.from} toRect={dragRects.to} />

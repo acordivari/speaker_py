@@ -50,7 +50,9 @@ function getPanelStyle(panelSide, rect) {
   return { position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: PANEL_WIDTH }
 }
 
-export default function DemoPanel({ step, stepIndex, totalSteps, targetRect, onNext, onBack, onSkip }) {
+const MISSION_GREEN = '#00ff88'
+
+export default function DemoPanel({ step, stepIndex, totalSteps, targetRect, onNext, onBack, onSkip, onStartMission }) {
   const panelStyle = getPanelStyle(step.panelSide, targetRect)
   const isFirst = stepIndex === 0
   const isLast  = stepIndex === totalSteps - 1
@@ -118,8 +120,26 @@ export default function DemoPanel({ step, stepIndex, totalSteps, targetRect, onN
             onMouseEnter={e => { e.currentTarget.style.background = '#00e5ff1a'; e.currentTarget.style.borderColor = '#00e5ffaa' }}
             onMouseLeave={e => { e.currentTarget.style.background = '#00e5ff0d'; e.currentTarget.style.borderColor = '#00e5ff66' }}
           >
-            {isLast ? 'FINISH →' : 'NEXT →'}
+            {isLast ? 'EXPLORE FREELY →' : 'NEXT →'}
           </button>
+
+          {/* Close-the-loop CTA: on the final step, send the student straight
+              into the first guided mission instead of just dismissing the tour. */}
+          {isLast && onStartMission && (
+            <button
+              onClick={onStartMission}
+              style={{
+                fontSize: 11, fontFamily: 'monospace', fontWeight: 700, padding: '6px 20px',
+                borderRadius: 6, border: `1px solid ${MISSION_GREEN}88`, color: MISSION_GREEN,
+                background: `${MISSION_GREEN}14`, cursor: 'pointer', touchAction: 'manipulation',
+                whiteSpace: 'nowrap',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = `${MISSION_GREEN}26`; e.currentTarget.style.borderColor = MISSION_GREEN }}
+              onMouseLeave={e => { e.currentTarget.style.background = `${MISSION_GREEN}14`; e.currentTarget.style.borderColor = `${MISSION_GREEN}88` }}
+            >
+              ◎ START MISSION 1 →
+            </button>
+          )}
         </div>
       </div>
     </div>

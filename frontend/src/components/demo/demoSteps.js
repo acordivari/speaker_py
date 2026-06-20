@@ -104,8 +104,8 @@ export const DEMO_STEPS = [
     id: 'preset',
     title: "You're All Set",
     body: [
-      "We've loaded a complete Funktion-One configuration across all 8 channels of Mission Ballroom. The validation panel shows the full system health and the SPL Map will preview its coverage.",
-      'Try RUN SOUNDCHECK to hear the system, open MISSIONS to start a guided challenge, or dig into the Channel Editor to explore and modify the configuration yourself.',
+      "You've seen the whole workflow — now it's your turn. Pick how you want to dive in.",
+      'START MISSION 1 clears the stage and gives you your first graded challenge: power up a single speaker hang safely. Prefer to poke around first? EXPLORE FREELY loads a complete Funktion-One reference rig across all 8 channels that you can run through soundcheck, view on the SPL Map, and modify.',
     ],
     target: null,
     panelSide: 'center',
