@@ -3,6 +3,9 @@ import axios from 'axios'
 const client = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL ?? ''}/api/v1`,
   headers: { 'Content-Type': 'application/json' },
+  // Render's free tier spins down when idle and takes ~50 s to wake, so the
+  // timeout must comfortably outlast a cold start while still bounding failure.
+  timeout: 90_000,
 })
 
 export const fetchManufacturers = () =>

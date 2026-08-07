@@ -6,4 +6,10 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     autoDeploy: true
+    healthCheckPath: /
+    envVars:
+      # Value is set in the Render dashboard (Netlify site URL); sync: false
+      # keeps it declared here so a blueprint re-sync doesn't drop it.
+      - key: ALLOWED_ORIGINS
+        sync: false
     # Python version is pinned via backend/.python-version

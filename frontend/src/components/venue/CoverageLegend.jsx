@@ -7,10 +7,38 @@ import { LEGEND_TICKS, splToColor, splToFraction } from './coverageScale'
  * labels stay legible in both themes.
  */
 export default function CoverageLegend() {
-  const coverageResult = useStore(s => s.coverageResult)
-  const showCoverage   = useStore(s => s.showCoverage)
+  const coverageResult      = useStore(s => s.coverageResult)
+  const showCoverage        = useStore(s => s.showCoverage)
+  const coverageError       = useStore(s => s.coverageError)
+  const isComputingCoverage = useStore(s => s.isComputingCoverage)
 
-  if (!showCoverage || !coverageResult) return null
+  if (!showCoverage) return null
+
+  // A failed fetch leaves no heatmap at all — say so rather than rendering
+  // nothing. The next channel change retries automatically.
+  if (coverageError && !coverageResult) {
+    return (
+      <div
+        className="px-3 py-2 flex-shrink-0 border-t border-venue-border"
+        data-testid="coverage-error"
+      >
+        <p className="text-[10px] font-mono" style={{ color: '#ffb300' }}>
+          ⚠ SPL map unavailable — {coverageError}. Retries on your next change.
+        </p>
+      </div>
+    )
+  }
+
+  if (!coverageResult) {
+    if (!isComputingCoverage) return null
+    return (
+      <div className="px-3 py-2 flex-shrink-0 border-t border-venue-border">
+        <p className="text-[10px] font-mono animate-pulse" style={{ color: 'var(--color-muted)' }}>
+          Computing SPL map…
+        </p>
+      </div>
+    )
+  }
 
   const { stats } = coverageResult
   const hasSources = stats.active_source_count > 0

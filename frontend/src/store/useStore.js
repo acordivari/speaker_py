@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 import { fetchManufacturers, fetchComponents, validateConfiguration, fetchCoverage } from '../services/api'
 import { bestMedal } from '../scenarios/scoreScenario'
 
@@ -153,7 +154,7 @@ export const FUNKTION_ONE_PRESET = [
 
 // ── Store ────────────────────────────────────────────────────────────────────
 
-const useStore = create((set, get) => ({
+const useStore = create(persist((set, get) => ({
   // ── Remote data ──────────────────────────────────────────────────────────
   manufacturers: [],
   components: [],
@@ -348,7 +349,7 @@ const useStore = create((set, get) => ({
       }))
 
     if (payload.length === 0) {
-      set({ validationResult: null })
+      set({ validationResult: null, validationError: null })
       return
     }
 
@@ -383,8 +384,10 @@ const useStore = create((set, get) => ({
         limiter_mode: ch.limiterMode,
       }))
 
+    // Clear any stale error too — an empty rig issues no request, so a
+    // leftover error would otherwise display forever.
     if (payload.length === 0) {
-      set({ coverageResult: null })
+      set({ coverageResult: null, coverageError: null })
       return
     }
 
@@ -411,6 +414,39 @@ const useStore = create((set, get) => ({
       saveCompletedScenarios(completedScenarios)
       return { completedScenarios }
     }),
+}), {
+  // Persist only the rig itself; everything else is refetched or recomputed.
+  name: 'sdl_rig',
+  version: 1,
+  partialize: (state) => ({ channels: state.channels }),
+  // Rehydrate only the user-assigned fields onto fresh channel definitions,
+  // so venue metadata (labels, allowed types, positions) always comes from
+  // code, never from a stale localStorage copy.
+  // localStorage is user-editable and survives schema changes, so treat the
+  // persisted blob as untrusted: anything malformed falls back to defaults
+  // (and the next write overwrites it) instead of throwing during hydration.
+  merge: (persisted, current) => {
+    if (!Array.isArray(persisted?.channels)) return current
+    const savedById = {}
+    persisted.channels.forEach(ch => { if (ch?.id) savedById[ch.id] = ch })
+    return {
+      ...current,
+      channels: current.channels.map(ch => {
+        const saved = savedById[ch.id]
+        if (!saved) return ch
+        return {
+          ...ch,
+          amp:         saved.amp ?? null,
+          speakers:    Array.isArray(saved.speakers)
+            ? saved.speakers.filter(s => s?.component?.id != null && s.count > 0)
+            : [],
+          wiring:      saved.wiring ?? 'parallel',
+          bridged:     saved.bridged ?? false,
+          limiterMode: saved.limiterMode ?? 'none',
+        }
+      }),
+    }
+  },
 }))
 
 export default useStore

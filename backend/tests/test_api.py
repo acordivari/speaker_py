@@ -12,6 +12,21 @@ class TestHealthEndpoint:
         assert r.json()["status"] == "ok"
 
 
+class TestSecurityHeaders:
+    def test_api_responses_use_strict_csp(self, client):
+        r = client.get("/")
+        assert r.headers["Content-Security-Policy"].startswith("default-src 'none'")
+        assert r.headers["X-Content-Type-Options"] == "nosniff"
+        assert r.headers["X-Frame-Options"] == "DENY"
+
+    def test_docs_csp_allows_swagger_assets(self, client):
+        r = client.get("/docs")
+        assert r.status_code == 200
+        csp = r.headers["Content-Security-Policy"]
+        assert "cdn.jsdelivr.net" in csp
+        assert "default-src 'none'" not in csp
+
+
 class TestManufacturersEndpoint:
     def test_list_manufacturers(self, client):
         r = client.get("/api/v1/manufacturers/")
@@ -295,6 +310,29 @@ class TestValidationEndpoint:
         }
         r = client.post("/api/v1/validate/", json=payload)
         # Should still return 200 with a global issue rather than crashing
+        assert r.status_code == 200
+
+    def test_seventeen_channels_rejected(self, client, amp_d80, speaker_v8):
+        channel = {
+            "label": "Main Left",
+            "amplifier_id": amp_d80.id,
+            "speakers": [{"component_id": speaker_v8.id, "count": 2}],
+            "wiring": "parallel",
+        }
+        payload = {"channels": [dict(channel) for _ in range(17)]}
+        r = client.post("/api/v1/validate/", json=payload)
+        assert r.status_code == 422
+
+    def test_sixteen_channels_accepted(self, client, amp_d80, speaker_v8):
+        channel = {
+            "label": "Main Left",
+            "amplifier_id": amp_d80.id,
+            "speakers": [{"component_id": speaker_v8.id, "count": 2}],
+            "wiring": "parallel",
+        }
+        payload = {"channels": [dict(channel) for _ in range(16)]}
+        r = client.post("/api/v1/validate/", json=payload)
+        assert r.status_code != 422
         assert r.status_code == 200
 
     def test_severely_overpowered_returns_error(

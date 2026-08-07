@@ -1,7 +1,23 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import useStore from '../../store/useStore'
 import DraggableCard from './DraggableCard'
 import { getMfrColor } from '../venue/venueConfig'
+
+/** Extra context once loading has clearly outlived a warm backend response. */
+function SlowLoadNotice() {
+  const [slow, setSlow] = useState(false)
+  useEffect(() => {
+    const timer = setTimeout(() => setSlow(true), 3000)
+    return () => clearTimeout(timer)
+  }, [])
+  if (!slow) return null
+  return (
+    <div className="mt-2 text-[10px]" style={{ color: 'var(--color-muted)' }}>
+      Waking the server — the first load after a quiet period
+      <br />can take up to a minute.
+    </div>
+  )
+}
 
 const TYPE_OPTIONS = [
   { value: null,         label: 'ALL' },
@@ -114,6 +130,7 @@ export default function ComponentPalette({ isLoading }) {
         {isLoading && (
           <div className="text-center text-slate-400 text-xs font-mono py-8 animate-pulse">
             Loading components…
+            <SlowLoadNotice />
           </div>
         )}
 

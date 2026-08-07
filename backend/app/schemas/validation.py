@@ -28,7 +28,7 @@ class ChannelConfig(BaseModel):
 
 
 class ValidationRequest(BaseModel):
-    channels: list[ChannelConfig] = Field(..., min_length=1)
+    channels: list[ChannelConfig] = Field(..., min_length=1, max_length=16)
 
 
 # ── Response types ──────────────────────────────────────────────────────────

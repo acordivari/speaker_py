@@ -24,6 +24,14 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
   const [isDark, setIsDark] = useState(
     () => (localStorage.getItem('sdl_theme') ?? 'dark') !== 'light'
   )
+
+  // Confirm lives here, not in the store action, so programmatic resets
+  // (e.g. the tour's mission handoff) stay silent.
+  function handleReset() {
+    if (window.confirm(`Clear all ${channels.length} channel configurations? This cannot be undone.`)) {
+      resetAll()
+    }
+  }
   function handleThemeToggle() {
     const next = isDark ? 'light' : 'dark'
     document.documentElement.dataset.theme = next
@@ -179,7 +187,7 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
         {hasConfig && (
           <button
             data-tour="header-reset"
-            onClick={resetAll}
+            onClick={handleReset}
             aria-label="Reset all channel configurations"
             className="text-xs font-mono px-3 py-1 rounded border transition-colors duration-200"
             style={actionBtn}
@@ -291,7 +299,7 @@ export default function Header({ soundcheckInfo, onSoundcheck, onGlossary, onNav
         {/* Reset */}
         {hasConfig && (
           <button
-            onClick={resetAll}
+            onClick={handleReset}
             aria-label="Reset all channel configurations"
             className="flex items-center justify-center w-8 h-8 rounded border touch-target"
             style={{ borderColor: '#3c3c68', color: '#7070a8', background: 'transparent' }}

@@ -54,15 +54,29 @@ app.add_middleware(
 )
 
 
+_DOCS_PATHS = {"/docs", "/redoc", "/openapi.json"}
+_DOCS_CSP = (
+    "default-src 'self'; "
+    "script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; "
+    "style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'unsafe-inline'; "
+    "img-src 'self' https://fastapi.tiangolo.com data:; "
+    "font-src 'self' https://fonts.gstatic.com; "
+    "connect-src 'self'; "
+    "worker-src blob:"
+)
+_STRICT_CSP = "default-src 'none'; connect-src 'self'; media-src 'self'"
+
+
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next) -> Response:
         response = await call_next(request)
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "DENY"
         response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
-        response.headers["Content-Security-Policy"] = (
-            "default-src 'none'; connect-src 'self'; media-src 'self'"
-        )
+        if request.url.path in _DOCS_PATHS:
+            response.headers["Content-Security-Policy"] = _DOCS_CSP
+        else:
+            response.headers["Content-Security-Policy"] = _STRICT_CSP
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
         return response
 

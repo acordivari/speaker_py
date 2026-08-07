@@ -194,3 +194,22 @@ class TestCoverageEndpoint:
         data = r.json()
         assert data["stats"]["active_source_count"] == 0
         assert "No active sources" in data["summary"]
+
+    def test_seventeen_channels_rejected(self, client):
+        payload = {
+            "channels": [
+                {"position_key": "MAIN_L", "label": "Main Left"} for _ in range(17)
+            ]
+        }
+        r = client.post("/api/v1/coverage/", json=payload)
+        assert r.status_code == 422
+
+    def test_sixteen_channels_accepted(self, client):
+        payload = {
+            "channels": [
+                {"position_key": "MAIN_L", "label": "Main Left"} for _ in range(16)
+            ]
+        }
+        r = client.post("/api/v1/coverage/", json=payload)
+        assert r.status_code != 422
+        assert r.status_code == 200

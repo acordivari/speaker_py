@@ -35,6 +35,7 @@ export default function App() {
   const channels      = useStore(s => s.channels)
   const isLoadingData = useStore(s => s.isLoadingData)
   const dataError     = useStore(s => s.dataError)
+  const validationResult = useStore(s => s.validationResult)
   const tapSelected   = useStore(s => s.tapSelectedComponent)
   const clearTapSelected = useStore(s => s.clearTapSelected)
 
@@ -106,16 +107,21 @@ export default function App() {
 
   if (dataError) {
     return (
-      <div className="flex items-center justify-center h-screen text-red-400 font-mono">
-        <div className="text-center space-y-3">
-          <div className="text-3xl font-bold">⚠ API Offline</div>
-          <div className="text-sm opacity-70">{dataError}</div>
-          <div className="text-xs opacity-50 max-w-xs">
-            Make sure the Python backend is running:
-            <code className="block mt-1 bg-black/40 px-3 py-1 rounded">
-              python3.9 run.py
-            </code>
+      <div className="flex items-center justify-center h-screen font-mono" style={{ background: 'var(--color-bg)' }}>
+        <div className="text-center space-y-3 px-6">
+          <div className="text-3xl font-bold" style={{ color: '#ff3d00' }}>⚠ Can't reach the server</div>
+          <div className="text-sm" style={{ color: 'var(--color-text-2)' }}>{dataError}</div>
+          <div className="text-xs max-w-xs mx-auto" style={{ color: 'var(--color-muted)' }}>
+            The server may be waking from sleep — the first visit after a quiet
+            period can take up to a minute.
           </div>
+          <button
+            onClick={loadData}
+            className="text-xs font-mono px-4 py-2 rounded border transition-colors duration-200"
+            style={{ borderColor: '#00e5ff66', color: '#00e5ff', background: 'transparent' }}
+          >
+            ↻ RETRY
+          </button>
         </div>
       </div>
     )

@@ -18,7 +18,7 @@ class CoverageChannel(ChannelConfig):
 
 
 class CoverageRequest(BaseModel):
-    channels: list[CoverageChannel] = Field(..., min_length=1)
+    channels: list[CoverageChannel] = Field(..., min_length=1, max_length=16)
     cell_size: float = Field(
         default=10.0, ge=4.0, le=40.0,
         description="Grid cell size in SVG px. Smaller = finer (and heavier).",
