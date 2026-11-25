@@ -46,7 +46,7 @@ The three interactive learning streams follow a **See it → Hear it → Do it**
 ### Prerequisites
 
 - **Python 3.11**, provided by [uv](https://docs.astral.sh/uv/) (see [Python environment note](#python-environment) below)
-- **Node.js 20+** and npm
+- **Node.js 22** and npm (Netlify and CI build on 22; 20.19+ also works locally)
 
 ### 1. Backend
 
