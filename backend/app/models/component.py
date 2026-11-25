@@ -84,7 +84,7 @@ class Component(Base):
     def __repr__(self) -> str:
         return (
             f"<Component id={self.id} model={self.model_number!r} "
-            f"type={self.component_type}>"
+            f"type={self.component_type.value}>"
         )
 
     # ── Convenience helpers ──────────────────────────────────────────────────

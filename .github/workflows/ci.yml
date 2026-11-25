@@ -15,8 +15,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          # Matches Render's runtime (backend/.python-version); local dev is 3.9,
-          # so CI is the only place the suite runs on 3.11 before deploy.
+          # Matches backend/.python-version, which local dev and Render both use.
           python-version: '3.11'
       - name: Install dependencies
         run: pip install -r requirements.txt

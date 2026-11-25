@@ -45,7 +45,7 @@ The three interactive learning streams follow a **See it → Hear it → Do it**
 
 ### Prerequisites
 
-- **Python 3.9** (the local interpreter — see [Python environment note](#python-environment) below)
+- **Python 3.11**, provided by [uv](https://docs.astral.sh/uv/) (see [Python environment note](#python-environment) below)
 - **Node.js 20+** and npm
 
 ### 1. Backend
@@ -53,8 +53,7 @@ The three interactive learning streams follow a **See it → Hear it → Do it**
 ```bash
 cd backend
 rm -rf .venv
-python3.9 -m venv .venv
-.venv/bin/pip install --upgrade pip
+uv venv --seed          # Python 3.11, read from .python-version
 .venv/bin/pip install -r requirements.txt
 .venv/bin/python run.py
 ```
@@ -112,11 +111,9 @@ backend changes required.
 
 ## Python environment
 
-**`.python-version` (3.11) is for Render only.** The local machine uses `python3.9`.
+**`backend/.python-version` (`3.11`) sets the Python version for both local dev and Render.** `uv venv` reads it locally; Render resolves it to the latest 3.11 patch release. CI pins `3.11` in `.github/workflows/ci.yml`. FastAPI requires Python 3.11 or later, so older interpreters cannot run the backend.
 
 Always rebuild the venv from scratch using the commands above — never install packages individually. `requirements.txt` is the single source of truth.
-
-`eval_type_backport` is listed as a dependency because Pydantic v2 uses `int | None` union syntax (Python 3.10+) that Python 3.9 cannot evaluate at runtime. The package teaches Python 3.9 how to handle it and is a no-op on 3.11.
 
 ---
 

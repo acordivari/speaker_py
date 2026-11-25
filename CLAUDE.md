@@ -22,14 +22,14 @@ npm run test:watch
 ```
 
 ### Python environment — critical
-`.python-version` (3.11) is **Render-only**; local machine tops out at `python3.9`. Rebuild the
-venv only this way — never install packages ad-hoc; `requirements.txt` is the single source of truth:
+`backend/.python-version` (`3.11`) is the single source for local dev (read by `uv venv`) and
+Render (resolves to the latest 3.11 patch); CI pins `3.11` in `ci.yml`. FastAPI now requires
+Python ≥ 3.11, so the system `python3.9` cannot run the backend. Rebuild the venv only this way —
+never install packages ad-hoc; `requirements.txt` is the single source of truth:
 ```bash
-cd backend && rm -rf .venv && python3.9 -m venv .venv
-.venv/bin/pip install --upgrade pip && .venv/bin/pip install -r requirements.txt
+cd backend && rm -rf .venv && uv venv --seed
+.venv/bin/pip install -r requirements.txt
 ```
-`eval_type_backport` stays in requirements: Pydantic v2 schemas use `int | None` syntax that
-Python 3.9 can't evaluate; the package is a no-op on 3.11.
 
 ## Backend architecture
 
