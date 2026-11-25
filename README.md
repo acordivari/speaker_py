@@ -29,7 +29,7 @@ The three interactive learning streams follow a **See it → Hear it → Do it**
 | Backend API | FastAPI 0.115 + Uvicorn |
 | Database | SQLite + SQLAlchemy 2 ORM |
 | Validation | Schemas via Pydantic v2 |
-| Frontend | React 18 + Vite 5 |
+| Frontend | React 18 + Vite 8 |
 | State | Zustand |
 | Drag and drop | dnd-kit |
 | Styling | Tailwind CSS (CSS-variable theming, dark/light) |

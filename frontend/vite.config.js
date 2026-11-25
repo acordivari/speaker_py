@@ -19,6 +19,12 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
+    // Keep the browser support Vite 5 shipped by default. Vite 8's default
+    // target (Safari 16.4 / Chrome 111) rewrites breakpoints as
+    // `@media (width>=768px)`, which older iOS Safari ignores.
+    build: {
+      target: ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14'],
+    },
     test: {
       environment: 'jsdom',
       globals: true,
